@@ -6,7 +6,7 @@ const STATIC_ASSETS = [
 './',
 './icons/icon-192x192.png',
 './icons/icon-512x512.png',
-'https://akbari5561.github.io/PosterIran/icons/logo.png',
+'https://PosterIran.github.io/pixel/icons/logo.png',
 'https://cdn.tailwindcss.com',
 'https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap',
 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css'
@@ -60,7 +60,7 @@ const requestUrl = new URL(event.request.url);
 // بررسی اینکه آیا فایل درخواستی جزو فایل‌های حساس به آپدیت است یا خیر
 const isNetworkFirst = NETWORK_FIRST_ASSETS.some(asset => {
 const cleanAsset = asset.replace('./', '');
-return requestUrl.pathname.endsWith(cleanAsset) || requestUrl.pathname === '/PosterIran/' || requestUrl.pathname === '/';
+return requestUrl.pathname.endsWith(cleanAsset) || requestUrl.pathname === '/pixel/' || requestUrl.pathname === '/';
 });
 
 if (isNetworkFirst) {
