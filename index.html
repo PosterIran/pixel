@@ -219,7 +219,7 @@
     <header class="fixed w-full right-0 left-0 top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center gap-2 cursor-pointer" onclick="showScreen('home')">
-                <img src="https://akbari5561.github.io/PosterIran/icons/logo.png" alt="Logo" class="h-10 w-10">
+                <img src="https://PosterIran.github.io/pixel/icons/logo.png" alt="Logo" class="h-10 w-10">
                 <span class="text-xl font-bold text-blue-900">پوستر ایران</span>
             </div>
             <nav class="hidden md:flex gap-8 font-medium">
@@ -560,7 +560,7 @@
         <div class="flex items-start gap-3">
             <!-- قرارگیری لوگوی رسمی فروشگاه با کادر شکیل سفید و حاشیه ظریف آبی -->
             <div class="w-12 h-12 rounded-2xl bg-white border border-blue-100 flex items-center justify-center p-1 shadow-md shrink-0">
-                <img src="https://akbari5561.github.io/PosterIran/icons/logo.png" alt="پوستر ایران" class="w-full h-full object-contain">
+                <img src="https://PosterIran.github.io/pixel/icons/logo.png" alt="پوستر ایران" class="w-full h-full object-contain">
             </div>
             <div>
                 <h4 class="font-bold text-sm text-gray-900 leading-tight">پوستر ایران را نصب کنید!</h4>
@@ -821,12 +821,12 @@
         function getThumbnailUrl(groupName, filename) {
             // تبدیل پسوند فایل به .webp برای لود سریع در گالری
             const baseName = filename.substring(0, filename.lastIndexOf('.')) || filename;
-            return `https://akbari5561.github.io/PosterIran/Image/${encodeURIComponent(groupName)}/${encodeURIComponent(baseName)}.webp`;
+            return `https://PosterIran.github.io/pixel/Image/${encodeURIComponent(groupName)}/${encodeURIComponent(baseName)}.webp`;
         }
 
         function getOriginalUrl(groupName, filename) {
             // استفاده از پسوند اصلی فایل (jpg/jpeg/webp) برای زوم با کیفیت کامل
-            return `https://akbari5561.github.io/PosterIran/Image/${encodeURIComponent(groupName)}/${encodeURIComponent(filename)}`;
+            return `https://PosterIran.github.io/pixel/Image/${encodeURIComponent(groupName)}/${encodeURIComponent(filename)}`;
         }
 
         // ۳. مدیریت صفحات
