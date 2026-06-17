@@ -2,7 +2,7 @@
 "name": "پوستر ایران",
 "short_name": "پوستر ایران",
 "description": "فروشگاه تخصصی پوسترهای آموزشی مدارس و معلمان خلاق",
-"id": "/PosterIran/",
+"id": "/pixel/",
 "start_url": "./index.html",
 "display": "standalone",
 "background_color": "#1e40af",
