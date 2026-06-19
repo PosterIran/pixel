@@ -13,7 +13,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
     <!-- ۲. اتصال به استایل‌ها (CSS) -->
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./style.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -29,9 +29,10 @@
         /* ----------------------------------------------------
            استایل‌های ایمن‌ساز فوق‌العاده حیاتی برای حالت آفلاین 
         ---------------------------------------------------- */
+        /* اصلاح استایل ایمن‌ساز قبلی جهت جلوگیری از تخریب ابعاد تصاویر گالری و محصول */
         svg, img {
-            max-width: 100% !important;
-            height: auto !important;
+            max-width: 100%;
+            height: auto;
         }
         /* مهار آیکون‌های SVG منوی ناوبری و بخش مزایا */
         svg {
@@ -369,9 +370,10 @@
                         <button onclick="showScreen('cart')" class="bg-yellow-500 text-white px-4 py-2 rounded-xl font-bold text-xs shadow-md">مشاهده سبد</button>
                     </div>
                     
-                    <a href="#benefits" class="w-full border-2 border-white/30 bg-white/10 px-8 py-4 rounded-2xl text-xl font-bold hover:bg-white/20 transition text-center">
+                    <!-- اصلاح دکمه چرا پوستر آموزشی جهت عدم بروز رفتار اشتباه دکمه خروج -->
+                    <button onclick="scrollToBenefitsAndHighlight()" class="w-full border-2 border-white/30 bg-white/10 px-8 py-4 rounded-2xl text-xl font-bold hover:bg-white/20 transition text-center">
                         چرا پوستر آموزشی؟
-                    </a>
+                    </button>
                 </div>
             </div>
             
@@ -912,6 +914,7 @@
         let cart = {};
         let currentScreen = 'home'; 
 
+        // اصلاح فرآیند لود آدرس تصاویر گالری برای همگام‌سازی و وب‌پک با گیت‌هاب بر اساس نام پوشه و نوع فرمت تصویر
         function getThumbnailUrl(groupName, filename) {
             const baseName = filename.substring(0, filename.lastIndexOf('.')) || filename;
             return `https://posteriran.github.io/pixel/Image/${encodeURIComponent(groupName)}/${encodeURIComponent(baseName)}.webp`;
@@ -919,6 +922,15 @@
 
         function getOriginalUrl(groupName, filename) {
             return `https://posteriran.github.io/pixel/Image/${encodeURIComponent(groupName)}/${encodeURIComponent(filename)}`;
+        }
+
+        // عملکرد اسکرول و هایلایت بخش مزایا برای دکمه «چرا پوسترهای آموزشی» بدون باز شدن تصادفی خروج
+        function scrollToBenefitsAndHighlight() {
+            const benefitsSection = document.getElementById('benefits');
+            if (benefitsSection) {
+                benefitsSection.scrollIntoView({ behavior: 'smooth' });
+                showToast("✨ به بخش مزایا هدایت شدید! ویژگی‌های برجسته پوسترهای آموزشی را در زیر مطالعه کنید.", "آموزش", "info");
+            }
         }
 
         // سیستم هوشمند جابجایی صفحه به همراه درج وضعیت در History مرورگر برای دکمه بک
@@ -2037,8 +2049,8 @@ ${catalogString}
         }
     </script>
 
-    <!-- ۵. اتصال به منطق برنامه -->
-    <script src="./js/script.js" defer></script>
-<script src="live-reload.js" defer></script>
+    <!-- ۵. اتصال به منطق برنامه (اصلاح آدرس بدون دایرکتوری اشتباه js جهت لود صحیح کدهای PWA) -->
+    <script src="script.js" defer></script>
+    <script src="live-reload.js" defer></script>
 </body>
 </html>
