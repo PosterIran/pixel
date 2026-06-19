@@ -8,7 +8,7 @@ const STATIC_ASSETS = [
   './manifest.json',
   './icons/icon-192x192.png',
   './icons/icon-512x512.png',
-  'https://akbari5561.github.io/PosterIran/icons/logo.png',
+  'https://posteriran.github.io/pixel/icons/logo.png',
   'https://cdn.tailwindcss.com',
   'https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap',
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css'
@@ -104,7 +104,7 @@ self.addEventListener('fetch', (event) => {
         }).catch(() => {
           // در صورت آفلاین بودن کامل و عدم دسترسی به کش تصاویر
           if (event.request.destination === 'image') {
-            return caches.match('https://akbari5561.github.io/PosterIran/icons/logo.png');
+            return caches.match('https://posteriran.github.io/pixel/icons/logo.png');
           }
         });
       })
