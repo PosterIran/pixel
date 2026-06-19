@@ -1,0 +1,45 @@
+ / تنظیمات پایه برای موبایل /
+ {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Tahoma', sans-serif;
+    direction: rtl; / راست‌چین برای فارسی /
+    background-color: #f4f4f9;
+    color: #333;
+    line-height: 1.6;
+    padding: 20px;
+}
+/ کانتینر اصلی محتوا /
+.container {
+    max-width: 600px; / در موبایل عرض مناسب ایجاد می‌کند /
+    margin: 0 auto;
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+h1 {
+    color: #1e40af;
+    text-align: center;
+    margin-bottom: 20px;
+}
+ / استایل دکمه‌ها */
+.btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+
+    background-color: #1e40af;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 8px;
+    margin-top: 10px;
+    border: none;
+    font-size: 16px;
+}
