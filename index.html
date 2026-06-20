@@ -13,7 +13,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
     <!-- ۲. اتصال به استایل‌ها (CSS) -->
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="style.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -369,7 +369,6 @@
                         <button onclick="showScreen('cart')" class="bg-yellow-500 text-white px-4 py-2 rounded-xl font-bold text-xs shadow-md">مشاهده سبد</button>
                     </div>
                     
-                    <!-- تغییر دکمه به حالت ایمن و بدون تغییر هش آدرس جهت جلوگیری از پاپ آپ اشتباه خروج -->
                     <button onclick="scrollToBenefitsSection()" class="w-full border-2 border-white/30 bg-white/10 px-8 py-4 rounded-2xl text-xl font-bold hover:bg-white/20 transition text-center cursor-pointer">
                         چرا پوستر آموزشی؟
                     </button>
@@ -467,7 +466,6 @@
                 <h2 class="text-3xl font-bold text-blue-900">گالری محصولات</h2>
             </div>
 
-            <!-- تغییر موقعیت چسبندگی دسته‌بندی گالری متناسب با برداشته شدن هدر چسبنده -->
             <div class="sticky top-0 z-40 bg-white/95 backdrop-blur-md py-4 mb-8 -mx-4 px-4 border-b border-blue-50 shadow-sm">
                 <div class="max-w-md mx-auto relative group">
                     <label class="block text-[14px] font-bold text-indigo-500 mb-2 mr-2 flex items-center gap-1.5">
@@ -587,7 +585,6 @@
                     <p> تهران: خیابان پانزده خرداد ، بازار آهنگران ، کوچه مسجدجامع ، پاساژ کاغذوتحریر، زیرزمن اول ، پلاک ۷۴</p>
                     <p> <a href="https://maps.google.com/?cid=1396884775989221050&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNl" target="_blank" class="text-blue-500 font-bold hover:underline">  (مشاهده در نقشه)</a></p>
                 
-                    <!-- افزودن قابلیت شماره‌گیری مستقیم با لمس شماره‌ها -->
                     <p>📞 تلفن: <a href="tel:02155611875" class="text-blue-600 font-bold hover:text-blue-800 hover:underline transition-colors">۰۲۱۵۵۶۱۱۸۷۵</a></p>
                     <p>📱 موبایل: <a href="tel:09010195885" class="text-blue-600 font-bold hover:text-blue-800 hover:underline transition-colors">۰۹۰۱۰۱۹۵۸۸۵</a></p>
                 </div>
@@ -605,7 +602,7 @@
         </section>
     </main>
 
-    <!-- منوی پایینی چسبنده با استایل جدید (بزرگ‌نمایی و شناور شدن منوی فعال) -->
+    <!-- منوی پایینی چسبنده -->
     <nav class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-lg border-t border-gray-200 z-[100] flex justify-around items-center py-2 shadow-lg">
         <button onclick="showScreen('home')" id="nav-home" class="flex flex-col items-center gap-1 text-blue-700 transition flex-1">
             <svg width="24" height="24" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
@@ -628,7 +625,6 @@
             </svg>
             <span class="text-[9px] font-bold">سفارشات</span>
         </button>
-        <!-- دکمه دستیار آموزشی هوشمند -->
         <button onclick="showScreen('assistant')" id="nav-assistant" class="flex flex-col items-center gap-1 text-gray-500 transition flex-1">
             <svg width="24" height="24" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
@@ -656,16 +652,12 @@
         </div>
     </div>
 
-    <!-- مودال بزرگنمایی تصویر با قابلیت Spinner -->
+    <!-- مودال بزرگنمایی تصویر -->
     <div id="imageModal" class="fixed inset-0 z-[200] hidden bg-black/95 flex items-center justify-center p-4 backdrop-blur-md" onclick="closeModal()">
         <span class="absolute top-5 right-5 text-white text-5xl cursor-pointer hover:text-red-500 transition-colors z-[210]">&times;</span>
-        
-        <!-- انیمیشن بارگذاری سفارشی (Spinner) -->
         <div id="modalSpinner" class="absolute inset-0 flex items-center justify-center z-10">
             <div class="w-12 h-12 border-4 border-white/20 border-t-blue-500 rounded-full animate-spin-custom"></div>
         </div>
-        
-        <!-- تصویر باکیفیت -->
         <img id="modalImage" class="max-w-full max-h-[85vh] rounded-xl shadow-2xl border-2 border-white/20 object-contain shadow-white/10 opacity-0 scale-95 transition-all duration-300 z-20" src="" alt="بزرگنمایی" onclick="event.stopPropagation()">
     </div>
 
@@ -922,7 +914,6 @@
             return `https://PosterIran.github.io/pixel/Image/${encodeURIComponent(groupName)}/${encodeURIComponent(filename)}`;
         }
 
-        // اسکرول نرم و ایمن به بخش چرا پوستر آموزشی
         function scrollToBenefitsSection() {
             const benefitsEl = document.getElementById('benefits');
             if (benefitsEl) {
@@ -930,7 +921,6 @@
             }
         }
 
-        // سیستم هوشمند جابجایی صفحه به همراه درج وضعیت در History مرورگر برای دکمه بک
         function showScreen(screenId, shouldScroll = true, isBackAction = false) {
             currentScreen = screenId;
             const sections = ['home', 'gallery', 'cart', 'about', 'history', 'assistant'];
@@ -945,13 +935,11 @@
                 target.classList.remove('hidden-section');
             }
 
-            // پاکسازی افکت‌های منوی ناوبری پایینی
             document.querySelectorAll('nav button').forEach(btn => {
                 btn.classList.remove('active-nav-btn', 'assistant-active', 'text-blue-700', 'text-purple-700');
                 btn.classList.add('text-gray-500');
             });
             
-            // اعمال افکت فعال مدرن و انیمیشن سه‌بعدی برای دکمه فعال شده
             const activeNav = document.getElementById('nav-' + screenId);
             if (activeNav) {
                 activeNav.classList.remove('text-gray-500');
@@ -971,42 +959,34 @@
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
 
-            // اگر تغییر صفحه از طریق فشردن دکمه‌های سایت انجام شده (نه زدن دکمه بک)، وضعیت در تاریخچه ذخیره می‌شود
             if (!isBackAction) {
                 history.pushState({ screen: screenId }, "", `#${screenId}`);
             }
         }
 
-        // مانیتورینگ بک استیت (Back Key) و همگام‌سازی SPA با مرورگر و گوشی
         window.addEventListener('popstate', function (event) {
-            // ۱. ابتدا بررسی بستن مودال تصویر بزرگ‌نمایی شده
             const modal = document.getElementById("imageModal");
             if (modal && !modal.classList.contains("hidden")) {
                 closeModal(true);
                 return;
             }
 
-            // ۲. بررسی بستن کادر تایید انتخابی پیش‌فرض
             const confirmModal = document.getElementById("confirmModal");
             if (confirmModal && !confirmModal.classList.contains("hidden")) {
                 confirmModal.classList.add("hidden");
                 return;
             }
 
-            // ۳. نادیده گرفتن تغییر آدرس‌های مربوط به لنگرگاه‌های داخلی کلاسیک مانند benefits جهت برطرف کردن باگ خروج
             if (window.location.hash === '#benefits') {
                 return;
             }
 
-            // ۴. هدایت به صفحات قبلی تاریخچه
             if (event.state && event.state.screen) {
                 showScreen(event.state.screen, true, true);
             } else {
-                // اگر استیت خالی بود به صفحه خانه برمی‌گردیم
                 if (currentScreen !== 'home') {
                     showScreen('home', true, true);
                 } else {
-                    // در صفحه اصلی زدن بک کادر خروج را نمایان می‌کند (فقط در صورتی که روی لنگرگاه و هش فرعی نباشیم)
                     if (!window.location.hash || window.location.hash === '#home') {
                         showExitConfirm();
                     }
@@ -1014,7 +994,6 @@
             }
         });
 
-        // نمایش پاپ‌آپ تاییدیه خروج جهت امنیت کاربر اندروید
         function showExitConfirm() {
             showCustomConfirm(
                 "خروج از برنامه",
@@ -1782,7 +1761,6 @@
         async function callGeminiAPI(userQuery) {
             const apiKey = ""; 
             const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-            
             const catalogString = JSON.stringify(groupInfo, null, 2);
             
             const systemPrompt = `شما دستیار آموزشی و مشاور خرید هوشمند انتشارات "پوستر ایران" هستید. 
@@ -1904,7 +1882,7 @@ ${catalogString}
             return indicatorDiv;
         }
 
-        // === PWA مدیریت نصب ===
+        // === سیستم جامع و مدرن مدیریت نصب PWA (نسخه تجمیع شده) ===
         let deferredPrompt = null;
 
         function setupInstallBanner() {
@@ -1915,21 +1893,24 @@ ${catalogString}
             if (!banner || !btnInstall || !btnClose) return;
 
             const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-
             const isRunningStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+            
             if (isRunningStandalone) {
                 localStorage.setItem('pwa_installed', 'true');
                 return; 
             }
 
+            // پاکسازی کوکی‌های قدیمی تداخل‌برانگیز در LocalStorage
+            localStorage.removeItem('install_prompt_dismissed');
+
             window.addEventListener('beforeinstallprompt', (e) => {
                 e.preventDefault();
                 deferredPrompt = e;
                 
-                // پاک کردن حالت کش قبلی در صورت دریافت رویداد جدید نصب
                 localStorage.removeItem('pwa_installed');
-
                 const blockInstallBanner = localStorage.getItem('block_install_banner_until');
+                
+                // در صورتی که کاربر دکمه بعدا را زده باشد، ۲۴ ساعت صبر می‌کنیم
                 if (blockInstallBanner && Date.now() < Number(blockInstallBanner)) {
                     return; 
                 }
@@ -1937,7 +1918,7 @@ ${catalogString}
                 setTimeout(() => {
                     banner.classList.remove('pointer-events-none', 'translate-y-20', 'opacity-0');
                     banner.classList.add('translate-y-0', 'opacity-100');
-                }, 2000);
+                }, 1500);
             });
 
             window.addEventListener('appinstalled', (evt) => {
@@ -2003,14 +1984,11 @@ ${catalogString}
             }
         }
 
-        // تابع مدیریت به‌روزرسانی ساعت و تقویم بالا
         function updateLiveClock() {
             try {
                 const now = new Date();
-                
                 const dateOptions = { year: 'numeric', month: '2-digit', day: '2-digit', calendar: 'persian' };
                 let dateStr = new Intl.DateTimeFormat('fa-IR', dateOptions).format(now);
-                
                 dateStr = dateStr.replace(/[^\d\/۰-۹]/g, ''); 
                 
                 const weekdayOptions = { weekday: 'long', calendar: 'persian' };
@@ -2029,7 +2007,6 @@ ${catalogString}
             }
         }
 
-        // راه‌اندازی اولیه برنامه با جایگذاری اولین استیت تاریخچه برای فعال‌سازی کلید بک گوشی
         function initializeApplication() {
             loadCustomerData();
             loadCartFromStorage();
@@ -2038,7 +2015,6 @@ ${catalogString}
             updateLiveClock();
             setInterval(updateLiveClock, 1000);
             
-            // جایگذاری استیت پایه خانه در تاریخچه مرورگر برای کارکرد صحیح دکمه بازگشت فیزیکی گوشی
             history.replaceState({ screen: 'home' }, "", "#home");
             showScreen('home', false, true);
         }
@@ -2059,7 +2035,7 @@ ${catalogString}
     </script>
 
     <!-- ۵. اتصال به منطق برنامه -->
-    <script src="./js/script.js" defer></script>
+    <script src="script.js" defer></script>
 <script src="live-reload.js" defer></script>
 </body>
 </html>
