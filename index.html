@@ -13,7 +13,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
     <!-- ۲. اتصال به استایل‌ها (CSS) -->
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./css/style.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -26,114 +26,15 @@
         .hidden-section { display: none; }
         .qty-select { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
         
-        /* ----------------------------------------------------
-           استایل‌های ایمن‌ساز فوق‌العاده حیاتی برای حالت آفلاین 
-        ---------------------------------------------------- */
-        svg, img {
-            max-width: 100% !important;
-            height: auto !important;
-        }
-        /* مهار آیکون‌های SVG منوی ناوبری و بخش مزایا */
-        svg {
-            width: 24px !important;
-            height: 24px !important;
-            display: inline-block;
-        }
-        /* مهار اختصاصی لوگوی بالای صفحه */
-        header img, .logo-img {
-            width: 40px !important;
-            height: 40px !important;
-            min-width: 40px !important;
-            min-height: 40px !important;
-        }
-        /* مهار آیکون‌های بخش مزایا */
-        #benefits svg {
-            width: 32px !important;
-            height: 32px !important;
-        }
-        /* ایمن‌سازی چیدمان افقی و عمودی منوی پایین حتی بدون لود تایلوند */
-        nav {
-            display: flex !important;
-            flex-direction: row !important;
-            justify-content: space-around !important;
-            align-items: flex-end !important;
-            background-color: #ffffff !important;
-            border-top: 1px solid #e5e7eb !important;
-            height: 70px !important;
-            padding-bottom: 8px !important;
-        }
-        nav button {
-            display: flex !important;
-            flex-direction: column !important;
-            align-items: center !important;
-            justify-content: center !important;
-            background: none !important;
-            border: none !important;
-            flex: 1 !important;
-            color: #6b7280 !important;
-            cursor: pointer !important;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-            position: relative !important;
-            height: 100% !important;
-        }
-        nav button span {
-            font-size: 10px !important;
-            font-weight: bold !important;
-            margin-top: 4px !important;
-            transition: color 0.3s !important;
-        }
-
-        /* استایل حالت فعال ناوبری - برجسته شدن با افکت شناور */
-        nav button.active-nav-btn {
-            transform: translateY(-8px) scale(1.1) !important;
-            color: #1e40af !important;
-        }
-        nav button.active-nav-btn.assistant-active {
-            color: #7c3aed !important;
-        }
-
-        /* خط نشانگر زیر منوی فعال */
-        nav button::after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            width: 16px;
-            height: 3px;
-            background-color: transparent;
-            border-radius: 9999px;
-            transition: all 0.3s ease;
-        }
-        nav button.active-nav-btn::after {
-            background-color: #1e40af;
-            width: 24px;
-        }
-        nav button.active-nav-btn.assistant-active::after {
-            background-color: #7c3aed;
-        }
-
-        /* ایمن‌سازی هدر در حالت آفلاین */
-        header {
-            display: flex !important;
-            justify-content: space-between !important;
-            align-items: center !important;
-            background-color: rgba(255, 255, 255, 0.95) !important;
-        }
-        header .container {
-            display: flex !important;
-            justify-content: space-between !important;
-            align-items: center !important;
-            width: 100% !important;
-        }
-        /* ---------------------------------------------------- */
-
-        summary::-webkit-details-marker { display: none; }
-        summary { list-style: none; }
-
-        /* لغو استایل پیش‌فرض و سفارشی‌سازی کامل دراپ‌داون دسته‌بندی گالری */
+        /* حذف فلش پیش‌فرض و جایگزینی با آیکون در گالری */
         #groupSelect {
             appearance: none;
             -webkit-appearance: none;
-            outline: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%231e40af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: left 1rem center;
+            background-repeat: no-repeat;
+            background-size: 1.2em;
+            padding-left: 2.5rem;
         }
 
         /* افکت مات برای منوی چسبنده */
@@ -147,7 +48,7 @@
             transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            top: 20px;
+            top: 20px; /* قرارگیری در بالای صفحه */
         }
         
         /* استایل جدید برای کانتینر انتخاب تعداد */
@@ -162,14 +63,14 @@
         .qty-label {
             font-size: 10px;
             font-weight: bold;
-            color: #64748b;
+            color: #64748b; /* slate-500 */
         }
 
         .custom-select-container {
             width: 100%;
             position: relative;
-            background: #eff6ff;
-            border: 1px solid #dbeafe;
+            background: #eff6ff; /* blue-50 */
+            border: 1px solid #dbeafe; /* blue-100 */
             border-radius: 12px;
             padding: 4px 8px;
             display: flex;
@@ -183,10 +84,10 @@
             outline: none;
             font-size: 12px;
             font-weight: bold;
-            color: #1e40af;
+            color: #1e40af; /* blue-800 */
             cursor: pointer;
             text-align: center;
-            appearance: none;
+            appearance: none; /* حذف ظاهر پیش‌فرض مرورگر */
             -webkit-appearance: none;
         }
         
@@ -198,7 +99,7 @@
             background: white;
             padding: 0.3rem 0.75rem;
             border-radius: 0.75rem;
-            border: 2px solid #e0e7ff;
+            border: 2px solid #e0e7ff; /* blue-100 */
         }
         
         /* باکس اصلی کنترل تعداد در سبد خرید */
@@ -238,14 +139,14 @@
 
         .qty-btn:hover { background: #eff6ff; }
         
-        /* وضعیت پنهان */
+        /* وضعیت پنهان (خارج از صفحه در بالا) */
         .toast-hidden {
             opacity: 0 !important;
             transform: translate(-50%, -100px) scale(0.9) !important;
             pointer-events: none;
         }
 
-        /* وضعیت نمایان */
+        /* وضعیت نمایان (لغزش به پایین) */
         .toast-visible {
             opacity: 1 !important;
             transform: translate(-50%, 20px) scale(1) !important;
@@ -300,10 +201,10 @@
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-900 pb-28">
+<body class="bg-gray-50 text-gray-900 pb-24">
     <div class="container mx-auto">
 
-    <!-- اعلان پاپ‌آپ سراسری -->
+    <!-- اعلان پاپ‌آپ سراسری با آیکون پویا -->
     <div id="toast" class="fixed top-0 left-1/2 -translate-x-1/2 z-[1000] px-6 py-3 rounded-2xl flex flex-col items-center gap-1 border border-white/40 bg-white/80 text-blue-900 shadow-xl toast-hidden">
         <div class="flex items-center gap-3">
             <div id="toastIconContainer" class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-white shadow-sm transition-all duration-300">
@@ -315,20 +216,38 @@
     </div>
 
     <!-- هدر سایت -->
-    <header class="absolute w-full right-0 left-0 top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm">
+    <header class="fixed w-full right-0 left-0 top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center gap-2 cursor-pointer" onclick="showScreen('home')">
-                <img src="https://PosterIran.github.io/pixel/icons/logo.png" alt="Logo" class="h-10 w-10 logo-img" width="40" height="40">
-                <span class="text-xl font-black text-blue-900">پوستر ایران</span>
+                <img src="https://posteriran.github.io/pixel/icons/logo.png" alt="Logo" class="h-10 w-10">
+                <span class="text-xl font-bold text-blue-900">پوستر ایران</span>
             </div>
-            
+            <nav class="hidden md:flex gap-8 font-medium">
+                <a href="#benefits" class="hover:text-blue-600 transition">مزایا</a>
+                <a href="#products" class="hover:text-blue-600 transition">محصولات</a>
+                <a href="#faq" class="hover:text-blue-600 transition">سوالات متداول</a>
+            </nav>
             <div class="flex items-center gap-3">
-                <!-- ویجت زمان و تاریخ شمسی -->
-                <div class="flex flex-col items-center justify-center text-center bg-blue-50/90 px-3 py-1.5 rounded-2xl border border-blue-100/50 shadow-sm min-w-[125px]">
-                    <span id="headerDayTime" class="text-[10px] md:text-[11px] font-bold text-blue-600 leading-none">--- --:--:--</span>
-                    <span id="headerDate" class="text-xs md:text-sm font-black text-blue-900 tracking-wider mt-1 leading-none">----/--/--</span>
+                <!-- تقویم شمسی و ساعت پویا -->
+                <div id="solarDateTimeWidget" class="flex items-center gap-2">
+                    <!-- نمایش دسکتاپ -->
+                    <div class="hidden sm:flex items-center gap-2 bg-slate-50 border border-slate-100 px-3 py-1.5 rounded-xl">
+                        <div class="flex flex-col text-right">
+                            <span class="text-[10px] font-black text-slate-800 leading-tight" id="headerDate">بارگذاری...</span>
+                            <span class="text-[9px] font-medium text-slate-500 mt-0.5" id="headerTime">۰۰:۰۰:۰۰</span>
+                        </div>
+                        <div class="w-7 h-7 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center text-xs shadow-sm">
+                            <i class="far fa-calendar-alt"></i>
+                        </div>
+                    </div>
+                    <!-- نمایش موبایل بسیار فشرده -->
+                    <div class="flex sm:hidden items-center gap-1.5 bg-slate-50 border border-slate-100 px-2 py-1 rounded-lg">
+                        <span class="text-[9px] font-black text-slate-700" id="headerMobileTime">۰۰:۰۰</span>
+                        <div class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></div>
+                    </div>
                 </div>
 
+                <!-- آیکون سبد خرید در هدر با آیکون استاندارد FontAwesome جایگزین شد -->
                 <button onclick="showScreen('cart')" class="relative bg-blue-100 text-blue-800 p-2.5 rounded-full hover:bg-blue-200 transition flex items-center justify-center w-10 h-10">
                     <i class="fas fa-shopping-cart text-base"></i>
                     <span class="cartBadge absolute -top-1 -right-1 bg-red-500 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full hidden">0</span>
@@ -337,7 +256,7 @@
         </div>
     </header>
 
-    <main class="pt-24">
+    <main class="pt-20">
         <!-- صفحه اصلی -->
         <section id="homeScreen">
             <div id="resumeOrder" class="hidden bg-yellow-400/20 border border-yellow-500 p-3 rounded-2xl mb-6 flex items-center justify-between animate-bounce">
@@ -369,9 +288,9 @@
                         <button onclick="showScreen('cart')" class="bg-yellow-500 text-white px-4 py-2 rounded-xl font-bold text-xs shadow-md">مشاهده سبد</button>
                     </div>
                     
-                    <button onclick="scrollToBenefitsSection()" class="w-full border-2 border-white/30 bg-white/10 px-8 py-4 rounded-2xl text-xl font-bold hover:bg-white/20 transition text-center cursor-pointer">
+                    <a href="#benefits" class="w-full border-2 border-white/30 bg-white/10 px-8 py-4 rounded-2xl text-xl font-bold hover:bg-white/20 transition text-center">
                         چرا پوستر آموزشی؟
-                    </button>
+                    </a>
                 </div>
             </div>
             
@@ -384,21 +303,21 @@
                 <div class="grid md:grid-cols-3 gap-10">
                     <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 text-center">
                         <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <svg width="32" height="32" class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                         </div>
-                        <h3 class="text-xl font-bold mb-4 text-blue-900">افزایش ۵۰ درصدی تمرکز</h3>
+                        <h3 class="text-xl font-bold mb-4 text-blue-900">افزایش ۵0 درصدی تمرکز</h3>
                         <p class="text-gray-600">تحقیقات نشان داده که یادگیری بصری ماندگاری مطالب را در ذهن دانش‌آموزان تا چندین برابر افزایش می‌دهد.</p>
                     </div>
                     <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 text-center">
                         <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <svg width="32" height="32" class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         </div>
                         <h3 class="text-xl font-bold mb-4 text-green-900">مطابق با استانداردهای آموزش</h3>
                         <p class="text-gray-600">تمامی محتواها بر اساس آخرین تغییرات کتب درسی طراحی شده و مورد تایید مدرسان برتر است.</p>
                     </div>
                     <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 text-center">
                         <div class="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <svg width="32" height="32" class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         </div>
                         <h3 class="text-xl font-bold mb-4 text-purple-900">دوام و ماندگاری بالا</h3>
                         <p class="text-gray-600">استفاده از پوشش‌های UV و کاغذهای باکیفیت که در برابر نور و رطوبت کلاس درس مقاوم هستند.</p>
@@ -416,7 +335,7 @@
                             <span class="group-open:rotate-180 transition">↓</span>
                         </summary>
                         <p class="mt-4 text-gray-600 leading-relaxed">
-                            بله، پوستر ایران محصولات خود را از طریق چاپار ، تیپاکس و باربری تمام نقاط کشور ارسال می‌کند.
+                            بله، پوستر ایران محصولات خود را از طریق چاپار (تیپاکس) و باربری به تمام نقاط کشور ارسال می‌کند.
                         </p>
                     </details>
                     <details class="group bg-white rounded-xl p-6 border border-gray-200">
@@ -466,27 +385,16 @@
                 <h2 class="text-3xl font-bold text-blue-900">گالری محصولات</h2>
             </div>
 
-            <div class="sticky top-0 z-40 bg-white/95 backdrop-blur-md py-4 mb-8 -mx-4 px-4 border-b border-blue-50 shadow-sm">
-                <div class="max-w-md mx-auto relative group">
-                    <label class="block text-[14px] font-bold text-indigo-500 mb-2 mr-2 flex items-center gap-1.5">
-                        <i class="fas fa-filter text-xs"></i>
-                        دسته‌بندی و سایز مورد نظر خود را انتخاب کنید:
-                    </label>
-                    <div class="relative bg-gradient-to-l from-blue-500 to-indigo-600 p-[2px] rounded-2xl shadow-md shadow-blue-100 transition-all duration-300 focus-within:shadow-lg focus-within:shadow-indigo-100 focus-within:scale-[1.01]">
-                        <div class="bg-white rounded-[14px] flex items-center px-4 relative">
-                            <i class="fas fa-th-large text-indigo-600 text-base ml-3"></i>
-                            <select id="groupSelect" onchange="loadImages(true)" class="w-full py-4 pr-1 pl-10 bg-transparent font-black text-blue-900 outline-none cursor-pointer appearance-none text-sm transition-all">
-                                <option value="1"> سایز ۲۹×۲۱ (دوروچاپ)</option>
-                                <option value="3"> سایز ۵۰×۳۵ (دوروچاپ)</option>
-                                <option value="4">️ سایز ۷۰×۵۰ (یکروچاپ)</option>
-                                <option value="5"> سایز ۷۰×۵۰ (یووی‌دار)</option>
-                                <option value="6"> سایر محصولات و فلش‌کارت‌ها</option>
-                            </select>
-                            <div class="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none text-indigo-600 transition-transform duration-300">
-                                <i class="fas fa-chevron-down text-xs"></i>
-                            </div>
-                        </div>
-                    </div>
+            <div class="sticky top-16 z-40 bg-white/90 backdrop-blur-md py-4 mb-8 -mx-4 px-4 border-b border-blue-50">
+                <div class="max-w-md mx-auto relative">
+                    <label class="block text-[10px] font-bold text-blue-400 mb-1 mr-2">سایز مورد نظر را انتخاب و تعداد هر محصول را تعیین کنید:</label>
+                    <select id="groupSelect" onchange="loadImages(true)" class="w-full p-4 rounded-2xl border-2 border-blue-100 bg-white font-bold text-blue-800 outline-none shadow-sm cursor-pointer">
+                        <option value="1">سایز ۲۹×۲۱ دوروچاپ</option>
+                        <option value="3">سایز ۵۰×۳۵ دوروچاپ</option>
+                        <option value="4">سایز ۷۰×۵۰ یکروچاپ</option>
+                        <option value="5">سایز ۷۰×۵۰ یووی‌دار</option>
+                        <option value="6">سایر محصولات</option>
+                    </select>
                 </div>
             </div>
 
@@ -578,15 +486,15 @@
         <section id="aboutScreen" class="hidden-section container mx-auto px-4 py-10 max-w-4xl">
             <div class="bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
                 <h2 class="text-3xl font-bold text-blue-900 mb-6">پوستر ایران</h2>
-                <p class="text-gray-700 leading-8 mb-6 text-justify">انتشارات پوستر ایران با افتخار یکی از پیشگامان در زمینه تولید و چاپ پوستر در کشور است. ما با تکیه بر سال‌ها تجربه در زمینه چاپ و شناخت دقیق از نیازهای نظام آموزشی, مجموعه‌ای از پوسترهای جذاب، کاربردی و هماهنگ با محتوای کتب درسی مدارس تهیه کرده‌آیم تا فرآیند یادگیری را برای دانش‌آموزان ساده‌تر، عمیق‌تر و لذت‌بخش‌تر کنیم.
+                <p class="text-gray-700 leading-8 mb-6 text-justify">انتشارات پوستر ایران با افتخار یکی از پیشگامان در زمینه تولید و چاپ پوستر در کشور است. ما با تکیه بر سال‌ها تجربه در زمینه چاپ و شناخت دقیق از نیازهای نظام آموزشی، مجموعه‌ای از پوسترهای جذاب، کاربردی و هماهنگ با محتوای کتب درسی مدارس تهیه کرده‌آیم تا فرآیند یادگیری را برای دانش‌آموزان ساده‌تر، عمیق‌تر و لذت‌بخش‌تر کنیم.
 
 پوسترهای آموزشی با طراحی حرفه‌ای، چاپ تمام‌رنگی، با کیفیت عالی و محتوای استاندارد، ابزاری کارآمد برای معلمان، دانش‌آموزان و مدارس در سراسر کشور به شمار می‌آیند. "پوستر ایران" همواره در تلاش است تا با نوآوری و پایبندی به اصول آموزشی، نقش مؤثری در ارتقاء سطح آموزش ایفا کند.</p>
                 <div class="space-y-4 text-gray-600">
                     <p> تهران: خیابان پانزده خرداد ، بازار آهنگران ، کوچه مسجدجامع ، پاساژ کاغذوتحریر، زیرزمن اول ، پلاک ۷۴</p>
                     <p> <a href="https://maps.google.com/?cid=1396884775989221050&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNl" target="_blank" class="text-blue-500 font-bold hover:underline">  (مشاهده در نقشه)</a></p>
                 
-                    <p>📞 تلفن: <a href="tel:02155611875" class="text-blue-600 font-bold hover:text-blue-800 hover:underline transition-colors">۰۲۱۵۵۶۱۱۸۷۵</a></p>
-                    <p>📱 موبایل: <a href="tel:09010195885" class="text-blue-600 font-bold hover:text-blue-800 hover:underline transition-colors">۰۹۰۱۰۱۹۵۸۸۵</a></p>
+                    <p>📞 تلفن: ۰۲۱۵۵۶۱۱۸۷۵</p>
+                    <p>📱 موبایل: ۰۹۰۱۰۱۹۵۸۸۵</p>
                 </div>
             </div>
         </section>
@@ -605,34 +513,35 @@
     <!-- منوی پایینی چسبنده -->
     <nav class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-lg border-t border-gray-200 z-[100] flex justify-around items-center py-2 shadow-lg">
         <button onclick="showScreen('home')" id="nav-home" class="flex flex-col items-center gap-1 text-blue-700 transition flex-1">
-            <svg width="24" height="24" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
             <span class="text-[9px] font-bold">خانه</span>
         </button>
         <button onclick="showScreen('gallery')" id="nav-gallery" class="flex flex-col items-center gap-1 text-gray-500 transition flex-1">
-            <svg width="24" height="24" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
             <span class="text-[9px] font-bold">گالری</span>
         </button>
         <button onclick="showScreen('cart')" id="nav-cart" class="flex flex-col items-center gap-1 text-gray-500 transition flex-1 relative">
             <div class="relative">
-                <svg width="24" height="24" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
                 <span class="cartBadge absolute -top-1 -right-1 bg-red-500 text-white text-[9px] w-4 h-4 flex items-center justify-center rounded-full hidden">0</span>
             </div>
             <span class="text-[9px] font-bold">سبد خرید</span>
         </button>
         <button onclick="showScreen('history')" id="nav-history" class="flex flex-col items-center gap-1 text-gray-500 flex-1">
-            <svg width="24" height="24" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <span class="text-[9px] font-bold">سفارشات</span>
         </button>
+        <!-- دکمه دستیار آموزشی هوشمند -->
         <button onclick="showScreen('assistant')" id="nav-assistant" class="flex flex-col items-center gap-1 text-gray-500 transition flex-1">
-            <svg width="24" height="24" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
             </svg>
             <span class="text-[9px] font-bold">دستیار</span>
         </button>
         <button onclick="showScreen('about')" id="nav-about" class="flex flex-col items-center gap-1 text-gray-500 transition flex-1">
-            <svg width="24" height="24" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
             <span class="text-[9px] font-bold">درباره ما</span>
         </button>
     </nav>
@@ -652,20 +561,25 @@
         </div>
     </div>
 
-    <!-- مودال بزرگنمایی تصویر -->
+    <!-- مودال بزرگنمایی تصویر با قابلیت Spinner بارگذاری و پاکسازی کش موثر -->
     <div id="imageModal" class="fixed inset-0 z-[200] hidden bg-black/95 flex items-center justify-center p-4 backdrop-blur-md" onclick="closeModal()">
         <span class="absolute top-5 right-5 text-white text-5xl cursor-pointer hover:text-red-500 transition-colors z-[210]">&times;</span>
+        
+        <!-- انیمیشن بارگذاری سفارشی (Spinner) -->
         <div id="modalSpinner" class="absolute inset-0 flex items-center justify-center z-10">
             <div class="w-12 h-12 border-4 border-white/20 border-t-blue-500 rounded-full animate-spin-custom"></div>
         </div>
+        
+        <!-- تصویر باکیفیت به همراه سیستم نمایش انیمیشنی لایتمیک -->
         <img id="modalImage" class="max-w-full max-h-[85vh] rounded-xl shadow-2xl border-2 border-white/20 object-contain shadow-white/10 opacity-0 scale-95 transition-all duration-300 z-20" src="" alt="بزرگنمایی" onclick="event.stopPropagation()">
     </div>
 
-    <!-- پاپ‌آپ نصب PWA -->
+    <!-- پاپ‌آپ نصب PWA با سبک شیشه‌ای پریمیوم (Glassmorphism) -->
     <div id="install-banner" class="fixed bottom-24 left-4 right-4 md:left-auto md:right-4 md:max-w-sm z-[9999] p-5 rounded-3xl border border-white/30 bg-white/80 backdrop-blur-xl shadow-2xl flex flex-col gap-4 transform translate-y-20 opacity-0 pointer-events-none transition-all duration-700">
         <div class="flex items-start gap-3">
+            <!-- قرارگیری لوگوی رسمی فروشگاه با کادر شکیل سفید و حاشیه ظریف آبی -->
             <div class="w-12 h-12 rounded-2xl bg-white border border-blue-100 flex items-center justify-center p-1 shadow-md shrink-0">
-                <img src="https://PosterIran.github.io/pixel/icons/logo.png" alt="پوستر ایران" class="w-full h-full object-contain">
+                <img src="https://posteriran.github.io/pixel/icons/logo.png" alt="پوستر ایران" class="w-full h-full object-contain">
             </div>
             <div>
                 <h4 class="font-bold text-sm text-gray-900 leading-tight">پوستر ایران را نصب کنید!</h4>
@@ -679,11 +593,13 @@
     </div>
 
     <script>
+        // ۱. توابع کمکی تبدیل اعداد و اعلان
         function toPersianDigits(n) {
             const farsiDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
             return n.toString().replace(/\d/g, x => farsiDigits[x]);
         }
 
+        // نمایش تصویر شاخص به زبان فارسی به عنوان برچسب کمکی
         function toPersianPrice(n) {
             return toPersianDigits(n.toLocaleString());
         }
@@ -692,6 +608,7 @@
         let toastQueue = [];
         let isToastShowing = false;
 
+        // تابع اعلان جدید با پشتیبانی از نوع پیام (type) و آیکون اختصاصی
         function showToast(message, groupName = "", type = "success") {
             toastQueue.push({ message, groupName, type });
             if (!isToastShowing) {
@@ -722,9 +639,11 @@
             toastText.innerText = currentToast.message;
             toastGroup.innerText = currentToast.groupName ? ` ${currentToast.groupName}` : "";
             
+            // بازنشانی کلاس‌های قالب آیکون اعلان و افکت‌های تعاملی
             if (toastIconContainer && toastIcon) {
                 toastIconContainer.className = "w-6 h-6 rounded-full flex items-center justify-center text-white shadow-sm transition-all duration-300";
                 
+                // مدیریت رنگ‌ها و گرافیک بر اساس نوع اعلان
                 if (currentToast.type === 'error') {
                     toastIconContainer.classList.add('bg-red-500', 'animate-pulse');
                     toastIcon.className = "fas fa-exclamation-circle text-[10px]";
@@ -738,6 +657,7 @@
                     toastIconContainer.classList.add('bg-blue-500');
                     toastIcon.className = "fas fa-info text-[10px]";
                 } else {
+                    // قالب پیش‌فرض موفقیت (success)
                     toastIconContainer.classList.add('bg-green-500');
                     toastIcon.className = "fas fa-check text-[10px]";
                 }
@@ -755,12 +675,15 @@
             }, 3500);
         }
 
+        // تابع مدیریت کپی متن در حافظه به روشی مدرن و مقاوم در برابر محدودیت‌های iFrame
         function copyToClipboard(text) {
             return new Promise((resolve, reject) => {
+                // بررسی وجود کلیپ‌بورد مدرن و عدم وجود محدودیت سیاست دسترسی مرورگر
                 if (navigator.clipboard && navigator.clipboard.writeText) {
                     navigator.clipboard.writeText(text)
                         .then(resolve)
                         .catch(err => {
+                            // در صورت خطا، از روش پشتیبان سنتی استفاده می‌شود
                             if (fallbackCopyToClipboard(text)) {
                                 resolve();
                             } else {
@@ -768,6 +691,7 @@
                             }
                         });
                 } else {
+                    // استفاده مستقیم از روش پشتیبان برای مرورگرهای فاقد پشتیبانی یا تحت محدودیت
                     if (fallbackCopyToClipboard(text)) {
                         resolve();
                     } else {
@@ -777,9 +701,12 @@
             });
         }
 
+        // تابع کمکی پشتیبان (Fallback) برای کپی متن با استفاده از ساخت المان متنی نامرئی
         function fallbackCopyToClipboard(text) {
             const textArea = document.createElement("textarea");
             textArea.value = text;
+            
+            // استایل‌دهی برای خارج کردن کامل از دید کاربر و جلوگیری از اسکرول صفحه
             textArea.style.position = "fixed";
             textArea.style.top = "-99999px";
             textArea.style.left = "-99999px";
@@ -806,12 +733,14 @@
             return successful;
         }
 
+        // تابع مدیریت پاپ آپ تاییدیه اختصاصی پیشرفته با آیکون و رنگ دلخواه
         function showCustomConfirm(title, message, onConfirm, yesText = "بله، مطمئنم", noText = "انصراف", yesColorClass = "bg-red-600 hover:bg-red-700", iconHtml = '<i class="fas fa-exclamation-triangle text-2xl"></i>', iconBgClass = "bg-red-100 text-red-600") {
             const modal = document.getElementById('confirmModal');
             document.getElementById('confirmTitle').innerText = title;
             document.getElementById('confirmMessage').innerText = message;
             modal.classList.remove('hidden');
             
+            // شخصی‌سازی آیکون و رنگ کانتینر آن بر اساس اکشن مد نظر
             const iconContainer = modal.querySelector('.w-16.h-16');
             if (iconContainer) {
                 iconContainer.className = `w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${iconBgClass}`;
@@ -828,6 +757,8 @@
             
             newYesBtn.innerText = yesText;
             newNoBtn.innerText = noText;
+            
+            // بازنشانی کلاس دکمه بله
             newYesBtn.className = `flex-1 text-white py-3 rounded-xl font-bold text-sm transition-colors ${yesColorClass}`;
             
             newYesBtn.addEventListener('click', () => {
@@ -840,6 +771,7 @@
             });
         }
 
+        // ۳. داده‌های محصولات کاتالوگ
         const groupInfo = {
             1: { name: "سایز ۲۹×۲۱ دوروچاپ", images: [
                 { filename: "جدول دوستی تمرینی.jpg", name: "جدول دوستی تمرینی", price: 200000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500] },
@@ -903,28 +835,22 @@
         };
 
         let cart = {};
-        let currentScreen = 'home'; 
 
+        // توابع کمکی برای آدرس تصاویر با تفکیک فرمت WebP برای Thumbnail و اصلی برای Modal
         function getThumbnailUrl(groupName, filename) {
+            // تبدیل پسوند فایل به .webp برای لود سریع در گالری
             const baseName = filename.substring(0, filename.lastIndexOf('.')) || filename;
-            return `https://PosterIran.github.io/pixel/Image/${encodeURIComponent(groupName)}/${encodeURIComponent(baseName)}.webp`;
+            return `https://posteriran.github.io/pixel/Image/${encodeURIComponent(groupName)}/${encodeURIComponent(baseName)}.webp`;
         }
 
         function getOriginalUrl(groupName, filename) {
-            return `https://PosterIran.github.io/pixel/Image/${encodeURIComponent(groupName)}/${encodeURIComponent(filename)}`;
+            // استفاده از پسوند اصلی فایل (jpg/jpg/webp) برای زوم با کیفیت کامل
+            return `https://posteriran.github.io/pixel/Image/${encodeURIComponent(groupName)}/${encodeURIComponent(filename)}`;
         }
 
-        function scrollToBenefitsSection() {
-            const benefitsEl = document.getElementById('benefits');
-            if (benefitsEl) {
-                benefitsEl.scrollIntoView({ behavior: 'smooth' });
-            }
-        }
-
-        function showScreen(screenId, shouldScroll = true, isBackAction = false) {
-            currentScreen = screenId;
+        // ۳. مدیریت صفحات
+        function showScreen(screenId, shouldScroll = true) {
             const sections = ['home', 'gallery', 'cart', 'about', 'history', 'assistant'];
-            
             sections.forEach(id => {
                 const el = document.getElementById(id + 'Screen');
                 if (el) el.classList.add('hidden-section');
@@ -936,18 +862,15 @@
             }
 
             document.querySelectorAll('nav button').forEach(btn => {
-                btn.classList.remove('active-nav-btn', 'assistant-active', 'text-blue-700', 'text-purple-700');
-                btn.classList.add('text-gray-500');
+                btn.classList.replace('text-blue-700', 'text-gray-500');
+                btn.classList.replace('text-purple-700', 'text-gray-500');
             });
-            
             const activeNav = document.getElementById('nav-' + screenId);
             if (activeNav) {
-                activeNav.classList.remove('text-gray-500');
-                activeNav.classList.add('active-nav-btn');
                 if (screenId === 'assistant') {
-                    activeNav.classList.add('assistant-active', 'text-purple-700');
+                    activeNav.classList.replace('text-gray-500', 'text-purple-700');
                 } else {
-                    activeNav.classList.add('text-blue-700');
+                    activeNav.classList.replace('text-gray-500', 'text-blue-700');
                 }
             }
 
@@ -958,60 +881,9 @@
             if (shouldScroll) {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
-
-            if (!isBackAction) {
-                history.pushState({ screen: screenId }, "", `#${screenId}`);
-            }
         }
 
-        window.addEventListener('popstate', function (event) {
-            const modal = document.getElementById("imageModal");
-            if (modal && !modal.classList.contains("hidden")) {
-                closeModal(true);
-                return;
-            }
-
-            const confirmModal = document.getElementById("confirmModal");
-            if (confirmModal && !confirmModal.classList.contains("hidden")) {
-                confirmModal.classList.add("hidden");
-                return;
-            }
-
-            if (window.location.hash === '#benefits') {
-                return;
-            }
-
-            if (event.state && event.state.screen) {
-                showScreen(event.state.screen, true, true);
-            } else {
-                if (currentScreen !== 'home') {
-                    showScreen('home', true, true);
-                } else {
-                    if (!window.location.hash || window.location.hash === '#home') {
-                        showExitConfirm();
-                    }
-                }
-            }
-        });
-
-        function showExitConfirm() {
-            showCustomConfirm(
-                "خروج از برنامه",
-                "آیا می‌خواهید از اپلیکیشن پوستر ایران خارج شوید؟",
-                () => {
-                    window.close();
-                    setTimeout(() => {
-                        window.location.href = "about:blank";
-                    }, 500);
-                },
-                "خروج",
-                "ماندن",
-                "bg-red-600 hover:bg-red-700",
-                '<i class="fas fa-sign-out-alt text-2xl"></i>',
-                "bg-red-100 text-red-600"
-            );
-        }
-
+        // ۴. نمایش گالری تصاویر با بهینه‌سازی فرمت بارگذاری
         function loadImages(shouldScroll = false) {
             const gallerySection = document.getElementById('galleryScreen');
             if (shouldScroll && gallerySection) {
@@ -1038,7 +910,9 @@
                     `<option value="${q}" ${q === currentQty ? 'selected' : ''}>${q === 0 ? 'انتخاب تعداد' : toPersianDigits(q) + ' عدد'}</option>`
                 ).join('');
                 
+                // تصویر بندانگشتی بهینه‌شده وب‌پی
                 const thumbSrc = getThumbnailUrl(info.name, img.filename);
+                // تصویر اصلی و باکیفیت برای نمایش بزرگ
                 const originalSrc = getOriginalUrl(info.name, img.filename);
                 
                 box.innerHTML = `
@@ -1063,6 +937,7 @@
             });
         }
 
+        // ۵. مدیریت تغییر تعداد و افزودن به سبد خرید با پایش مقادیر قبلی و ارسال پیام‌های پویا و هوشمند
         function addToCart(filename, name, qty, price, groupName, allowedQtys) {
             const productId = groupName + "_" + filename;
             const previousQty = cart[productId] ? cart[productId].quantity : 0;
@@ -1071,6 +946,7 @@
                 delete cart[productId];
                 updateBadge();
                 saveCartToStorage();
+                // اعلان مدرن برای حذف کامل کالا از سبد
                 showToast(`❌ «${name}» از سبد خرید برداشته شد.`, groupName, "remove");
             } else {
                 cart[productId] = {
@@ -1084,6 +960,7 @@
                 updateBadge();
                 saveCartToStorage();
 
+                // اگر کالا از قبل موجود بود و تعداد آن تغییر کرد، تشخیص جهت کاهش یا افزایش تعداد
                 if (previousQty > 0 && previousQty !== qty) {
                     if (qty > previousQty) {
                         const diff = qty - previousQty;
@@ -1093,11 +970,13 @@
                         showToast(`📉 تعداد «${name}» به ${toPersianDigits(qty)} عدد کاهش یافت (به میزان ${toPersianDigits(diff)}- عدد)`, groupName, "info");
                     }
                 } else {
+                    // بار اولی است که کالا انتخاب می‌شود
                     showToast(`✨ ${toPersianDigits(qty)} عدد «${name}» به سبد خرید اضافه شد!`, groupName, "success");
                 }
             }
         }
 
+        // بروزرسانی تعداد نشان داده شده بر روی هدر و کارت موقت
         function updateBadge() {
             const itemsCount = Object.keys(cart).length;
             const isSubmitted = localStorage.getItem('cart_submitted') === 'true';
@@ -1123,6 +1002,7 @@
             }
         }
 
+        // ۶. نمایش سبد خرید و فاکتور نهایی
         function updateCartDisplay() {
             validateCart();
             const list = document.getElementById('cartList');
@@ -1189,6 +1069,7 @@
                 }
             });
 
+            // خلاصه گروه‌ها
             htmlContent += `
             <div class="mt-6 p-5 bg-blue-50/50 rounded-[2rem] border-2 border-blue-100/50">
                 <h3 class="text-[11px] font-black text-blue-900 mb-4 flex items-center gap-2">
@@ -1220,6 +1101,7 @@
             });
             htmlContent += `</div></div>`;
             
+            // محاسبات فاکتور و تخفیف
             let discountPercent = (total >= 1000000000) ? 0.1 : (total >= 700000000 ? 0.07 : (total >= 500000000 ? 0.05 : 0));
             let discount = total * discountPercent;
             let afterDiscount = total - discount;
@@ -1247,6 +1129,7 @@
             totalDisplay.innerText = toPersianPrice(finalPayable) + ' ریال';
         }
 
+        // ۷. ذخیره‌سازی داده‌های سفارش و مشتری
         function saveCustomerData() {
             const customerData = {
                 name: document.getElementById('customerName').value,
@@ -1266,6 +1149,7 @@
             }
         }
 
+        // بازنشانی اطلاعات سبد در حافظه مرورگر
         function saveCartToStorage() {
             if (cart) {
                 localStorage.setItem('poster_cart', JSON.stringify(cart));
@@ -1284,6 +1168,7 @@
             }
         }
 
+        // ۸. مدیریت ارسال سفارش با سیستم تایید پیشرفته و مدرن
         function submitOrder(platform, isConfirmed = false) {
             const name = document.getElementById('customerName').value;
             const phone = document.getElementById('customerPhone').value;
@@ -1294,6 +1179,7 @@
                 return;
             }
 
+            // نمایش هشدار تایید هوشمند قبل از شروع عملیات کپی و هدایت
             if (!isConfirmed) {
                 let title = "";
                 let message = "";
@@ -1387,6 +1273,7 @@
             addToHistory();
             incrementOrderNumber();
             
+            // استفاده از سیستم کپی متنی امن و مقاوم در برابر محدودیت‌های iFrame
             copyToClipboard(text).then(() => {
                 if (platform === 'eitaa') {
                     showToast("📋 متن فاکتور کپی شد؛ در حال انتقال به پیام‌رسان ایتا...", "ایتا", "success");
@@ -1402,6 +1289,7 @@
                 updateBadge();
                 setTimeout(() => showScreen('history'), 1500);
             }).catch(err => {
+                // اجرای موازی به عنوان سوپاپ اطمینان: حتی در صورت خطای کامل Clipboard API، هدایت را متوقف نکنید
                 console.error("خطا در اجرای فرآیند کپی خودکار:", err);
                 showToast("⚠️ کپی خودکار با محدودیت مواجه شد، اما در حال انتقال به پیام‌رسان هستیم...", "سیستم", "warning");
                 
@@ -1419,6 +1307,7 @@
             });
         }
 
+        // پاک کردن سبد خرید با پاپ آپ تاییدیه اختصاصی
         function clearCart() {
             showCustomConfirm(
                 'پاک کردن سبد خرید', 
@@ -1440,6 +1329,7 @@
             );
         }
 
+        // بررسی و اصلاح هوشمند اقلام داخل سبد خرید بر اساس تغییرات لحظه‌ای کاتالوگ
         function validateCart() {
             if (!cart || Object.keys(cart).length === 0) return;
             if (!groupInfo || Object.keys(groupInfo).length === 0) return;
@@ -1474,9 +1364,11 @@
                     continue;
                 }
                 
+                // بررسی معتبر بودن تعداد انتخاب‌شده بر اساس تغییرات کاتالوگ جدید
                 const validQtys = liveRef.allowedQuantities.filter(q => q > 0);
                 if (!liveRef.allowedQuantities.includes(cartItem.quantity)) {
                     if (validQtys.length > 0) {
+                        // انتخاب بالاترین مقدار مجاز به عنوان جایگزین هوشمند
                         cartItem.quantity = Math.max(...validQtys);
                     } else {
                         delete cart[productId];
@@ -1484,6 +1376,7 @@
                     isCartChanged = true;
                 }
                 
+                // بروزرسانی قیمت در صورت تغییر قیمت پایه محصول
                 if (Number(cartItem.price) !== Number(liveRef.price)) {
                     cartItem.price = liveRef.price;
                     isCartChanged = true;
@@ -1620,6 +1513,7 @@
             }).join('');
         }
 
+        // حذف سفارش با پاپ آپ تاییدیه اختصاصی
         function deleteFromHistory(orderId) {
             showCustomConfirm(
                 'حذف سفارش از تاریخچه', 
@@ -1639,6 +1533,7 @@
             );
         }
 
+        // بازنشانی و بارگذاری سفارشات پیشین به سبد خرید با اعتبارسنجی هوشمند حداکثر تعداد مجاز فعلی و نمایش گزارش دقیق
         function reorder(oldItems) {
             cart = {}; 
             let removedItemsCount = 0;
@@ -1669,8 +1564,10 @@
                 let finalQty = item.quantity;
                 const validQtys = currentRef.allowedQuantities.filter(q => q > 0);
 
+                // اگر تعداد سفارش قبلی دیگر در لیست تعدادهای مجاز فعلی وجود نداشت (مثلاً ۵۰۰ حذف شده بود)
                 if (!currentRef.allowedQuantities.includes(finalQty)) {
                     if (validQtys.length > 0) {
+                        // انتخاب بالاترین (بزرگترین) گزینه مجاز از لیست فعلی
                         finalQty = Math.max(...validQtys);
                         updatedQtyCount++; 
                     } else {
@@ -1696,6 +1593,7 @@
             saveCartToStorage();
             updateBadge();
             
+            // نمایش هوشمند و تفکیک‌شده پیغام‌های هشدار مربوط به بازنشانی فاکتور
             if (removedItemsCount > 0 || updatedQtyCount > 0 || updatedPriceCount > 0) {
                 let alertMsg = "⚠️ سبد خرید بازنشانی شد:";
                 if (removedItemsCount > 0) alertMsg += ` ${toPersianDigits(removedItemsCount)} کالا (اتمام موجودی) حذف؛`;
@@ -1710,26 +1608,33 @@
             showScreen('cart');
         }
 
+        // باز کردن مودال تصویر همراه با پشتیبانی از دکمه بازگشت گوشی و انیمیشن روان و اسپینر
         function openModal(imgSrc) {
             const modal = document.getElementById("imageModal");
             const modalImg = document.getElementById("modalImage");
             const spinner = document.getElementById("modalSpinner");
             
+            // ابتدا آدرس قبلی را به طور کامل پاک می‌کنیم تا اثر کش قبلی نمایش داده نشود
             modalImg.src = "";
             modalImg.classList.add("opacity-0", "scale-95");
             modalImg.classList.remove("opacity-100", "scale-100");
             
+            // نمایش اسپینر بارگذاری
             if (spinner) spinner.classList.remove("hidden");
             
             modal.classList.remove("hidden");
+            
+            // تنظیم منبع تصویر جدید
             modalImg.src = imgSrc;
             
+            // وقتی تصویر جدید به طور کامل بارگذاری شد
             modalImg.onload = function() {
                 if (spinner) spinner.classList.add("hidden");
                 modalImg.classList.remove("opacity-0", "scale-95");
                 modalImg.classList.add("opacity-100", "scale-100");
             };
             
+            // در صورتی که در بارگذاری خطایی رخ داد، اسپینر را پنهان کنیم
             modalImg.onerror = function() {
                 if (spinner) spinner.classList.add("hidden");
             };
@@ -1737,30 +1642,47 @@
             history.pushState({ modalOpen: true }, "");
         }
 
-        function closeModal(isBackAction = false) {
+        function closeModal() {
             const modal = document.getElementById("imageModal");
             const modalImg = document.getElementById("modalImage");
             
             if (modal && !modal.classList.contains("hidden")) {
                 modal.classList.add("hidden");
                 
+                // پاک‌سازی کامل منبع تصویر جهت آزاد کردن حافظه و جلوگیری از فلش تصویر قدیمی در باز شدن بعدی
                 if (modalImg) {
                     modalImg.src = "";
                     modalImg.classList.add("opacity-0", "scale-95");
                     modalImg.classList.remove("opacity-100", "scale-100");
                 }
                 
-                if (!isBackAction && history.state && history.state.modalOpen) {
+                if (history.state && history.state.modalOpen) {
                     history.back();
                 }
             }
         }
+        
+        // گوش دادن به دکمه بازگشت فیزیکی گوشی
+        window.addEventListener("popstate", function (event) {
+            const modal = document.getElementById("imageModal");
+            const modalImg = document.getElementById("modalImage");
+            if (modal && !modal.classList.contains("hidden")) {
+                modal.classList.add("hidden");
+                if (modalImg) {
+                    modalImg.src = "";
+                    modalImg.classList.add("opacity-0", "scale-95");
+                    modalImg.classList.remove("opacity-100", "scale-100");
+                }
+            }
+        });
 
-        let aiChatHistory = []; 
+        // === بخش منطق هوش مصنوعی و اتصال به API مدل Gemini ===
+        let aiChatHistory = []; // تعریف آرایه تاریخچه مکالمات برای ذخیره‌سازی سوابق جلسه فعلی
 
         async function callGeminiAPI(userQuery) {
-            const apiKey = ""; 
+            const apiKey = ""; // محیط اجرایی ایمرسیو کلید API را به صورت خودکار در زمان اجرا مدیریت و تزریق می‌کند.
             const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            
             const catalogString = JSON.stringify(groupInfo, null, 2);
             
             const systemPrompt = `شما دستیار آموزشی و مشاور خرید هوشمند انتشارات "پوستر ایران" هستید. 
@@ -1776,6 +1698,7 @@ ${catalogString}
 5. از فرمت‌دهی زیبای متنی (پررنگ کردن، لیست‌ها) استفاده کنید تا خوانایی پیام بالا رود.
 6. سوابق گفتگوی قبلی با کاربر در این آرایه ارسال می‌شود. پاسخ‌های جدید شما باید کاملاً هماهنگ و پیوسته با سوابق ارسالی قبلی باشد.`;
 
+            // اضافه کردن پیام جدید کاربر به تاریخچه مکالمه
             aiChatHistory.push({
                 role: "user",
                 parts: [{ text: userQuery }]
@@ -1801,6 +1724,7 @@ ${catalogString}
                         const result = await response.json();
                         const modelText = result.candidates?.[0]?.content?.parts?.[0]?.text || "متاسفانه پاسخی دریافت نشد.";
                         
+                        // اضافه کردن پاسخ هوش مصنوعی به تاریخچه مکالمه برای مراجعات بعدی
                         aiChatHistory.push({
                             role: "model",
                             parts: [{ text: modelText }]
@@ -1815,6 +1739,7 @@ ${catalogString}
                 delay *= 2;
             }
             
+            // در صورت بروز خطا و عدم ثبت پاسخ، سوال آخر کاربر را از تاریخچه موقت حذف می‌کنیم تا ترتیب به هم نخورد
             aiChatHistory.pop();
             throw new Error("ارتباط با دستیار هوشمند با خطا مواجه شد.");
         }
@@ -1882,7 +1807,7 @@ ${catalogString}
             return indicatorDiv;
         }
 
-        // === سیستم جامع و مدرن مدیریت نصب PWA (نسخه تجمیع شده) ===
+        // === مدیریت هوشمند نصب اپلیکیشن PWA (پاپ آپ مستقل و ذخیره وضعیت در حافظه محلی) ===
         let deferredPrompt = null;
 
         function setupInstallBanner() {
@@ -1892,35 +1817,37 @@ ${catalogString}
 
             if (!banner || !btnInstall || !btnClose) return;
 
+            // تشخیص سیستم‌عامل برای ارائه بازخورد دقیق‌تر
             const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+            // بررسی اینکه آیا از قبل وب‌اپلیکیشن به عنوان مستقل باز شده است
             const isRunningStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-            
             if (isRunningStandalone) {
                 localStorage.setItem('pwa_installed', 'true');
                 return; 
             }
 
-            // پاکسازی کوکی‌های قدیمی تداخل‌برانگیز در LocalStorage
-            localStorage.removeItem('install_prompt_dismissed');
-
+            // شنود رویداد بومی مرورگر برای نصب
             window.addEventListener('beforeinstallprompt', (e) => {
                 e.preventDefault();
                 deferredPrompt = e;
                 
+                // بسیار مهم: چون مرورگر اجازه نصب مجدد داده، یعنی برنامه نصب نیست. پس کلیدهای مزاحم را پاک می‌کنیم!
                 localStorage.removeItem('pwa_installed');
+
                 const blockInstallBanner = localStorage.getItem('block_install_banner_until');
-                
-                // در صورتی که کاربر دکمه بعدا را زده باشد، ۲۴ ساعت صبر می‌کنیم
                 if (blockInstallBanner && Date.now() < Number(blockInstallBanner)) {
                     return; 
                 }
 
+                // نمایش پاپ‌آپ با وقفه کوتاه پس از ۲ ثانیه لود
                 setTimeout(() => {
                     banner.classList.remove('pointer-events-none', 'translate-y-20', 'opacity-0');
                     banner.classList.add('translate-y-0', 'opacity-100');
-                }, 1500);
+                }, 2000);
             });
 
+            // رویداد اتمام نصب موفق
             window.addEventListener('appinstalled', (evt) => {
                 localStorage.setItem('pwa_installed', 'true');
                 deferredPrompt = null;
@@ -1928,20 +1855,18 @@ ${catalogString}
                 showToast("🎉 اپلیکیشن پوستر ایران با موفقیت روی دستگاه شما نصب شد!", "نصب موفق", "success");
             });
 
+            // رفتار دکمه "نصب سریع"
             btnInstall.addEventListener('click', async () => {
                 if (deferredPrompt) {
                     deferredPrompt.prompt();
-                    try {
-                        const { outcome } = await deferredPrompt.userChoice;
-                        if (outcome === 'accepted') {
-                            localStorage.setItem('pwa_installed', 'true');
-                            deferredPrompt = null;
-                        }
-                    } catch (err) {
-                        console.error("خطا در پذیرش نصب PWA:", err);
+                    const { outcome } = await deferredPrompt.userChoice;
+                    if (outcome === 'accepted') {
+                        localStorage.setItem('pwa_installed', 'true');
+                        deferredPrompt = null;
                     }
                     hideInstallBanner();
                 } else if (isIOS) {
+                    // راهنمای دستی برای آیفون (iOS)
                     hideInstallBanner();
                     showCustomConfirm(
                         "راهنمای نصب در آیفون (iOS)",
@@ -1954,10 +1879,11 @@ ${catalogString}
                         "bg-blue-100 text-blue-600"
                     );
                 } else {
+                    // برای اندروید/مرورگرهایی که قبل از رویداد prompt کلیک کرده‌اند یا مرورگر نصب را مسدود کرده است
                     hideInstallBanner();
                     showCustomConfirm(
                         "راهنمای نصب وب‌اپلیکیشن",
-                        "در صورتی که برنامه قبلاً حذف شده باشد، سیستم‌عامل اندروید جهت مدیریت امنیت نیاز به تأیید مجدد دارد. لطفاً بر روی ۳ نقطه بالا سمت راست مرورگر خود ضربه بزنید و گزینه «Install app» یا «Add to Home screen» را لمس کنید تا نصب کامل انجام شود.",
+                        "مرورگر شما در حال حاضر فرآیند نصب مستقیم را مسدود کرده است. جهت نصب دستی، لطفاً بر روی ۳ نقطه بالا سمت راست مرورگر خود ضربه بزنید و گزینه «Install app» یا «Add to Home screen» را انتخاب کنید.",
                         () => {},
                         "متوجه شدم",
                         "بستن",
@@ -1968,6 +1894,7 @@ ${catalogString}
                 }
             });
 
+            // رفتار دکمه "بعداً" (مزاحمت را تا ۲۴ ساعت آینده سلب می‌کند)
             btnClose.addEventListener('click', () => {
                 const oneDayInMs = 24 * 60 * 60 * 1000;
                 localStorage.setItem('block_install_banner_until', (Date.now() + oneDayInMs).toString());
@@ -1984,39 +1911,40 @@ ${catalogString}
             }
         }
 
-        function updateLiveClock() {
+        // تقویم و ساعت شمسی پویا
+        function updateSolarDateTime() {
             try {
                 const now = new Date();
-                const dateOptions = { year: 'numeric', month: '2-digit', day: '2-digit', calendar: 'persian' };
-                let dateStr = new Intl.DateTimeFormat('fa-IR', dateOptions).format(now);
-                dateStr = dateStr.replace(/[^\d\/۰-۹]/g, ''); 
                 
-                const weekdayOptions = { weekday: 'long', calendar: 'persian' };
-                const dayStr = new Intl.DateTimeFormat('fa-IR', weekdayOptions).format(now);
+                // فرمت تاریخ خورشیدی به فارسی: مانند "پنجشنبه، ۲۸ خرداد"
+                const dateStr = new Intl.DateTimeFormat('fa-IR', { weekday: 'long', day: 'numeric', month: 'long' }).format(now);
                 
-                const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
-                const timeStr = new Intl.DateTimeFormat('fa-IR', timeOptions).format(now);
-                
-                const dateEl = document.getElementById('headerDate');
-                const dateTimeEl = document.getElementById('headerDayTime');
-                
-                if (dateEl) dateEl.innerText = dateStr;
-                if (dateTimeEl) dateTimeEl.innerText = `${dayStr} ${timeStr}`;
+                // فرمت ساعت پویا به همراه ثانیه‌شمار
+                const timeStr = new Intl.DateTimeFormat('fa-IR', { hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(now);
+                const mobileTimeStr = new Intl.DateTimeFormat('fa-IR', { hour: '2-digit', minute: '2-digit' }).format(now);
+
+                const headerDate = document.getElementById('headerDate');
+                const headerTime = document.getElementById('headerTime');
+                const headerMobileTime = document.getElementById('headerMobileTime');
+
+                if (headerDate) headerDate.innerText = dateStr;
+                if (headerTime) headerTime.innerText = `ساعت ${timeStr}`;
+                if (headerMobileTime) headerMobileTime.innerText = mobileTimeStr;
             } catch (e) {
-                console.error("خطا در به‌روزرسانی ساعت:", e);
+                console.error("خطا در محاسبه تقویم شمسی:", e);
             }
         }
 
+        // راه‌اندازی اولیه برنامه
         function initializeApplication() {
             loadCustomerData();
             loadCartFromStorage();
             setupInstallBanner();
+            showScreen('home');
             
-            updateLiveClock();
-            setInterval(updateLiveClock, 1000);
-            
-            history.replaceState({ screen: 'home' }, "", "#home");
-            showScreen('home', false, true);
+            // اجرای فوری و راه‌اندازی تایمر ثانیه‌شمار ساعت
+            updateSolarDateTime();
+            setInterval(updateSolarDateTime, 1000);
         }
 
         window.addEventListener('DOMContentLoaded', initializeApplication);
@@ -2025,8 +1953,12 @@ ${catalogString}
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
+                // ثبت سرویس ورکر با متد اصولی و Scope ریشه برای عملکرد همیشگی
                 navigator.serviceWorker.register('./service-worker.js', { scope: './' }).then(function(registration) {
                     console.log('✅ Service Worker با موفقیت ثبت شد: ', registration.scope);
+                    
+                    // بررسی بروزرسانی خودکار فایل سرویس ورکر در هر بار لود سایت
+                    registration.update();
                 }).catch(function(error) {
                     console.log('❌ ثبت Service Worker شکست خورد:', error);
                 });
@@ -2035,7 +1967,7 @@ ${catalogString}
     </script>
 
     <!-- ۵. اتصال به منطق برنامه -->
-    <script src="script.js" defer></script>
+    <script src="./js/script.js" defer></script>
 <script src="live-reload.js" defer></script>
 </body>
 </html>
