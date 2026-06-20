@@ -2,263 +2,127 @@
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>پوستر ایران | فروشگاه پوسترهای آموزشی</title>
-    <!-- ۱. اتصال به شناسنامه اپلیکیشن (Manifest) -->
-    <link rel="manifest" href="manifest.json">
+    
     <!-- رنگ نوار بالای گوشی اندروید -->
     <meta name="theme-color" content="#1e40af">
     <!-- تنظیمات برای نمایش بهتر در موبایل -->
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="پوستر ایران">
 
-    <!-- ۲. اتصال به استایل‌ها (CSS) -->
-    <link rel="stylesheet" href="./style.css">
+    <!-- بارگذاری فریمورک‌ها و فونت ایرانی مدرن -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        body { font-family: 'Vazirmatn', sans-serif; scroll-behavior: smooth; }
-        .hero-gradient { background: linear-gradient(135deg, #0d2440 0%, #1e40af 100%); }
-        .image-box { transition: transform 0.3s ease; }
-        .image-box:hover { transform: translateY(-5px); }
-        .hidden-section { display: none; }
-        .qty-select { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
-        
-        /* ----------------------------------------------------
-           استایل‌های ایمن‌ساز فوق‌العاده حیاتی برای حالت آفلاین 
-        ---------------------------------------------------- */
-        /* اصلاح استایل ایمن‌ساز قبلی جهت جلوگیری از تخریب ابعاد تصاویر گالری و محصول */
-        svg, img {
-            max-width: 100%;
-            height: auto;
-        }
-        /* مهار آیکون‌های SVG منوی ناوبری و بخش مزایا */
-        svg {
-            width: 24px !important;
-            height: 24px !important;
-            display: inline-block;
-        }
-        /* مهار اختصاصی لوگوی بالای صفحه */
-        header img, .logo-img {
-            width: 40px !important;
-            height: 40px !important;
-            min-width: 40px !important;
-            min-height: 40px !important;
-        }
-        /* مهار آیکون‌های بخش مزایا */
-        #benefits svg {
-            width: 32px !important;
-            height: 32px !important;
-        }
-        /* ایمن‌سازی چیدمان افقی و عمودی منوی پایین حتی بدون لود تایلوند */
-        nav {
-            display: flex !important;
-            flex-direction: row !important;
-            justify-content: space-around !important;
-            align-items: flex-end !important;
-            background-color: #ffffff !important;
-            border-top: 1px solid #e5e7eb !important;
-            height: 70px !important;
-            padding-bottom: 8px !important;
-        }
-        nav button {
-            display: flex !important;
-            flex-direction: column !important;
-            align-items: center !important;
-            justify-content: center !important;
-            background: none !important;
-            border: none !important;
-            flex: 1 !important;
-            color: #6b7280 !important;
-            cursor: pointer !important;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-            position: relative !important;
-            height: 100% !important;
-        }
-        nav button span {
-            font-size: 10px !important;
-            font-weight: bold !important;
-            margin-top: 4px !important;
-            transition: color 0.3s !important;
+        body { 
+            font-family: 'Vazirmatn', sans-serif; 
+            scroll-behavior: smooth; 
+            -webkit-tap-highlight-color: transparent;
+            background-color: #f8fafc;
         }
 
+        /* استایل ماجراجویی بصری هیرو - تمام عرض و با افکت‌های مواج */
+        .visual-adventure-hero {
+            position: relative;
+            background: linear-gradient(135deg, #0f172a 0%, #1e40af 50%, #3b82f6 100%);
+            overflow: hidden;
+            width: 100vw;
+            margin-left: calc(-50vw + 50%);
+            margin-right: calc(-50vw + 50%);
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+
+        /* المان‌های شناور ماجراجویی بصری */
+        .floating-shape {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0.15;
+            animation: floatAround 20s infinite linear;
+        }
+
+        @keyframes floatAround {
+            0% { transform: translateY(0px) rotate(0deg) scale(1); }
+            50% { transform: translateY(-30px) rotate(180deg) scale(1.1); }
+            100% { transform: translateY(0px) rotate(360deg) scale(1); }
+        }
+
+        .floating-shape-fast {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0.25;
+            animation: floatBounce 8s infinite ease-in-out;
+        }
+
+        @keyframes floatBounce {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-15px) scale(1.05); }
+        }
+
+        /* پنهان کردن اسکرول‌بار افقی کل صفحه */
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        .image-box { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .image-box:hover { transform: translateY(-4px); }
+        .hidden-section { display: none !important; }
+        
+        /* مهار آیکون‌های SVG منوی ناوبری و بخش مزایا */
+        svg {
+            width: 24px;
+            height: 24px;
+            display: inline-block;
+        }
+        
         /* استایل حالت فعال ناوبری - برجسته شدن با افکت شناور */
+        nav button {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
         nav button.active-nav-btn {
-            transform: translateY(-8px) scale(1.1) !important;
+            transform: translateY(-4px) scale(1.08);
             color: #1e40af !important;
         }
         nav button.active-nav-btn.assistant-active {
             color: #7c3aed !important;
         }
 
-        /* خط نشانگر زیر منوی فعال */
-        nav button::after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            width: 16px;
-            height: 3px;
-            background-color: transparent;
-            border-radius: 9999px;
-            transition: all 0.3s ease;
-        }
-        nav button.active-nav-btn::after {
-            background-color: #1e40af;
-            width: 24px;
-        }
-        nav button.active-nav-btn.assistant-active::after {
-            background-color: #7c3aed;
-        }
-
-        /* ایمن‌سازی هدر در حالت آفلاین */
-        header {
-            display: flex !important;
-            justify-content: space-between !important;
-            align-items: center !important;
-            background-color: rgba(255, 255, 255, 0.95) !important;
-        }
-        header .container {
-            display: flex !important;
-            justify-content: space-between !important;
-            align-items: center !important;
-            width: 100% !important;
-        }
-        /* ---------------------------------------------------- */
-
-        summary::-webkit-details-marker { display: none; }
-        summary { list-style: none; }
-
-        /* لغو استایل پیش‌فرض و سفارشی‌سازی کامل دراپ‌داون دسته‌بندی گالری */
-        #groupSelect {
-            appearance: none;
-            -webkit-appearance: none;
-            outline: none;
-        }
-
         /* افکت مات برای منوی چسبنده */
         .backdrop-blur-md {
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
         }
         
         /* استایل اعلان (Toast) */
         #toast {
-            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            top: 20px;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         
-        /* استایل جدید برای کانتینر انتخاب تعداد */
-        .qty-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            width: 100%;
-        }
-
-        .qty-label {
-            font-size: 10px;
-            font-weight: bold;
-            color: #64748b;
-        }
-
-        .custom-select-container {
-            width: 100%;
-            position: relative;
-            background: #eff6ff;
-            border: 1px solid #dbeafe;
-            border-radius: 12px;
-            padding: 4px 8px;
-            display: flex;
-            align-items: center;
-        }
-
-        .custom-select {
-            width: 100%;
-            background: transparent;
-            border: none;
-            outline: none;
-            font-size: 12px;
-            font-weight: bold;
-            color: #1e40af;
-            cursor: pointer;
-            text-align: center;
-            appearance: none;
-            -webkit-appearance: none;
-        }
-        
-        .qty-container {
-            position: relative;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            background: white;
-            padding: 0.3rem 0.75rem;
-            border-radius: 0.75rem;
-            border: 2px solid #e0e7ff;
-        }
-        
-        /* باکس اصلی کنترل تعداد در سبد خرید */
-        .qty-container-mini {
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            width: 100px;
-            height: 32px;
-            overflow: hidden;
-        }
-
-        /* دراپ‌دان کاملاً مخفی که فقط روی عدد عمل می‌کند */
-        .qty-select-overlay {
-            position: absolute;
-            left: 33.33%;
-            width: 33.33%;
-            height: 100%;
-            opacity: 0;
-            cursor: pointer;
-            z-index: 10;
-        }
-
-        .qty-btn {
-            width: 32px;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #2563eb;
-            transition: background 0.2s;
-        }
-
-        .qty-btn:hover { background: #eff6ff; }
-        
-        /* وضعیت پنهان */
+        /* وضعیت پنهان توست */
         .toast-hidden {
-            opacity: 0 !important;
-            transform: translate(-50%, -100px) scale(0.9) !important;
+            opacity: 0;
+            transform: translate(-50%, -50px) scale(0.9);
             pointer-events: none;
         }
 
-        /* وضعیت نمایان */
+        /* وضعیت نمایان توست */
         .toast-visible {
-            opacity: 1 !important;
-            transform: translate(-50%, 20px) scale(1) !important;
+            opacity: 1;
+            transform: translate(-50%, 0) scale(1);
         }
 
         /* استایل‌های شخصی‌سازی شده برای حباب‌های چت هوش مصنوعی */
         .ai-message {
             max-width: 85%;
             padding: 12px 16px;
-            border-radius: 16px;
+            border-radius: 18px;
             line-height: 1.6;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             display: inline-block;
         }
         .ai-message.user {
@@ -272,11 +136,11 @@
             background-color: #ffffff;
             color: #1f2937;
             border-bottom-right-radius: 4px;
-            border: 1px solid #e5e7eb;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
         }
         
-        /* افکت تایپ سه نقطه متحرک */
+        /* افکت تایپ متحرک */
         .typing-indicator span {
             width: 6px;
             height: 6px;
@@ -289,406 +153,391 @@
         .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
         @keyframes bounce {
             0%, 80%, 100% { transform: scale(0); }
-            40% { transform: scale(1.0); }
-        }
-
-        /* استایل سفارشی برای انیمیشن چرخشی لودر مگنیفایر تصویر */
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        .animate-spin-custom {
-            animation: spin 1s linear infinite;
+            40% { transform: scale(1); }
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-900 pb-28">
-    <div class="container mx-auto">
+<body class="bg-slate-50 text-slate-900 pb-24">
+    
+    <!-- کانتینر محدودکننده سراسری برای هماهنگی با عرض موبایل استاندارد -->
+    <div class="max-w-md mx-auto min-h-screen flex flex-col relative px-4 bg-white shadow-2xl shadow-slate-200">
 
-    <!-- اعلان پاپ‌آپ سراسری -->
-    <div id="toast" class="fixed top-0 left-1/2 -translate-x-1/2 z-[1000] px-6 py-3 rounded-2xl flex flex-col items-center gap-1 border border-white/40 bg-white/80 text-blue-900 shadow-xl toast-hidden">
-        <div class="flex items-center gap-3">
-            <div id="toastIconContainer" class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-white shadow-sm transition-all duration-300">
-                <i id="toastIcon" class="fas fa-check text-[10px]"></i>
+        <!-- اعلان پاپ‌آپی اختصاصی (Toast) -->
+        <div id="toast" class="fixed top-6 left-1/2 -translate-x-1/2 z-[1000] w-11/12 max-w-sm px-4 py-3 rounded-2xl flex flex-col items-center gap-1 border border-white bg-white/90 text-blue-900 shadow-xl toast-hidden backdrop-blur-md">
+            <div class="flex items-center gap-3 w-full">
+                <div id="toastIconContainer" class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-white shrink-0">
+                    <i id="toastIcon" class="fas fa-check text-[10px]"></i>
+                </div>
+                <div class="flex-1 text-right">
+                    <span id="toastText" class="font-bold text-xs block leading-snug">آیتم اضافه شد</span>
+                    <span id="toastGroup" class="text-[9px] text-blue-600 font-medium block mt-0.5"></span>
+                </div>
             </div>
-            <span id="toastText" class="font-bold text-xs">آیتم اضافه شد</span>
         </div>
-        <span id="toastGroup" class="text-[10px] text-blue-600 opacity-80 font-medium"></span>
-    </div>
 
-    <!-- هدر سایت (تغییر به Absolute برای حرکت به بالا هنگام اسکرول صفحه) -->
-    <header class="absolute w-full right-0 left-0 top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm">
-        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+        <!-- هدر چسبنده شیک همگام با نوچ موبایل -->
+        <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-100 py-3 flex justify-between items-center -mx-4 px-4 shadow-sm">
             <div class="flex items-center gap-2 cursor-pointer" onclick="showScreen('home')">
-                <img src="https://posteriran.github.io/pixel/icons/logo.png" alt="Logo" class="h-10 w-10 logo-img" width="40" height="40">
-                <span class="text-xl font-black text-blue-900">پوستر ایران</span>
+                <img src="https://posteriran.github.io/pixel/icons/logo.png" alt="Logo" class="h-9 w-9 rounded-xl object-contain" width="36" height="36" onerror="this.src='https://placehold.co/100x100/1e40af/ffffff?text=PI'">
+                <span class="text-lg font-black text-blue-900">پوستر ایران</span>
             </div>
             
-            <div class="flex items-center gap-3">
-                <!-- ویجت زمان و تاریخ شمسی -->
-                <div class="flex flex-col items-center justify-center text-center bg-blue-50/90 px-3 py-1.5 rounded-2xl border border-blue-100/50 shadow-sm min-w-[125px]">
-                    <span id="headerDayTime" class="text-[10px] md:text-[11px] font-bold text-blue-600 leading-none">--- --:--:--</span>
-                    <span id="headerDate" class="text-xs md:text-sm font-black text-blue-900 tracking-wider mt-1 leading-none">----/--/--</span>
+            <div class="flex items-center gap-2">
+                <!-- تاریخ امروز شمسی کوچک -->
+                <div class="flex flex-col text-left bg-slate-50 px-2.5 py-1 rounded-xl border border-slate-100">
+                    <span id="headerDayTime" class="text-[9px] font-bold text-slate-500 leading-none">--- --:--</span>
+                    <span id="headerDate" class="text-[10px] font-black text-blue-900 tracking-wider mt-1 leading-none">----/--/--</span>
                 </div>
 
-                <button onclick="showScreen('cart')" class="relative bg-blue-100 text-blue-800 p-2.5 rounded-full hover:bg-blue-200 transition flex items-center justify-center w-10 h-10">
-                    <i class="fas fa-shopping-cart text-base"></i>
-                    <span class="cartBadge absolute -top-1 -right-1 bg-red-500 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full hidden">0</span>
+                <!-- سبد خرید سریع هدر -->
+                <button onclick="showScreen('cart')" class="relative bg-blue-50 text-blue-800 p-2 rounded-full hover:bg-blue-100 transition flex items-center justify-center w-9 h-9">
+                    <i class="fas fa-shopping-cart text-sm"></i>
+                    <span class="cartBadge absolute -top-1 -right-1 bg-red-500 text-white text-[9px] w-4.5 h-4.5 flex items-center justify-center rounded-full hidden">0</span>
                 </button>
             </div>
-        </div>
-    </header>
+        </header>
 
-    <main class="pt-24">
-        <!-- صفحه اصلی -->
-        <section id="homeScreen">
-            <div id="resumeOrder" class="hidden bg-yellow-400/20 border border-yellow-500 p-3 rounded-2xl mb-6 flex items-center justify-between animate-bounce">
-                <span class="text-sm font-bold text-yellow-900">⚠️ شما یک سفارش تکمیل نشده دارید!</span>
-                <button onclick="showScreen('cart')" class="bg-yellow-500 text-white px-3 py-1 rounded-lg text-xs">ادامه خرید</button>
-            </div>
+        <!-- محتوای اصلی صفحات -->
+        <main class="flex-1 py-4">
             
-            <div class="hero-gradient text-white py-20 px-6 text-center">
-                <h1 class="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
-                    یادگیری را به یک <span class="text-yellow-400">ماجراجویی بصری</span> تبدیل کنید!
-                </h1>
-                <p class="text-lg md:text-xl mb-10 text-blue-100 leading-relaxed max-w-3xl mx-auto">
-                    مجموعه‌ای از پوسترهای آموزشی حرفه‌ای، همگام با کتب درسی؛ طراحی شده برای معلمان خلاق و دانش‌آموزانی که به دنبال یادگیری عمیق‌تر هستند.
-                </p>
+            <!-- صفحه اصلی -->
+            <section id="homeScreen">
+                <div id="resumeOrder" class="hidden bg-yellow-50 border border-yellow-200 p-3 rounded-2xl mb-4 flex items-center justify-between">
+                    <span class="text-xs font-bold text-yellow-800">⚠️ شما یک سفارش تکمیل نشده دارید!</span>
+                    <button onclick="showScreen('cart')" class="bg-yellow-500 text-slate-950 px-3 py-1.5 rounded-xl text-xs font-bold shadow-sm">ادامه خرید</button>
+                </div>
+                
+                <!-- ماجراجویی بصری: هیرو با انیمیشن‌های شگفت‌انگیز و چسبیده به طرفین صفحه -->
+                <div class="visual-adventure-hero text-white py-12 px-6 text-center rounded-b-[2.5rem] shadow-lg shadow-blue-900/10 mb-8 relative">
+                    <!-- اشکال شناور هندسی و کارتونی پس‌زمینه -->
+                    <div class="floating-shape top-4 right-6 w-12 h-12 bg-white rounded-full"></div>
+                    <div class="floating-shape top-20 left-10 w-8 h-8 bg-yellow-400 rounded-lg"></div>
+                    <div class="floating-shape bottom-12 right-20 w-16 h-16 bg-blue-300 rounded-full" style="animation-duration: 25s;"></div>
+                    <div class="floating-shape-fast top-8 left-1/3 text-yellow-300 text-2xl"><i class="fas fa-star"></i></div>
+                    <div class="floating-shape-fast bottom-6 left-12 text-blue-200 text-xl"><i class="fas fa-graduation-cap"></i></div>
+                    <div class="floating-shape-fast top-24 right-1/4 text-white text-lg opacity-40"><i class="fas fa-calculator"></i></div>
 
-                <div class="flex flex-col gap-4 justify-center items-center max-w-md mx-auto">
-                    <button onclick="showScreen('gallery')" class="w-full bg-yellow-500 text-blue-900 px-8 py-4 rounded-2xl text-xl font-bold hover:bg-yellow-400 transition transform hover:scale-105 shadow-2xl">
-                        مشاهده گالری محصولات
-                    </button>
-                    
-                    <div id="pendingOrderNotice" class="hidden w-full mt-4 p-4 bg-yellow-50 border-2 border-yellow-400 rounded-2xl flex items-center justify-between animate-pulse">
-                        <div class="flex items-center gap-3">
-                            <span class="text-2xl">🛒</span>
-                            <div class="text-right">
-                                <p class="font-bold text-yellow-800 text-sm">شما یک سبد خرید ناتمام دارید!</p>
-                                <p class="text-xs text-yellow-700">اقلام قبلی هنوز در سبد شما موجود است.</p>
-                            </div>
-                        </div>
-                        <button onclick="showScreen('cart')" class="bg-yellow-500 text-white px-4 py-2 rounded-xl font-bold text-xs shadow-md">مشاهده سبد</button>
-                    </div>
-                    
-                    <!-- اصلاح دکمه چرا پوستر آموزشی جهت عدم بروز رفتار اشتباه دکمه خروج -->
-                    <button onclick="scrollToBenefitsAndHighlight()" class="w-full border-2 border-white/30 bg-white/10 px-8 py-4 rounded-2xl text-xl font-bold hover:bg-white/20 transition text-center">
-                        چرا پوستر آموزشی؟
-                    </button>
-                </div>
-            </div>
-            
-            <!-- بخش مزایا -->
-            <div id="benefits" class="py-20 container mx-auto px-4">
-                <div class="text-center mb-16">
-                    <h2 class="text-3xl font-bold text-gray-800 mb-4">چرا محیط‌های آموزشی به پوسترهای ما نیاز دارند؟</h2>
-                    <p class="text-gray-600">فراتر از یک پوستر ؛ ما ابزار یادگیری می‌سازیم.</p>
-                </div>
-                <div class="grid md:grid-cols-3 gap-10">
-                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 text-center">
-                        <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <svg width="32" height="32" class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                        </div>
-                        <h3 class="text-xl font-bold mb-4 text-blue-900">افزایش ۵۰ درصدی تمرکز</h3>
-                        <p class="text-gray-600">تحقیقات نشان داده که یادگیری بصری ماندگاری مطالب را در ذهن دانش‌آموزان تا چندین برابر افزایش می‌دهد.</p>
-                    </div>
-                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 text-center">
-                        <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <svg width="32" height="32" class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        </div>
-                        <h3 class="text-xl font-bold mb-4 text-green-900">مطابق با استانداردهای آموزش</h3>
-                        <p class="text-gray-600">تمامی محتواها بر اساس آخرین تغییرات کتب درسی طراحی شده و مورد تایید مدرسان برتر است.</p>
-                    </div>
-                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 text-center">
-                        <div class="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <svg width="32" height="32" class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        </div>
-                        <h3 class="text-xl font-bold mb-4 text-purple-900">دوام و ماندگاری بالا</h3>
-                        <p class="text-gray-600">استفاده از پوشش‌های UV و کاغذهای باکیفیت که در برابر نور و رطوبت کلاس درس مقاوم هستند.</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- بخش سوالات متداول -->
-            <section id="faq" class="py-20 container mx-auto px-6 max-w-3xl">
-                <h2 class="text-3xl font-bold text-center mb-12">سوالات متداول</h2>
-                <div class="space-y-4">
-                    <details class="group bg-white rounded-xl p-6 border border-gray-200">
-                        <summary class="font-bold cursor-pointer list-none flex justify-between items-center text-blue-900">
-                            آیا ارسال به شهرستان دارید؟
-                            <span class="group-open:rotate-180 transition">↓</span>
-                        </summary>
-                        <p class="mt-4 text-gray-600 leading-relaxed">
-                            بله، پوستر ایران محصولات خود را از طریق چاپار ، تیپاکس و باربری تمام نقاط کشور ارسال می‌کند.
-                        </p>
-                    </details>
-                    <details class="group bg-white rounded-xl p-6 border border-gray-200">
-                        <summary class="font-bold cursor-pointer list-none flex justify-between items-center text-blue-900">
-                            چگونه می‌توانم سفارش خود را ثبت کنم؟
-                            <span class="group-open:rotate-180 transition">↓</span>
-                        </summary>
-                        <p class="mt-4 text-gray-600 leading-relaxed">
-                            شما می‌توانید از طریق ورود به گالری و انتخاب محصولات، سفارش خود را به صورت مستقیم در واتس‌آپ یا ایتا برای ما ارسال کنید.
-                        </p>
-                    </details>
-                    <details class="group bg-white rounded-xl p-6 border border-gray-200">
-                        <summary class="font-bold cursor-pointer list-none flex justify-between items-center text-blue-900">
-                            چطور سفارش را با واتس‌آپ ارسال کنم؟
-                            <span class="group-open:rotate-180 transition">↓</span>
-                        </summary>
-                        <p class="mt-4 text-gray-600 leading-relaxed">
-                            پس از انتخاب پوسترهای مورد نظر در سبد خرید و تکمیل اطلاعات فردی، بر روی دکمه «ارسال واتس‌آپ» کلیک کنید تا متن فاکتور به همراه جزئیات به صورت خودکار به چت پشتیبانی ما در واتس‌آپ منتقل و ارسال شود.
-                        </p>
-                    </details>
-                    <details class="group bg-white rounded-xl p-6 border border-gray-200">
-                        <summary class="font-bold cursor-pointer list-none flex justify-between items-center text-blue-900">
-                            چطور سفارش را با ایتا ارسال کنم؟
-                            <span class="group-open:rotate-180 transition">↓</span>
-                        </summary>
-                        <p class="mt-4 text-gray-600 leading-relaxed">
-                            در صفحه سبد خرید، پس از وارد کردن نام و آدرس، دکمه «ارسال در ایتا» را لمس کنید. با این کار متن نهایی فاکتور در حافظه گوشی شما کپی می‌شود و به کانال یا پشتیبانی پوستر ایران در ایتا هدایت می‌شوید تا بتوانید متن را به راحتی پیست (Paste) و ارسال کنید.
-                        </p>
-                    </details>
-                    
-                    <details class="group bg-white rounded-xl p-6 border border-gray-200">
-                        <summary class="font-bold cursor-pointer list-none flex justify-between items-center text-blue-900">
-                            برنامه را چطور در گوشی آیفون نصب کنم؟
-                            <span class="group-open:rotate-180 transition">↓</span>
-                        </summary>
-                        <p class="mt-4 text-gray-600 leading-relaxed">
-                        برای نصب، از منوی مرورگر گزینه Add to Home Screen را بزنید.
-                        </p>
-                    </details>
-                </div>
-            </section>
-        </section>
-        
-        <!-- صفحه گالری محصولات -->
-        <section id="galleryScreen" class="hidden-section container mx-auto px-4 py-10">
-            <div class="mb-6 px-2">
-                <h2 class="text-3xl font-bold text-blue-900">گالری محصولات</h2>
-            </div>
-
-            <!-- تغییر موقعیت چسبندگی دسته‌بندی گالری متناسب با برداشته شدن هدر چسبنده -->
-            <div class="sticky top-0 z-40 bg-white/95 backdrop-blur-md py-4 mb-8 -mx-4 px-4 border-b border-blue-50 shadow-sm">
-                <div class="max-w-md mx-auto relative group">
-                    <label class="block text-[14px] font-bold text-indigo-500 mb-2 mr-2 flex items-center gap-1.5">
-                        <i class="fas fa-filter text-xs"></i>
-                        دسته‌بندی و سایز مورد نظر خود را انتخاب کنید:
-                    </label>
-                    <div class="relative bg-gradient-to-l from-blue-500 to-indigo-600 p-[2px] rounded-2xl shadow-md shadow-blue-100 transition-all duration-300 focus-within:shadow-lg focus-within:shadow-indigo-100 focus-within:scale-[1.01]">
-                        <div class="bg-white rounded-[14px] flex items-center px-4 relative">
-                            <i class="fas fa-th-large text-indigo-600 text-base ml-3"></i>
-                            <select id="groupSelect" onchange="loadImages(true)" class="w-full py-4 pr-1 pl-10 bg-transparent font-black text-blue-900 outline-none cursor-pointer appearance-none text-sm transition-all">
-                                <option value="1">سایز ۲۹×۲۱ دوروچاپ</option>
-                        <option value="3">سایز ۵۰×۳۵ دوروچاپ</option>
-                        <option value="4">سایز ۷۰×۵۰ یکروچاپ</option>
-                        <option value="5">سایز ۷۰×۵۰ یووی‌دار</option>
-                        <option value="6">سایر محصولات</option>
-                    </select>
-                            </select>
-                            <div class="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none text-indigo-600 transition-transform duration-300">
-                                <i class="fas fa-chevron-down text-xs"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="imagesContainer" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
-        </section>
-
-        <!-- صفحه سبد خرید -->
-        <section id="cartScreen" class="hidden-section container mx-auto px-4 py-10 max-w-4xl">
-            <div class="bg-white rounded-3xl shadow-xl p-6 md:p-10 border border-gray-100">
-                <div class="flex items-center gap-3 mb-8 border-b pb-4">
-                    <h2 class="text-3xl font-bold text-gray-800">🛒 سبد خرید</h2>
-                </div>
-                <div id="cartList" class="space-y-4 mb-8"></div>
-                <div class="bg-blue-50 p-6 rounded-2xl mb-8 flex justify-between items-center">
-                    <span class="text-xl font-bold text-blue-900">مبلغ قابل پرداخت:</span>
-                    <span id="totalPrice" class="text-2xl font-black text-blue-700">۰ ریال</span>
-                </div>
-                <div class="space-y-4 bg-gray-50 p-6 rounded-2xl">
-                    <h4 class="font-bold text-gray-700">اطلاعات مشتری:</h4>
-                    <input type="text" id="customerName" oninput="saveCustomerData()" placeholder="نام و نام خانوادگی" class="w-full p-4 rounded-xl border outline-none focus:ring-2 focus:ring-blue-500">
-                    <input type="tel" id="customerPhone" oninput="saveCustomerData()" placeholder="شماره موبایل" class="w-full p-4 rounded-xl border outline-none focus:ring-2 focus:ring-blue-500">
-                    <textarea id="customerAddress" oninput="saveCustomerData()" placeholder="آدرس دقیق پستی" rows="3" class="w-full p-4 rounded-xl border outline-none focus:ring-2 focus:ring-blue-500"></textarea>
-                </div>
-                <div class="mt-8 p-4 bg-blue-50 rounded-2xl border-2 border-dashed border-blue-200">
-                    <p class="text-blue-800 text-sm font-bold mb-4 text-center">
-                        🚀 مرحله نهایی: یکی از پیام‌رسان‌های زیر را برای ارسال لیست انتخاب کنید:
+                    <!-- محتوای متنی و عنوان حماسی -->
+                    <h1 class="text-3xl font-black mb-4 leading-tight relative z-10 drop-shadow-md">
+                        یادگیری را به یک <br>
+                        <span class="text-yellow-300 bg-yellow-400/10 px-3 py-1 rounded-2xl inline-block mt-2 border border-yellow-400/20">ماجراجویی بصری</span> <br>
+                        تبدیل کنید!
+                    </h1>
+                    <p class="text-xs mb-8 text-blue-100 leading-relaxed max-w-sm mx-auto relative z-10 opacity-90">
+                        مجموعه‌ای از پوسترهای آموزشی حرفه‌ای، همگام با آخرین تغییرات کتب درسی مدارس؛ طراحی شده برای ارتقای تمرکز و یادگیری ملموس.
                     </p>
 
-                    <div class="grid grid-cols-2 gap-3">
-                        <button onclick="submitOrder('whatsapp')" 
-                            class="flex flex-col items-center justify-center bg-green-500 text-white py-3 rounded-2xl shadow-lg hover:bg-green-600 active:scale-95 transition-all">
-                            <span class="text-xl mb-1">💬</span>
-                            <span class="font-bold text-sm">ارسال واتس‌آپ</span>
+                    <div class="flex flex-col gap-3 justify-center items-center max-w-xs mx-auto relative z-10">
+                        <button onclick="showScreen('gallery')" class="w-full bg-yellow-400 text-slate-900 py-3.5 rounded-2xl text-md font-black hover:bg-yellow-300 transition-all transform active:scale-95 shadow-xl shadow-yellow-500/20 flex items-center justify-center gap-2">
+                            <i class="fas fa-images"></i>
+                            ورود به گالری پوسترهای آموزشی
                         </button>
-
-                        <button onclick="submitOrder('eitaa')" 
-                            class="flex flex-col items-center justify-center bg-orange-500 text-white py-3 rounded-2xl shadow-lg hover:bg-orange-600 active:scale-95 transition-all">
-                            <span class="text-xl mb-1">🟠</span>
-                            <span class="font-bold text-sm">ارسال در ایتا</span>
+                        
+                        <!-- اعلان سبد نیمه کاره در هیرو -->
+                        <div id="pendingOrderNotice" class="hidden w-full p-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl flex items-center justify-between">
+                            <span class="text-[10px] font-bold text-yellow-300">🛒 یک سبد خرید ناتمام دارید!</span>
+                            <button onclick="showScreen('cart')" class="bg-white text-blue-900 px-3 py-1 rounded-lg font-bold text-[10px]">مشاهده</button>
+                        </div>
+                        
+                        <button onclick="scrollToBenefitsAndHighlight()" class="w-full border border-white/20 bg-white/10 py-3.5 rounded-2xl text-sm font-bold hover:bg-white/20 transition-all flex items-center justify-center gap-2">
+                            <i class="fas fa-question-circle"></i>
+                            چرا پوستر آموزشی؟
                         </button>
                     </div>
-
-                    <button onclick="clearCart()" class="w-full mt-4 text-gray-400 text-xs hover:text-red-500 transition">
-                        🗑️ انصراف و پاک کردن سبد خرید
-                    </button>
                 </div>
-            </div>
-        </section>
-
-        <!-- صفحه دستیار آموزشی هوشمند -->
-        <section id="assistantScreen" class="hidden-section container mx-auto px-4 py-10 max-w-3xl">
-            <div class="bg-white rounded-3xl shadow-xl border border-blue-100 overflow-hidden flex flex-col h-[70vh]">
-                <!-- هدر برگه دستیار -->
-                <div class="bg-gradient-to-r from-blue-900 to-indigo-900 text-white px-6 py-4 flex items-center gap-3 border-b border-blue-950">
-                    <div class="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center text-lg shadow-inner">
-                        ✨
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-md leading-tight">دستیار آموزشی هوشمند</h3>
-                        <span class="text-[9px] text-blue-200 block">پاسخگویی بر پایه کاتالوگ و هوش مصنوعی</span>
-                    </div>
-                </div>
-                <!-- بدنه پیام‌ها -->
-                <div id="aiChatBody" class="flex-1 p-6 overflow-y-auto bg-slate-50 flex flex-col gap-4">
-                    <div class="ai-message gemini self-end bg-white border border-slate-200 text-slate-800 p-4 rounded-2xl rounded-tr-none max-w-[85%] shadow-sm leading-relaxed text-sm">
-                        <p class="font-bold text-blue-900 mb-1">🎓 درود بر شما همکار گرامی</p>
-                        <p>من دستیار هوشمند و مشاور خرید پوستر ایران هستم.</p>
-                        <p>می‌توانم به شما کمک کنم تا بهترین پوسترهای آموزشی متناسب با موضوع یا مقطع تحصیلی کلاس درس خود را انتخاب کنید و همچنین چندین بازی آموزشی کلاسی با آنها طراحی کنید.</p>
-                        <p>برای شروع چه سوالی دارید?</p>
-                    </div>
-                </div>
-                <!-- دکمه‌های سوالات فوری -->
-                <div class="flex gap-2 overflow-x-auto p-3 bg-slate-100 border-t border-b border-slate-200 whitespace-nowrap scrollbar-none">
-                    <button onclick="sendQuickPrompt('بهترین پوسترهای کلاس اول دبستان چیست؟')" class="bg-white hover:bg-blue-50 text-blue-900 border border-blue-200 px-4 py-2 rounded-full text-xs font-bold transition">🎒 پوسترهای کلاس اول</button>
-                    <button onclick="sendQuickPrompt('چگونه با پوستر ضرب و تقسیم یک بازی کلاسی طراحی کنم؟')" class="bg-white hover:bg-blue-50 text-blue-900 border border-blue-200 px-4 py-2 rounded-full text-xs font-bold transition">🎲 بازی ضرب و تقسیم</button>
-                    <button onclick="sendQuickPrompt('برای آموزش جغرافیا و جهت‌ها چه محصولی دارید؟')" class="bg-white hover:bg-blue-50 text-blue-900 border border-blue-200 px-4 py-2 rounded-full text-xs font-bold transition">🌍 آموزش جغرافیا</button>
-                </div>
-                <!-- فوتر چت -->
-                <div class="p-4 bg-white flex gap-2 border-t border-slate-100">
-                    <input type="text" id="aiChatInput" onkeypress="handleAiInputKeypress(event)" class="flex-1 px-5 py-3 rounded-full border border-slate-200 outline-none focus:ring-2 focus:ring-purple-500 text-sm transition" placeholder="سوال آموزشی خود را اینجا بنویسید...">
-                    <button onclick="sendAiMessage()" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white px-6 py-3 rounded-full font-bold text-sm transition shadow-md flex items-center justify-center">
-                        ارسال
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- صفحه درباره ما -->
-        <section id="aboutScreen" class="hidden-section container mx-auto px-4 py-10 max-w-4xl">
-            <div class="bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
-                <h2 class="text-3xl font-bold text-blue-900 mb-6">پوستر ایران</h2>
-                <p class="text-gray-700 leading-8 mb-6 text-justify">انتشارات پوستر ایران با افتخار یکی از پیشگامان در زمینه تولید و چاپ پوستر در کشور است. ما با تکیه بر سال‌ها تجربه در زمینه چاپ و شناخت دقیق از نیازهای نظام آموزشی, مجموعه‌ای از پوسترهای جذاب، کاربردی و هماهنگ با محتوای کتب درسی مدارس تهیه کرده‌آیم تا فرآیند یادگیری را برای دانش‌آموزان ساده‌تر، عمیق‌تر و لذت‌بخش‌تر کنیم.
-
-پوسترهای آموزشی با طراحی حرفه‌ای، چاپ تمام‌رنگی، با کیفیت عالی و محتوای استاندارد، ابزاری کارآمد برای معلمان، دانش‌آموزان و مدارس در سراسر کشور به شمار می‌آیند. "پوستر ایران" همواره در تلاش است تا با نوآوری و پایبندی به اصول آموزشی، نقش مؤثری در ارتقاء سطح آموزش ایفا کند.</p>
-                <div class="space-y-4 text-gray-600">
-                    <p> تهران: خیابان پانزده خرداد ، بازار آهنگران ، کوچه مسجدجامع ، پاساژ کاغذوتحریر، زیرزمن اول ، پلاک ۷۴</p>
-                    <p> <a href="https://maps.google.com/?cid=1396884775989221050&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNl" target="_blank" class="text-blue-500 font-bold hover:underline">  (مشاهده در نقشه)</a></p>
                 
-                    <!-- افزودن قابلیت شماره‌گیری مستقیم با لمس شماره‌ها -->
-                    <p>📞 تلفن: <a href="tel:02155611875" class="text-blue-600 font-bold hover:text-blue-800 hover:underline transition-colors">۰۲۱۵۵۶۱۱۸۷۵</a></p>
-                    <p>📱 موبایل: <a href="tel:09010195885" class="text-blue-600 font-bold hover:text-blue-800 hover:underline transition-colors">۰۹۰۱۰۱۹۵۸۸۵</a></p>
+                <!-- بخش مزایا با طراحی ظریف کارت‌محور -->
+                <div id="benefits" class="py-6">
+                    <div class="text-center mb-6">
+                        <h2 class="text-lg font-black text-slate-800 mb-1">چرا کلاس شما به پوستر نیاز دارد؟</h2>
+                        <p class="text-xs text-slate-500">طراحی استاندارد، همگام با فرآیند یادگیری عمیق</p>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <!-- کارت مزیت ۱ -->
+                        <div class="bg-white p-5 rounded-2xl border border-slate-100 flex items-start gap-4 shadow-sm">
+                            <div class="bg-blue-50 w-12 h-12 rounded-2xl flex items-center justify-center text-blue-600 shrink-0">
+                                <i class="fas fa-bolt text-lg"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xs font-black text-slate-900 mb-1">افزایش ۵۰ درصدی تمرکز</h3>
+                                <p class="text-[11px] text-slate-500 leading-relaxed">یادگیری بصری ماندگاری مفاهیم پایه و انتزاعی ریاضی را در ذهن دانش‌آموزان به شدت تثبیت می‌کند.</p>
+                            </div>
+                        </div>
+
+                        <!-- کارت مزیت ۲ -->
+                        <div class="bg-white p-5 rounded-2xl border border-slate-100 flex items-start gap-4 shadow-sm">
+                            <div class="bg-green-50 w-12 h-12 rounded-2xl flex items-center justify-center text-green-600 shrink-0">
+                                <i class="fas fa-check-double text-lg"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xs font-black text-slate-900 mb-1">مطابق با کتب آموزش و پرورش</h3>
+                                <p class="text-[11px] text-slate-500 leading-relaxed">محتوای تمامی آثار مطابق با آخرین تغییرات کتب درسی و استانداردهای نوین آموزشی وزارت‌خانه طراحی شده است.</p>
+                            </div>
+                        </div>
+
+                        <!-- کارت مزیت ۳ -->
+                        <div class="bg-white p-5 rounded-2xl border border-slate-100 flex items-start gap-4 shadow-sm">
+                            <div class="bg-purple-50 w-12 h-12 rounded-2xl flex items-center justify-center text-purple-600 shrink-0">
+                                <i class="fas fa-shield-alt text-lg"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xs font-black text-slate-900 mb-1">دوام بی‌نظیر با روکش مقاوم</h3>
+                                <p class="text-[11px] text-slate-500 leading-relaxed">استفاده از پوشش‌های مقاوم لمینت و یووی که دوام بالایی در مواجهه با شرایط کلاس درس تضمین می‌کند.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- بخش سوالات متداول کاربردی -->
+                <section id="faq" class="py-8 border-t border-slate-100 mt-6">
+                    <h2 class="text-md font-black text-center mb-6 text-slate-800">🤔 پاسخ به ابهامات شما</h2>
+                    <div class="space-y-3">
+                        <details class="group bg-white rounded-xl p-4 border border-slate-100">
+                            <summary class="text-xs font-bold cursor-pointer list-none flex justify-between items-center text-blue-900">
+                                آیا ارسال به شهرستان دارید؟
+                                <span class="group-open:rotate-180 transition text-xs">↓</span>
+                            </summary>
+                            <p class="mt-3 text-[11px] text-slate-500 leading-relaxed border-t pt-2 border-slate-50">
+                                بله، پوستر ایران سفارشات همکاران را از طریق سامانه‌های پستی، چاپار، تیپاکس و باربری به سراسر کشور ارسال می‌کند.
+                            </p>
+                        </details>
+                        <details class="group bg-white rounded-xl p-4 border border-slate-100">
+                            <summary class="text-xs font-bold cursor-pointer list-none flex justify-between items-center text-blue-900">
+                                چطور سفارش را در ایتا یا واتس‌آپ بفرستم؟
+                                <span class="group-open:rotate-180 transition text-xs">↓</span>
+                            </summary>
+                            <p class="mt-3 text-[11px] text-slate-500 leading-relaxed border-t pt-2 border-slate-50">
+                                شما کافیست بعد از پرکردن فاکتور خرید روی دکمه مربوطه بزنید. سفارش به فرمت دلخواه فاکتور شده و به چت پشتیبان در ایتا یا واتس‌آپ ارجاع داده می‌شود.
+                            </p>
+                        </details>
+                    </div>
+                </section>
+            </section>
+            
+            <!-- صفحه گالری محصولات -->
+            <section id="galleryScreen" class="hidden-section">
+                <div class="mb-4">
+                    <h2 class="text-xl font-black text-blue-900">گالری محصولات آموزشی</h2>
+                    <p class="text-[10px] text-slate-500">انتخاب سایز و افزودن به فاکتور سفارش</p>
+                </div>
+
+                <!-- فیلتر دسته‌بندی چسبنده شیک مخصوص موبایل -->
+                <div class="sticky top-[60px] z-40 bg-white/95 backdrop-blur-md py-3 mb-6 -mx-4 px-4 border-b border-slate-100 shadow-sm">
+                    <div class="relative">
+                        <select id="groupSelect" onchange="loadImages(true)" class="w-full py-3.5 pr-4 pl-10 bg-slate-50 border border-slate-200 rounded-2xl font-black text-slate-800 outline-none cursor-pointer appearance-none text-xs transition-all focus:border-blue-500">
+                            <option value="1">سایز ۲۹×۲۱ دوروچاپ</option>
+                            <option value="3">سایز ۵۰×۳۵ دوروچاپ</option>
+                            <option value="4">سایز ۷۰×۵۰ یکروچاپ</option>
+                            <option value="5">سایز ۷۰×۵۰ یووی‌دار</option>
+                            <option value="6">سایر محصولات و فلش کارت</option>
+                        </select>
+                        <div class="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                            <i class="fas fa-chevron-down text-xs"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ظرف اصلی نمایش شبکه‌ای محصولات به صورت دو ستونه عالی برای موبایل -->
+                <div id="imagesContainer" class="grid grid-cols-2 gap-3 pb-6"></div>
+            </section>
+
+            <!-- صفحه سبد خرید -->
+            <section id="cartScreen" class="hidden-section">
+                <div class="bg-white rounded-3xl border border-slate-100 p-4">
+                    <h2 class="text-xl font-black text-slate-800 mb-6 flex items-center gap-2">
+                        <i class="fas fa-shopping-basket text-blue-600"></i>
+                        سبد خرید جاری
+                    </h2>
+                    
+                    <div id="cartList" class="space-y-3 mb-6"></div>
+                    
+                    <div class="bg-blue-50/80 p-4 rounded-2xl mb-6 flex justify-between items-center border border-blue-100">
+                        <span class="text-xs font-bold text-blue-900">مبلغ قابل پرداخت:</span>
+                        <span id="totalPrice" class="text-md font-black text-blue-700">۰ ریال</span>
+                    </div>
+                    
+                    <!-- اطلاعات خریدار -->
+                    <div class="space-y-3 bg-slate-50 p-4 rounded-2xl border border-slate-100 mb-6">
+                        <h4 class="text-xs font-black text-slate-700 mb-2">📄 اطلاعات هماهنگی و ارسال:</h4>
+                        <input type="text" id="customerName" oninput="saveCustomerData()" placeholder="نام و نام خانوادگی خریدار" class="w-full p-3 text-xs rounded-xl border border-slate-200 outline-none focus:border-blue-500 bg-white">
+                        <input type="tel" id="customerPhone" oninput="saveCustomerData()" placeholder="شماره موبایل جهت هماهنگی" class="w-full p-3 text-xs rounded-xl border border-slate-200 outline-none focus:border-blue-500 bg-white">
+                        <textarea id="customerAddress" oninput="saveCustomerData()" placeholder="آدرس دقیق پستی جهت تحویل سفارش" rows="3" class="w-full p-3 text-xs rounded-xl border border-slate-200 outline-none focus:border-blue-500 bg-white"></textarea>
+                    </div>
+                    
+                    <!-- دکمه‌های ارسال فاکتور -->
+                    <div class="bg-blue-50/40 p-3 rounded-2xl border border-dashed border-blue-200">
+                        <p class="text-[10px] text-blue-800 font-bold mb-3 text-center">
+                            🚀 برای نهایی‌سازی، یکی از گزینه‌های زیر را لمس نمایید:
+                        </p>
+
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="submitOrder('whatsapp')" 
+                                class="flex flex-col items-center justify-center bg-emerald-500 text-white py-3 rounded-xl shadow-md active:scale-95 transition-all">
+                                <span class="text-md mb-0.5"><i class="fab fa-whatsapp"></i></span>
+                                <span class="font-bold text-[10px]">ارسال واتس‌آپ</span>
+                            </button>
+
+                            <button onclick="submitOrder('eitaa')" 
+                                class="flex flex-col items-center justify-center bg-orange-500 text-white py-3 rounded-xl shadow-md active:scale-95 transition-all">
+                                <span class="text-md mb-0.5"><i class="fas fa-paper-plane"></i></span>
+                                <span class="font-bold text-[10px]">ارسال در ایتا</span>
+                            </button>
+                        </div>
+
+                        <button onclick="clearCart()" class="w-full mt-4 text-slate-400 text-[10px] hover:text-red-500 transition-colors text-center block">
+                            🗑️ تخلیه و پاک‌کردن سبد خرید فعلی
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- صفحه دستیار آموزشی هوشمند -->
+            <section id="assistantScreen" class="hidden-section">
+                <div class="bg-white rounded-3xl border border-slate-100 overflow-hidden flex flex-col h-[65vh]">
+                    <!-- هدر چت -->
+                    <div class="bg-gradient-to-r from-blue-900 to-indigo-900 text-white px-4 py-3.5 flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-md">
+                            ✨
+                        </div>
+                        <div>
+                            <h3 class="font-black text-xs">دستیار آموزشی هوشمند</h3>
+                            <span class="text-[8px] text-blue-200 block">مشاوره خرید پوستر و سناریوهای بازی کلاسی</span>
+                        </div>
+                    </div>
+                    
+                    <!-- باکس چت -->
+                    <div id="aiChatBody" class="flex-1 p-4 overflow-y-auto bg-slate-50 flex flex-col gap-3">
+                        <div class="ai-message gemini self-end bg-white border border-slate-200 p-4 rounded-2xl rounded-tr-none shadow-sm text-xs leading-relaxed">
+                            <p class="font-black text-blue-900 mb-1">🎓 همکار گرامی، سلام!</p>
+                            <p class="mb-2">من مشاور و دستیار هوشمند انتشارات پوستر ایران هستم.</p>
+                            <p class="mb-2">بر اساس پایه تحصیلی یا موضوع مدنظرتان، می‌توانم بهترین پوسترها و همچنین یک "بازی آموزشی کلاسی جالب" با آنها را پیشنهاد دهم.</p>
+                            <p class="text-blue-600">برای شروع کافی است موضوع کلاس یا پایه مدنظرتان را از دکمه‌های زیر فشرده یا بنویسید:</p>
+                        </div>
+                    </div>
+                    
+                    <!-- گزینه‌های آماده پایین چت -->
+                    <div class="flex gap-1.5 overflow-x-auto p-2 bg-slate-100 border-t border-b border-slate-200 whitespace-nowrap">
+                        <button onclick="sendQuickPrompt('بهترین پوسترهای کلاس اول دبستان چیست؟')" class="bg-white text-slate-700 border border-slate-200 px-3 py-1.5 rounded-full text-[10px] font-bold shrink-0">🎒 کلاس اول ابتدایی</button>
+                        <button onclick="sendQuickPrompt('چگونه با پوستر ضرب و تقسیم یک بازی کلاسی طراحی کنم؟')" class="bg-white text-slate-700 border border-slate-200 px-3 py-1.5 rounded-full text-[10px] font-bold shrink-0">🎲 بازی کلاسی ضرب</button>
+                        <button onclick="sendQuickPrompt('برای آموزش آناتومی بدن چه پوسترهایی دارید؟')" class="bg-white text-slate-700 border border-slate-200 px-3 py-1.5 rounded-full text-[10px] font-bold shrink-0">🩺 آناتومی بدن انسان</button>
+                    </div>
+                    
+                    <!-- ورودی چت -->
+                    <div class="p-2.5 bg-white flex gap-2 border-t border-slate-100">
+                        <input type="text" id="aiChatInput" onkeypress="handleAiInputKeypress(event)" class="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 outline-none focus:border-purple-500 text-xs" placeholder="سوال آموزشی خود را بپرسید...">
+                        <button onclick="sendAiMessage()" class="bg-purple-600 hover:bg-purple-500 text-white px-5 py-2 rounded-xl font-bold text-xs transition">
+                            ارسال
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- صفحه درباره ما -->
+            <section id="aboutScreen" class="hidden-section">
+                <div class="bg-white rounded-3xl border border-slate-100 p-5 shadow-sm">
+                    <h2 class="text-lg font-black text-blue-900 mb-3">پوستر ایران</h2>
+                    <p class="text-slate-600 text-xs leading-relaxed mb-4 text-justify">
+                        انتشارات پوستر ایران به عنوان یکی از پیشگامان تولید محتوای بصری کمک آموزشی در کشور، با تکیه بر تجربه سالیان طولانی خود در حوزه طراحی، چاپ و توزیع ابزارهای کلاسی، همواره تلاش کرده تا فرآیند تدریس و ارائه‌های کلاسی را به یک تجربه لذت‌بخش و ملموس تبدیل نماید.
+                    </p>
+                    <div class="space-y-3 text-xs text-slate-500 border-t pt-4 border-slate-50">
+                        <p class="flex items-center gap-2"><i class="fas fa-map-marker-alt text-blue-500"></i> بازار تهران، خیابان پانزده خرداد، بازار آهنگران، کوچه مسجدجامع، پاساژ کاغذ و تحریر، پلاک ۷۴</p>
+                        <p class="flex items-center gap-2"><i class="fas fa-phone text-blue-500"></i> تلفن ثابت: <a href="tel:02155611875" class="text-blue-600 font-bold hover:underline">۰۲۱۵۵۶۱۱۸۷۵</a></p>
+                        <p class="flex items-center gap-2"><i class="fas fa-mobile-alt text-blue-500"></i> همراه مدیریت: <a href="tel:09010195885" class="text-blue-600 font-bold hover:underline">۰۹۰۱۰۱۹۵۸۸۵</a></p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- صفحه سفارشات قبلی -->
+            <section id="historyScreen" class="hidden-section">
+                <div class="bg-white rounded-3xl border border-slate-100 p-4">
+                    <h2 class="text-lg font-black text-slate-800 mb-4 flex items-center gap-2">
+                        <i class="fas fa-history text-slate-600"></i>
+                        تاریخچه خریدهای من
+                    </h2>
+                    <div id="historyList" class="space-y-4">
+                        <p class="text-slate-400 text-center py-10 text-xs">سفارشی یافت نشد.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- منوی ناوبری پایینی چسبنده و شیک، بهینه‌سازی شده برای موبایل -->
+        <nav class="sticky bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-100 z-[100] flex justify-around items-center py-2 -mx-4 px-2 shadow-lg rounded-t-3xl mt-auto">
+            <button onclick="showScreen('home')" id="nav-home" class="flex flex-col items-center gap-1 text-blue-700 flex-1 py-1">
+                <i class="fas fa-home text-base"></i>
+                <span class="text-[8px] font-bold">خانه</span>
+            </button>
+            <button onclick="showScreen('gallery')" id="nav-gallery" class="flex flex-col items-center gap-1 text-slate-400 flex-1 py-1">
+                <i class="fas fa-images text-base"></i>
+                <span class="text-[8px] font-bold">گالری</span>
+            </button>
+            <button onclick="showScreen('cart')" id="nav-cart" class="flex flex-col items-center gap-1 text-slate-400 flex-1 py-1 relative">
+                <div class="relative">
+                    <i class="fas fa-shopping-basket text-base"></i>
+                    <span class="cartBadge absolute -top-1.5 -right-2 bg-red-500 text-white text-[8px] w-4 h-4 flex items-center justify-center rounded-full hidden">0</span>
+                </div>
+                <span class="text-[8px] font-bold">سبد خرید</span>
+            </button>
+            <button onclick="showScreen('assistant')" id="nav-assistant" class="flex flex-col items-center gap-1 text-slate-400 flex-1 py-1">
+                <i class="fas fa-magic text-base"></i>
+                <span class="text-[8px] font-bold">دستیار هوشمند</span>
+            </button>
+            <button onclick="showScreen('history')" id="nav-history" class="flex flex-col items-center gap-1 text-slate-400 flex-1 py-1">
+                <i class="fas fa-file-invoice text-base"></i>
+                <span class="text-[8px] font-bold">سفارشات</span>
+            </button>
+            <button onclick="showScreen('about')" id="nav-about" class="flex flex-col items-center gap-1 text-slate-400 flex-1 py-1">
+                <i class="fas fa-info-circle text-base"></i>
+                <span class="text-[8px] font-bold">درباره ما</span>
+            </button>
+        </nav>
+
+        <!-- مودال تایید اختصاصی شیک -->
+        <div id="confirmModal" class="fixed inset-0 z-[1000] hidden bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+            <div class="bg-white rounded-3xl p-5 w-full max-w-xs shadow-2xl text-center">
+                <div class="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-3 text-blue-600 text-xl" id="confirmIcon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <h3 class="text-sm font-black text-slate-900 mb-1" id="confirmTitle">آیا مطمئن هستید؟</h3>
+                <p class="text-[11px] text-slate-500 mb-5 leading-relaxed" id="confirmMessage"></p>
+                <div class="flex gap-2">
+                    <button id="confirmYesBtn" class="flex-1 bg-blue-600 text-white py-2.5 rounded-xl font-bold text-xs hover:bg-blue-700 transition">تایید و ادامه</button>
+                    <button id="confirmNoBtn" class="flex-1 bg-slate-100 text-slate-700 py-2.5 rounded-xl font-bold text-xs hover:bg-slate-200 transition">انصراف</button>
                 </div>
             </div>
-        </section>
-        
-        <!-- صفحه تاریخچه -->
-        <section id="historyScreen" class="hidden-section container mx-auto px-4 py-10 max-w-4xl">
-            <div class="bg-white rounded-3xl shadow-xl p-6 border">
-                <h2 class="text-3xl font-bold text-gray-800 mb-6 pb-4 border-b">📜 تاریخچه سفارشات</h2>
-                <div id="historyList" class="space-y-6">
-                    <p class="text-gray-400 text-center py-10">هنوز هیچ سفارشی ثبت نشده است.</p>
+        </div>
+
+        <!-- مودال بزرگنمایی تصویر با لودر هوشمند -->
+        <div id="imageModal" class="fixed inset-0 z-[1100] hidden bg-black/90 flex items-center justify-center p-4 backdrop-blur-md" onclick="closeModal()">
+            <span class="absolute top-4 right-4 text-white text-3xl cursor-pointer hover:text-red-500 transition-colors z-[1110]">&times;</span>
+            <div id="modalSpinner" class="absolute inset-0 flex items-center justify-center z-10">
+                <div class="w-10 h-10 border-4 border-white/20 border-t-blue-500 rounded-full animate-spin"></div>
+            </div>
+            <img id="modalImage" class="max-w-full max-h-[80vh] rounded-xl shadow-2xl border-2 border-white/10 object-contain opacity-0 scale-95 transition-all duration-300 z-20" src="" alt="بزرگنمایی" onclick="event.stopPropagation()">
+        </div>
+
+        <!-- بنر نصب وب‌اپلیکیشن (PWA Install Prompt) با دکمه‌های کاملاً بهینه موبایل -->
+        <div id="install-banner" class="fixed bottom-20 left-4 right-4 z-[999] p-4 rounded-2xl border border-white bg-white/95 backdrop-blur-md shadow-2xl flex flex-col gap-3 transform translate-y-20 opacity-0 pointer-events-none transition-all duration-500 max-w-[340px] mx-auto">
+            <div class="flex items-start gap-3">
+                <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center p-1 shadow-sm shrink-0">
+                    <img src="https://posteriran.github.io/pixel/icons/logo.png" alt="پوستر ایران" class="w-full h-full object-contain" onerror="this.src='https://placehold.co/100x100/1e40af/ffffff?text=PI'">
+                </div>
+                <div class="flex-1">
+                    <h4 class="font-black text-xs text-slate-900">نصب برنامه پوستر ایران</h4>
+                    <p class="text-[10px] text-slate-500 mt-1 leading-relaxed">برای ثبت سریع‌تر فاکتور و کارکرد بدون اینترنت، وب‌اپلیکیشن ما را روی گوشی خود نصب کنید.</p>
                 </div>
             </div>
-        </section>
-    </main>
-
-    <!-- منوی پایینی چسبنده با استایل جدید (بزرگ‌نمایی و شناور شدن منوی فعال) -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-lg border-t border-gray-200 z-[100] flex justify-around items-center py-2 shadow-lg">
-        <button onclick="showScreen('home')" id="nav-home" class="flex flex-col items-center gap-1 text-blue-700 transition flex-1">
-            <svg width="24" height="24" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
-            <span class="text-[9px] font-bold">خانه</span>
-        </button>
-        <button onclick="showScreen('gallery')" id="nav-gallery" class="flex flex-col items-center gap-1 text-gray-500 transition flex-1">
-            <svg width="24" height="24" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
-            <span class="text-[9px] font-bold">گالری</span>
-        </button>
-        <button onclick="showScreen('cart')" id="nav-cart" class="flex flex-col items-center gap-1 text-gray-500 transition flex-1 relative">
-            <div class="relative">
-                <svg width="24" height="24" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-                <span class="cartBadge absolute -top-1 -right-1 bg-red-500 text-white text-[9px] w-4 h-4 flex items-center justify-center rounded-full hidden">0</span>
-            </div>
-            <span class="text-[9px] font-bold">سبد خرید</span>
-        </button>
-        <button onclick="showScreen('history')" id="nav-history" class="flex flex-col items-center gap-1 text-gray-500 flex-1">
-            <svg width="24" height="24" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span class="text-[9px] font-bold">سفارشات</span>
-        </button>
-        <!-- دکمه دستیار آموزشی هوشمند -->
-        <button onclick="showScreen('assistant')" id="nav-assistant" class="flex flex-col items-center gap-1 text-gray-500 transition flex-1">
-            <svg width="24" height="24" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-            </svg>
-            <span class="text-[9px] font-bold">دستیار</span>
-        </button>
-        <button onclick="showScreen('about')" id="nav-about" class="flex flex-col items-center gap-1 text-gray-500 transition flex-1">
-            <svg width="24" height="24" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-            <span class="text-[9px] font-bold">درباره ما</span>
-        </button>
-    </nav>
-
-    <!-- کانتینر مودال تایید اختصاصی -->
-    <div id="confirmModal" class="fixed inset-0 z-[300] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl border border-gray-100 text-center">
-            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4 text-red-600">
-                <i class="fas fa-exclamation-triangle text-2xl"></i>
-            </div>
-            <h3 class="text-lg font-bold text-gray-900 mb-2" id="confirmTitle">آیا مطمئن هستید؟</h3>
-            <p class="text-sm text-gray-500 mb-6" id="confirmMessage">این عمل غیرقابل بازگشت است.</p>
-            <div class="flex gap-3">
-                <button id="confirmYesBtn" class="flex-1 bg-red-600 text-white py-3 rounded-xl font-bold text-sm hover:bg-red-700 transition-colors">بله، مطمئنم</button>
-                <button id="confirmNoBtn" class="flex-1 bg-gray-100 text-gray-700 py-3 rounded-xl font-bold text-sm hover:bg-gray-200 transition-colors">انصراف</button>
+            <div class="flex gap-2">
+                <button id="btnInstall" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-xl font-black text-[10px] transition shadow-md">نصب مستقیم</button>
+                <button id="btnClose" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2 rounded-xl font-bold text-[10px] transition">بعداً</button>
             </div>
         </div>
-    </div>
 
-    <!-- مودال بزرگنمایی تصویر با قابلیت Spinner -->
-    <div id="imageModal" class="fixed inset-0 z-[200] hidden bg-black/95 flex items-center justify-center p-4 backdrop-blur-md" onclick="closeModal()">
-        <span class="absolute top-5 right-5 text-white text-5xl cursor-pointer hover:text-red-500 transition-colors z-[210]">&times;</span>
-        
-        <!-- انیمیشن بارگذاری سفارشی (Spinner) -->
-        <div id="modalSpinner" class="absolute inset-0 flex items-center justify-center z-10">
-            <div class="w-12 h-12 border-4 border-white/20 border-t-blue-500 rounded-full animate-spin-custom"></div>
-        </div>
-        
-        <!-- تصویر باکیفیت -->
-        <img id="modalImage" class="max-w-full max-h-[85vh] rounded-xl shadow-2xl border-2 border-white/20 object-contain shadow-white/10 opacity-0 scale-95 transition-all duration-300 z-20" src="" alt="بزرگنمایی" onclick="event.stopPropagation()">
-    </div>
-
-    <!-- پاپ‌آپ نصب PWA -->
-    <div id="install-banner" class="fixed bottom-24 left-4 right-4 md:left-auto md:right-4 md:max-w-sm z-[9999] p-5 rounded-3xl border border-white/30 bg-white/80 backdrop-blur-xl shadow-2xl flex flex-col gap-4 transform translate-y-20 opacity-0 pointer-events-none transition-all duration-700">
-        <div class="flex items-start gap-3">
-            <div class="w-12 h-12 rounded-2xl bg-white border border-blue-100 flex items-center justify-center p-1 shadow-md shrink-0">
-                <img src="https://posteriran.github.io/pixel/icons/logo.png" alt="پوستر ایران" class="w-full h-full object-contain">
-            </div>
-            <div>
-                <h4 class="font-bold text-sm text-gray-900 leading-tight">پوستر ایران را نصب کنید!</h4>
-                <p class="text-xs text-gray-600 mt-1 leading-relaxed">با نصب نسخه وب‌اپلیکیشن، خریدی سریع‌تر و دسترسی آفلاین به گالری و خدمات را تجربه کنید.</p>
-            </div>
-        </div>
-        <div class="flex gap-3">
-            <button id="btnInstall" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-bold text-xs transition-colors shadow-lg shadow-blue-100">نصب سریع</button>
-            <button id="btnClose" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 rounded-xl font-bold text-xs transition-colors">بعداً</button>
-        </div>
     </div>
 
     <script>
+        // تبدیل اعداد به فارسی
         function toPersianDigits(n) {
             const farsiDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
             return n.toString().replace(/\d/g, x => farsiDigits[x]);
@@ -698,7 +547,7 @@
             return toPersianDigits(n.toLocaleString());
         }
 
-        let toastTimer; 
+        // سیستم هوشمند اعلان‌ها (Toast Queue)
         let toastQueue = [];
         let isToastShowing = false;
 
@@ -733,16 +582,16 @@
             toastGroup.innerText = currentToast.groupName ? ` ${currentToast.groupName}` : "";
             
             if (toastIconContainer && toastIcon) {
-                toastIconContainer.className = "w-6 h-6 rounded-full flex items-center justify-center text-white shadow-sm transition-all duration-300";
+                toastIconContainer.className = "w-6 h-6 rounded-full flex items-center justify-center text-white shrink-0";
                 
                 if (currentToast.type === 'error') {
-                    toastIconContainer.classList.add('bg-red-500', 'animate-pulse');
+                    toastIconContainer.classList.add('bg-red-500');
                     toastIcon.className = "fas fa-exclamation-circle text-[10px]";
                 } else if (currentToast.type === 'remove') {
-                    toastIconContainer.classList.add('bg-red-500', 'animate-bounce');
+                    toastIconContainer.classList.add('bg-red-500');
                     toastIcon.className = "fas fa-trash-alt text-[10px]";
                 } else if (currentToast.type === 'warning') {
-                    toastIconContainer.classList.add('bg-yellow-500', 'animate-pulse');
+                    toastIconContainer.classList.add('bg-yellow-500');
                     toastIcon.className = "fas fa-exclamation text-[10px]";
                 } else if (currentToast.type === 'info') {
                     toastIconContainer.classList.add('bg-blue-500');
@@ -761,28 +610,19 @@
                 toast.classList.add('toast-hidden');
                 setTimeout(() => {
                     processToastQueue();
-                }, 500);
-            }, 3500);
+                }, 400);
+            }, 3000);
         }
 
+        // کپی خودکار در کلیپ‌بورد برای ایتا
         function copyToClipboard(text) {
             return new Promise((resolve, reject) => {
                 if (navigator.clipboard && navigator.clipboard.writeText) {
-                    navigator.clipboard.writeText(text)
-                        .then(resolve)
-                        .catch(err => {
-                            if (fallbackCopyToClipboard(text)) {
-                                resolve();
-                            } else {
-                                reject(err);
-                            }
-                        });
+                    navigator.clipboard.writeText(text).then(resolve).catch(err => {
+                        if (fallbackCopyToClipboard(text)) resolve(); else reject(err);
+                    });
                 } else {
-                    if (fallbackCopyToClipboard(text)) {
-                        resolve();
-                    } else {
-                        reject(new Error("کپی متن در حافظه موقت در این مرورگر امکان‌پذیر نیست."));
-                    }
+                    if (fallbackCopyToClipboard(text)) resolve(); else reject(new Error("محدودیت مرورگر"));
                 }
             });
         }
@@ -791,42 +631,27 @@
             const textArea = document.createElement("textarea");
             textArea.value = text;
             textArea.style.position = "fixed";
-            textArea.style.top = "-99999px";
-            textArea.style.left = "-99999px";
-            textArea.style.width = "2em";
-            textArea.style.height = "2em";
-            textArea.style.padding = "0";
-            textArea.style.border = "none";
-            textArea.style.outline = "none";
-            textArea.style.boxShadow = "none";
-            textArea.style.background = "transparent";
-            
+            textArea.style.opacity = "0";
             document.body.appendChild(textArea);
             textArea.focus();
             textArea.select();
-            
             let successful = false;
             try {
                 successful = document.execCommand('copy');
             } catch (err) {
-                console.error('محدودیت کپی فاکتور به روش سنتی:', err);
+                console.error(err);
             }
-            
             document.body.removeChild(textArea);
             return successful;
         }
 
-        function showCustomConfirm(title, message, onConfirm, yesText = "بله، مطمئنم", noText = "انصراف", yesColorClass = "bg-red-600 hover:bg-red-700", iconHtml = '<i class="fas fa-exclamation-triangle text-2xl"></i>', iconBgClass = "bg-red-100 text-red-600") {
+        // مودال تایید اختصاصی شیک به همراه آیکون داینامیک
+        function showCustomConfirm(title, message, onConfirm, yesText = "بله، مطمئنم", noText = "انصراف", yesColorClass = "bg-blue-600 hover:bg-blue-700", iconHtml = '<i class="fas fa-exclamation-triangle"></i>') {
             const modal = document.getElementById('confirmModal');
             document.getElementById('confirmTitle').innerText = title;
             document.getElementById('confirmMessage').innerText = message;
+            document.getElementById('confirmIcon').innerHTML = iconHtml;
             modal.classList.remove('hidden');
-            
-            const iconContainer = modal.querySelector('.w-16.h-16');
-            if (iconContainer) {
-                iconContainer.className = `w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${iconBgClass}`;
-                iconContainer.innerHTML = iconHtml;
-            }
             
             const yesBtn = document.getElementById('confirmYesBtn');
             const noBtn = document.getElementById('confirmNoBtn');
@@ -838,7 +663,7 @@
             
             newYesBtn.innerText = yesText;
             newNoBtn.innerText = noText;
-            newYesBtn.className = `flex-1 text-white py-3 rounded-xl font-bold text-sm transition-colors ${yesColorClass}`;
+            newYesBtn.className = `flex-1 text-white py-2.5 rounded-xl font-bold text-xs transition ${yesColorClass}`;
             
             newYesBtn.addEventListener('click', () => {
                 modal.classList.add('hidden');
@@ -850,6 +675,7 @@
             });
         }
 
+        // داده‌های رسمی کاتالوگ فروشگاه پوستر ایران
         const groupInfo = {
             1: { name: "سایز ۲۹×۲۱ دوروچاپ", images: [
                 { filename: "جدول دوستی تمرینی.jpg", name: "جدول دوستی تمرینی", price: 200000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500] },
@@ -908,14 +734,14 @@
                 { filename: "فلش کارت اعداد.jpg", name: "فلش کارت اعداد", price: 450000, allowedQuantities: [0, 60, 120, 240, 480] },
                 { filename: "فلش کارت نگاره ها و نشانه ها.jpg", name: "فلش کارت نگاره‌ها و نشانه‌ها", price: 450000, allowedQuantities: [0, 60, 120, 240, 480] },
                 { filename: "فلش کارت الفبا.jpg", name: "فلش کارت الفبا", price: 380000, allowedQuantities: [0] },
-                { filename: "استیکر A4.jpg", name: "استیکر A4", price: 150000, allowedQuantities: [0, 100, 200, 300, 400, 500, 1200, 2400] },
+                { filename: "استیکر A4.jpeg", name: "استیکر A4", price: 150000, allowedQuantities: [0, 100, 200, 300, 400, 500, 1200, 2400] },
             ]}
         };
 
         let cart = {};
         let currentScreen = 'home'; 
 
-        // اصلاح فرآیند لود آدرس تصاویر گالری برای همگام‌سازی و وب‌پک با گیت‌هاب بر اساس نام پوشه و نوع فرمت تصویر
+        // مدیریت آدرس تصاویر
         function getThumbnailUrl(groupName, filename) {
             const baseName = filename.substring(0, filename.lastIndexOf('.')) || filename;
             return `https://posteriran.github.io/pixel/Image/${encodeURIComponent(groupName)}/${encodeURIComponent(baseName)}.webp`;
@@ -925,16 +751,16 @@
             return `https://posteriran.github.io/pixel/Image/${encodeURIComponent(groupName)}/${encodeURIComponent(filename)}`;
         }
 
-        // عملکرد اسکرول و هایلایت بخش مزایا برای دکمه «چرا پوسترهای آموزشی» بدون باز شدن تصادفی خروج
+        // اسکرول نرم به بخش مزایا
         function scrollToBenefitsAndHighlight() {
             const benefitsSection = document.getElementById('benefits');
             if (benefitsSection) {
-                benefitsSection.scrollIntoView({ behavior: 'smooth' });
-                showToast("✨ به بخش مزایا هدایت شدید! ویژگی‌های برجسته پوسترهای آموزشی را در زیر مطالعه کنید.", "آموزش", "info");
+                benefitsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                showToast("✨ به بخش مزایای پوسترها هدایت شدید.", "پوستر ایران", "info");
             }
         }
 
-        // سیستم هوشمند جابجایی صفحه به همراه درج وضعیت در History مرورگر برای دکمه بک
+        // مسیریابی و کنترل نماها (SPA Layout)
         function showScreen(screenId, shouldScroll = true, isBackAction = false) {
             currentScreen = screenId;
             const sections = ['home', 'gallery', 'cart', 'about', 'history', 'assistant'];
@@ -949,16 +775,15 @@
                 target.classList.remove('hidden-section');
             }
 
-            // پاکسازی افکت‌های منوی ناوبری پایینی
+            // ناوبری پایینی
             document.querySelectorAll('nav button').forEach(btn => {
                 btn.classList.remove('active-nav-btn', 'assistant-active', 'text-blue-700', 'text-purple-700');
-                btn.classList.add('text-gray-500');
+                btn.classList.add('text-slate-400');
             });
             
-            // اعمال افکت فعال مدرن و انیمیشن سه‌بعدی برای دکمه فعال شده
             const activeNav = document.getElementById('nav-' + screenId);
             if (activeNav) {
-                activeNav.classList.remove('text-gray-500');
+                activeNav.classList.remove('text-slate-400');
                 activeNav.classList.add('active-nav-btn');
                 if (screenId === 'assistant') {
                     activeNav.classList.add('assistant-active', 'text-purple-700');
@@ -975,74 +800,44 @@
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
 
-            // اگر تغییر صفحه از طریق فشردن دکمه‌های سایت انجام شده (نه زدن دکمه بک)، وضعیت در تاریخچه ذخیره می‌شود
             if (!isBackAction) {
                 history.pushState({ screen: screenId }, "", `#${screenId}`);
             }
         }
 
-        // مانیتورینگ بک استیت (Back Key) و همگام‌سازی SPA با مرورگر و گوشی
         window.addEventListener('popstate', function (event) {
-            // ۱. ابتدا بررسی بستن مودال تصویر بزرگ‌نمایی شده
             const modal = document.getElementById("imageModal");
             if (modal && !modal.classList.contains("hidden")) {
                 closeModal(true);
                 return;
             }
 
-            // ۲. بررسی بستن کادر تایید انتخابی پیش‌فرض
             const confirmModal = document.getElementById("confirmModal");
             if (confirmModal && !confirmModal.classList.contains("hidden")) {
                 confirmModal.classList.add("hidden");
                 return;
             }
 
-            // ۳. هدایت به صفحات قبلی تاریخچه
             if (event.state && event.state.screen) {
                 showScreen(event.state.screen, true, true);
-            } else {
-                // اگر استیت خالی بود به صفحه خانه برمی‌گردیم
-                if (currentScreen !== 'home') {
-                    showScreen('home', true, true);
-                } else {
-                    // در صفحه اصلی زدن بک کادر خروج را نمایان می‌کند
-                    showExitConfirm();
-                }
+            } else if (currentScreen !== 'home') {
+                showScreen('home', true, true);
             }
         });
 
-        // نمایش پاپ‌آپ تاییدیه خروج جهت امنیت کاربر اندروید
-        function showExitConfirm() {
-            showCustomConfirm(
-                "خروج از برنامه",
-                "آیا می‌خواهید از اپلیکیشن پوستر ایران خارج شوید؟",
-                () => {
-                    window.close();
-                    setTimeout(() => {
-                        window.location.href = "about:blank";
-                    }, 500);
-                },
-                "خروج",
-                "ماندن",
-                "bg-red-600 hover:bg-red-700",
-                '<i class="fas fa-sign-out-alt text-2xl"></i>',
-                "bg-red-100 text-red-600"
-            );
-        }
-
+        // بارگذاری گالری دو ستونه مجهز به تصویر شاخص
         function loadImages(shouldScroll = false) {
             const gallerySection = document.getElementById('galleryScreen');
             if (shouldScroll && gallerySection) {
-                window.scrollTo({ top: gallerySection.offsetTop - 20, behavior: 'smooth' });
+                window.scrollTo({ top: gallerySection.offsetTop - 60, behavior: 'smooth' });
             }
             
             const groupId = document.getElementById('groupSelect').value;
             const info = groupInfo[groupId];
             const container = document.getElementById('imagesContainer');
             
-            if (!container) return;
+            if (!container || !info) return;
             container.innerHTML = '';
-            if (!info) return;
             
             info.images.forEach(img => {
                 const productId = info.name + "_" + img.filename;
@@ -1050,7 +845,7 @@
                 const qtys = img.allowedQuantities || [0, 50, 100, 200];
                 
                 const box = document.createElement('div');
-                box.className = 'image-box bg-white p-3 rounded-2xl border shadow-sm flex flex-col items-center';
+                box.className = 'image-box bg-white p-3 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center justify-between';
                 
                 let optionsHtml = qtys.map(q =>
                     `<option value="${q}" ${q === currentQty ? 'selected' : ''}>${q === 0 ? 'انتخاب تعداد' : toPersianDigits(q) + ' عدد'}</option>`
@@ -1060,19 +855,21 @@
                 const originalSrc = getOriginalUrl(info.name, img.filename);
                 
                 box.innerHTML = `
-                    <div class="w-full h-32 mb-2 rounded-lg bg-gray-50 flex items-center justify-center overflow-hidden cursor-pointer" 
+                    <div class="w-full h-28 mb-2 rounded-xl bg-slate-50 flex items-center justify-center overflow-hidden cursor-pointer relative" 
                          onclick="openModal('${originalSrc}')">
                         <img src="${thumbSrc}" 
-                             class="w-full h-full object-contain transition-transform hover:scale-110" 
+                             class="w-full h-full object-contain" 
                              onerror="this.onerror=null; this.src='${originalSrc}';">
+                        <div class="absolute bottom-1 right-1 bg-black/40 backdrop-blur-md p-1 rounded-lg text-[8px] text-white">
+                            <i class="fas fa-search-plus"></i>
+                        </div>
                     </div>
-                    <h4 class="font-bold text-[11px] text-center h-8 overflow-hidden mb-1">${img.name}</h4>
-                    <p class="text-blue-600 font-black text-[11px] mb-3">${toPersianPrice(img.price)} ریال</p>
-                    <div class="w-full flex items-center gap-2 mt-auto pt-2 border-t">
-                        <span class="text-[10px] text-gray-400 font-bold">تعداد:</span>
-                        <div class="relative bg-blue-50 border border-blue-100 rounded-xl px-2 py-1 flex-1 text-center">
+                    <h4 class="font-bold text-[10px] text-center text-slate-800 h-7 overflow-hidden leading-tight mb-1">${img.name}</h4>
+                    <p class="text-blue-600 font-black text-[10px] mb-2">${toPersianPrice(img.price)} ریال</p>
+                    <div class="w-full mt-auto">
+                        <div class="relative bg-slate-50 border border-slate-200 rounded-xl px-2 py-1.5 text-center">
                             <select onchange="addToCart('${img.filename}', '${img.name}', parseInt(this.value), ${img.price}, '${info.name}', ${JSON.stringify(qtys)}); loadImages(false);" 
-                                    class="w-full text-[11px] font-bold text-blue-700 bg-transparent outline-none cursor-pointer appearance-none text-center">
+                                    class="w-full text-[10px] font-black text-blue-700 bg-transparent outline-none cursor-pointer appearance-none text-center">
                                 ${optionsHtml}
                             </select>
                         </div>
@@ -1081,6 +878,7 @@
             });
         }
 
+        // اضافه کردن هوشمند به فاکتور خرید
         function addToCart(filename, name, qty, price, groupName, allowedQtys) {
             const productId = groupName + "_" + filename;
             const previousQty = cart[productId] ? cart[productId].quantity : 0;
@@ -1089,7 +887,7 @@
                 delete cart[productId];
                 updateBadge();
                 saveCartToStorage();
-                showToast(`❌ «${name}» از سبد خرید برداشته شد.`, groupName, "remove");
+                showToast(`❌ «${name}» از سبد شما خارج شد.`, groupName, "remove");
             } else {
                 cart[productId] = {
                     filename: filename,
@@ -1103,19 +901,14 @@
                 saveCartToStorage();
 
                 if (previousQty > 0 && previousQty !== qty) {
-                    if (qty > previousQty) {
-                        const diff = qty - previousQty;
-                        showToast(`📈 تعداد «${name}» به ${toPersianDigits(qty)} عدد افزایش یافت (به میزان ${toPersianDigits(diff)}+ عدد)`, groupName, "success");
-                    } else {
-                        const diff = previousQty - qty;
-                        showToast(`📉 تعداد «${name}» به ${toPersianDigits(qty)} عدد کاهش یافت (به میزان ${toPersianDigits(diff)}- عدد)`, groupName, "info");
-                    }
+                    showToast(`📈 تعداد به ${toPersianDigits(qty)} عدد تغییر یافت.`, groupName, "success");
                 } else {
-                    showToast(`✨ ${toPersianDigits(qty)} عدد «${name}» به سبد خرید اضافه شد!`, groupName, "success");
+                    showToast(`✨ ${toPersianDigits(qty)} عدد به سبد شما افزوده شد!`, groupName, "success");
                 }
             }
         }
 
+        // به روز رسانی نشانگرهای تعداد سبد خرید
         function updateBadge() {
             const itemsCount = Object.keys(cart).length;
             const isSubmitted = localStorage.getItem('cart_submitted') === 'true';
@@ -1141,6 +934,7 @@
             }
         }
 
+        // رندر و محاسبه اقلام سبد خرید
         function updateCartDisplay() {
             validateCart();
             const list = document.getElementById('cartList');
@@ -1148,7 +942,7 @@
             const items = Object.values(cart);
             
             if (items.length === 0) {
-                list.innerHTML = `<div class="text-center py-20"><p class="text-gray-400 font-bold">سبد خرید شما خالی است</p></div>`;
+                list.innerHTML = `<div class="text-center py-10"><p class="text-slate-400 font-bold text-xs">سبد خرید شما در حال حاضر خالی است.</p></div>`;
                 totalDisplay.innerText = '۰ ریال';
                 return;
             }
@@ -1163,101 +957,58 @@
                 
                 if (groupItemsInCart.length > 0) {
                     htmlContent += `
-                    <div class="mb-4 bg-white border border-gray-100 rounded-3xl overflow-hidden shadow-sm">
-                        <div class="bg-gray-50/80 px-5 py-2 border-b border-gray-100 flex items-center gap-2">
-                            <div class="w-1 h-3 bg-blue-600 rounded-full"></div>
-                            <span class="text-[10px] font-black text-gray-700">${gName}</span>
+                    <div class="bg-slate-50 border border-slate-100 rounded-2xl overflow-hidden mb-3">
+                        <div class="bg-slate-100 px-3 py-2 border-b border-slate-200 flex items-center gap-1.5">
+                            <span class="text-[9px] font-black text-slate-700">${gName}</span>
                         </div>
-                        <div class="divide-y divide-gray-50">`;
+                        <div class="divide-y divide-slate-100">`;
                     
-                    group.images.forEach(imgData => {
-                        const productId = gName + "_" + imgData.filename;
-                        const item = cart[productId];
+                    groupItemsInCart.forEach(item => {
+                        total += (item.quantity * item.price);
+                        const qtys = item.allowedQtys || [0, 50, 100, 200];
+                        let optionsHtml = qtys.map(q => `<option value="${q}" ${q === item.quantity ? 'selected' : ''}>${q === 0 ? 'حذف' : toPersianDigits(q) + ' عدد'}</option>`).join('');
                         
-                        if (item) {
-                            total += (item.quantity * item.price);
-                            const qtys = imgData.allowedQuantities || [0, 50, 100, 200];
-                            let optionsHtml = qtys.map(q => `<option value="${q}" ${q === item.quantity ? 'selected' : ''}>${q === 0 ? 'حذف' : toPersianDigits(q) + ' عدد'}</option>`).join('');
-                            
-                            const thumbSrc = getThumbnailUrl(item.groupName, item.filename);
-                            const originalSrc = getOriginalUrl(item.groupName, item.filename);
-                            
-                            htmlContent += `
-                            <div class="p-4 flex items-center justify-between">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-12 h-12 bg-gray-50 rounded-xl overflow-hidden border border-gray-100 flex-shrink-0 p-1 cursor-pointer" onclick="openModal('${originalSrc}')">
-                                        <img src="${thumbSrc}" class="w-full h-full object-contain" onerror="this.onerror=null; this.src='${originalSrc}';">
-                                    </div>
-                                    <div>
-                                        <h4 class="text-[11px] font-bold text-gray-800 mb-2">${item.name}</h4>
-                                        <div class="flex items-center gap-2">
-                                            <div class="relative bg-blue-50 border border-blue-100 rounded-lg px-2 py-0.5">
-                                                <select onchange="addToCart('${item.filename}', '${item.name}', parseInt(this.value), ${item.price}, '${item.groupName}', ${JSON.stringify(qtys)}); updateCartDisplay();" 
-                                                        class="text-[10px] font-bold text-blue-700 bg-transparent outline-none cursor-pointer appearance-none">
-                                                    ${optionsHtml}
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
+                        const thumbSrc = getThumbnailUrl(item.groupName, item.filename);
+                        
+                        htmlContent += `
+                        <div class="p-3 flex items-center justify-between bg-white">
+                            <div class="flex items-center gap-2">
+                                <div class="w-10 h-10 bg-slate-50 rounded-lg overflow-hidden border p-0.5 shrink-0">
+                                    <img src="${thumbSrc}" class="w-full h-full object-contain">
                                 </div>
-                            </div>`;
-                        }
+                                <div>
+                                    <h4 class="text-[10px] font-bold text-slate-800 mb-1">${item.name}</h4>
+                                    <span class="text-[9px] text-blue-600 block">${toPersianPrice(item.price)} ریال</span>
+                                </div>
+                            </div>
+                            <div class="relative bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 shrink-0">
+                                <select onchange="addToCart('${item.filename}', '${item.name}', parseInt(this.value), ${item.price}, '${item.groupName}', ${JSON.stringify(qtys)}); updateCartDisplay();" 
+                                        class="text-[9px] font-black text-blue-700 bg-transparent outline-none cursor-pointer appearance-none">
+                                    ${optionsHtml}
+                                </select>
+                            </div>
+                        </div>`;
                     });
                     htmlContent += `</div></div>`;
                 }
             });
 
-            htmlContent += `
-            <div class="mt-6 p-5 bg-blue-50/50 rounded-[2rem] border-2 border-blue-100/50">
-                <h3 class="text-[11px] font-black text-blue-900 mb-4 flex items-center gap-2">
-                    <i class="fas fa-chart-pie"></i> خلاصه سفارش بر اساس گروه:
-                </h3>
-                <div class="space-y-3">`;
-            
-            Object.keys(groupInfo).forEach(groupId => {
-                const gName = groupInfo[groupId].name;
-                const groupItemsInCart = items.filter(item => item.groupName === gName);
-                
-                if (groupItemsInCart.length > 0) {
-                    let gQty = 0;
-                    let gTotal = 0;
-                    groupItemsInCart.forEach(item => {
-                        gQty += Number(item.quantity);
-                        gTotal += (item.quantity * item.price);
-                    });
-                    
-                    htmlContent += `
-                        <div class="flex flex-col border-b border-blue-100/30 pb-2 last:border-0">
-                            <div class="flex justify-between items-center mb-1">
-                                <span class="text-[11px] font-bold text-gray-700">${gName}</span>
-                                <span class="text-[11px] font-black text-blue-600">${toPersianPrice(gTotal)} ریال</span>
-                            </div>
-                            <span class="text-[9px] text-gray-500 italic">تعداد کل این دسته: ${toPersianDigits(gQty)} عدد</span>
-                        </div>`;
-                }
-            });
-            htmlContent += `</div></div>`;
-            
-            let discountPercent = (total >= 1000000000) ? 0.1 : (total >= 700000000 ? 0.07 : (total >= 500000000 ? 0.05 : 0));
+            // محاسبات تخفیف و هزینه‌ها بر اساس استاندارد توزیع
+            let discountPercent = (total >= 10000000) ? 0.1 : (total >= 7000000 ? 0.07 : (total >= 5000000 ? 0.05 : 0));
             let discount = total * discountPercent;
             let afterDiscount = total - discount;
-            let packageCount = Math.floor(afterDiscount / 200000000) + 1;
-            let shipping = packageCount * 1000000;
+            let packageCount = Math.floor(afterDiscount / 2000000) + 1;
+            let shipping = packageCount * 100000;
             let finalPayable = afterDiscount + shipping;
             
             htmlContent += `
-            <div class="mt-6 p-6 bg-slate-900 rounded-[2.5rem] text-white shadow-xl">
-                <div class="space-y-3 mb-6">
-                    <div class="flex justify-between text-[11px] opacity-60"><span>مبلغ کل:</span><span>${toPersianPrice(total)} ریال</span></div>
-                    ${discount > 0 ? `<div class="flex justify-between text-[11px] text-emerald-400"><span>تخفیف (${toPersianDigits(Math.round(discountPercent*100))}٪):</span><span>${toPersianPrice(discount)}- ریال</span></div>` : ''}
-                    <div class="flex justify-between text-[11px] opacity-60"><span>هزینه ارسال (${toPersianDigits(packageCount)} بسته):</span><span>${toPersianPrice(shipping)} ریال</span></div>
-                </div>
-                <div class="flex justify-between items-center pt-4 border-t border-white/10">
-                    <div class="flex flex-col">
-                        <span class="text-[10px] opacity-50">مبلغ قابل پرداخت:</span>
-                        <span class="font-black text-xl text-yellow-400 mt-1">${toPersianPrice(finalPayable)} <small class="text-[10px]">ریال</small></span>
-                    </div>
-                    <i class="fas fa-file-invoice-dollar text-3xl opacity-20"></i>
+            <div class="p-4 bg-slate-900 rounded-2xl text-white shadow-md text-xs space-y-2 mt-4">
+                <div class="flex justify-between opacity-80"><span>مبلغ کل کالاها:</span><span>${toPersianPrice(total)} ریال</span></div>
+                ${discount > 0 ? `<div class="flex justify-between text-emerald-400"><span>تخفیف ویژه همکار (${toPersianDigits(Math.round(discountPercent*100))}٪):</span><span>${toPersianPrice(discount)}- ریال</span></div>` : ''}
+                <div class="flex justify-between opacity-80"><span>هزینه حمل‌ونقل (${toPersianDigits(packageCount)} بسته):</span><span>${toPersianPrice(shipping)} / باربری پس‌کرایه</span></div>
+                <div class="flex justify-between items-center pt-2 border-t border-white/10 font-bold text-sm text-yellow-300">
+                    <span>جمع کل فاکتور سفارش:</span>
+                    <span>${toPersianPrice(finalPayable)} ریال</span>
                 </div>
             </div>`;
             
@@ -1285,9 +1036,7 @@
         }
 
         function saveCartToStorage() {
-            if (cart) {
-                localStorage.setItem('poster_cart', JSON.stringify(cart));
-            }
+            localStorage.setItem('poster_cart', JSON.stringify(cart));
         }
 
         function loadCartFromStorage() {
@@ -1302,255 +1051,128 @@
             }
         }
 
+        // ثبت فاکتور نهایی و انتقال به واتس‌آپ / ایتا
         function submitOrder(platform, isConfirmed = false) {
-            const name = document.getElementById('customerName').value;
-            const phone = document.getElementById('customerPhone').value;
-            const address = document.getElementById('customerAddress').value;
+            const name = document.getElementById('customerName').value.trim();
+            const phone = document.getElementById('customerPhone').value.trim();
+            const address = document.getElementById('customerAddress').value.trim();
             
             if (!name || !phone || !address || Object.keys(cart).length === 0) {
-                showToast('لطفاً اطلاعات را کامل کرده و سبد را پر کنید.', 'خطا در ثبت', 'error');
+                showToast('لطفاً آدرس، مشخصات و اقلام فاکتور را تکمیل نمایید.', 'خطای اعتبار سنجی', 'error');
                 return;
             }
 
             if (!isConfirmed) {
-                let title = "";
-                let message = "";
-                let yesColorClass = "";
-                let iconHtml = "";
-                let iconBgClass = "";
-
-                if (platform === 'whatsapp') {
-                    title = "تایید ارسال سفارش در واتس‌آپ";
-                    message = "پس از انتخاب پوسترهای مورد نظر در سبد خرید و تکمیل اطلاعات فردی، با تایید این مرحله، متن فاکتور به همراه جزئیات به صورت خودکار به چت پشتیبانی ما در واتس‌آپ منتقل و ارسال خواهد شد.";
-                    yesColorClass = "bg-green-600 hover:bg-green-700 shadow-lg shadow-green-100";
-                    iconHtml = '<i class="fab fa-whatsapp text-2xl"></i>';
-                    iconBgClass = "bg-green-100 text-green-600";
-                } else if (platform === 'eitaa') {
-                    title = "تایید ارسال سفارش در ایتا";
-                    message = "با تایید این مرحله، متن نهایی فاکتور به صورت خودکار در حافظه گوشی شما کپی می‌شود و به پشتیبانی پوستر ایران در ایتا هدایت خواهید شد تا بتوانید متن را به راحتی پیست (Paste) و ارسال کنید.";
-                    yesColorClass = "bg-orange-500 hover:bg-orange-600 shadow-lg shadow-orange-100";
-                    iconHtml = '<i class="fas fa-paper-plane text-2xl"></i>';
-                    iconBgClass = "bg-orange-100 text-orange-600";
-                }
-
+                let title = "تایید ارسال سفارش";
+                let message = platform === 'whatsapp' ? "جزئیات فاکتور فورا به چت واتس‌آپ پشتیبانی ارسال خواهد شد." : "متن فاکتور سفارش کپی شده و به کانال پشتیبان ایتا منتقل می‌شوید.";
+                let yesColorClass = platform === 'whatsapp' ? "bg-emerald-600" : "bg-orange-500";
+                
                 showCustomConfirm(title, message, () => {
                     submitOrder(platform, true);
-                }, "ارسال", "انصراف", yesColorClass, iconHtml, iconBgClass);
+                }, "ارسال فاکتور", "انصراف", yesColorClass);
                 return;
             }
             
             const now = new Date();
             const dateStr = now.toLocaleDateString('fa-IR');
-            const timeStr = now.toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' });
-            const orderNum = getOrderNumber();
+            const orderNum = Math.floor(Math.random() * 9000) + 1000;
             
-            let text = `🗓️ تاریخ: ${dateStr} | ساعت: ${timeStr}\n`;
-            text += `🛍️ سفارش جدید - شماره: ${toPersianDigits(orderNum)}\n\n`;
-            text += `📌 آدرس: ${address}\n`;
-            text += `👤 نام: ${name}\n`;
-            text += `📱 همراه: ${phone}\n\n`;
-            text += `📋 جزئیات سفارش:\n`;
+            let text = `🗓️ تاریخ ثبت: ${dateStr}\n`;
+            text += `🛍️ سفارش پوستر ایران شماره: ${toPersianDigits(orderNum)}\n\n`;
+            text += `👤 خریدار: ${name}\n`;
+            text += `📱 شماره تماس: ${phone}\n`;
+            text += `📌 آدرس پستی: ${address}\n\n`;
+            text += `📋 اقلام ثبت شده در فاکتور:\n`;
             text += `---------------------------------------\n`;
             
             let total = 0;
-            let groupSummariesText = `📊 خلاصه گروه‌ها:\n`;
             const itemsInCart = Object.values(cart);
             
-            Object.keys(groupInfo).forEach(groupId => {
-                const group = groupInfo[groupId];
-                const gName = group.name;
-                const groupItemsInCart = itemsInCart.filter(item => item.groupName === gName);
-                
-                if (groupItemsInCart.length > 0) {
-                    text += `\n🔹 ${gName}:\n`;
-                    let groupQty = 0;
-                    let groupTotal = 0;
-                    
-                    group.images.forEach(imgData => {
-                        const productId = gName + "_" + imgData.filename;
-                        const item = cart[productId];
-                        if (item) {
-                            let itemSum = item.quantity * item.price;
-                            text += `- ${item.name}: ${toPersianDigits(item.quantity)} عدد\n`;
-                            groupQty += item.quantity;
-                            groupTotal += itemSum;
-                            total += itemSum;
-                        }
-                    });
-                    groupSummariesText += `▫️ ${gName}: ${toPersianDigits(groupQty)} عدد\n`;
-                }
+            itemsInCart.forEach(item => {
+                let itemSum = item.quantity * item.price;
+                text += `🔹 [${item.groupName}] - ${item.name}: ${toPersianDigits(item.quantity)} عدد\n`;
+                total += itemSum;
             });
             
-            let discountPercent = (total >= 1000000000) ? 0.10 : (total >= 700000000 ? 0.07 : (total >= 500000000 ? 0.05 : 0));
+            let discountPercent = (total >= 10000000) ? 0.1 : (total >= 7000000 ? 0.07 : (total >= 5000000 ? 0.05 : 0));
             let discountAmount = total * discountPercent;
-            let afterDiscount = total - discountAmount;
+            let finalPayable = total - discountAmount + (Math.floor(total / 2000000) + 1) * 100000;
             
-            let packageCount = Math.floor(afterDiscount / 200000000) + 1;
-            let shippingCost = packageCount * 1000000;
-            let finalPayable = afterDiscount + shippingCost;
-            
-            text += `\n---------------------------------------\n`;
-            text += groupSummariesText;
-            text += `---------------------------------------\n\n`;
+            text += `---------------------------------------\n`;
             text += `💵 جمع کالاها: ${toPersianPrice(total)} ریال\n`;
+            if (discountAmount > 0) text += `🎁 تخفیف: ${toPersianPrice(discountAmount)} ریال\n`;
+            text += `💰 مبلغ نهایی پرداختی: ${toPersianPrice(finalPayable)} ریال\n\n`;
+            text += `لطفاً جهت هماهنگی بسته‌بندی اقدام نمایید. با تشکر.`;
             
-            if (discountAmount > 0) {
-                text += `🎁 تخفیف (${toPersianDigits(Math.round(discountPercent * 100))}٪): ${toPersianPrice(discountAmount)} ریال\n`;
-            }
-            
-            text += `🚚 باربری (${toPersianDigits(packageCount)} بسته): ${toPersianPrice(shippingCost)} ریال\n`;
-            text += `💰 مبلغ نهایی: ${toPersianPrice(finalPayable)} ریال\n\n`;
-            text += `✅ سفارش شما با موفقیت ثبت شد. در اسرع وقت هماهنگی لازم صورت می‌گیرد.`;
-            
-            addToHistory();
-            incrementOrderNumber();
+            addToHistory(finalPayable, orderNum);
             
             copyToClipboard(text).then(() => {
                 if (platform === 'eitaa') {
-                    showToast("📋 متن فاکتور کپی شد؛ در حال انتقال به پیام‌رسان ایتا...", "ایتا", "success");
-                    setTimeout(() => { window.open(`https://eitaa.com/@PosterIran`, '_blank'); }, 1000);
-                } else if (platform === 'whatsapp') {
-                    showToast("🚀 ارسال خودکار جزئیات فاکتور به پشتیبانی واتس‌آپ...", "واتس‌آپ", "success");
+                    showToast("📋 متن کپی شد؛ در حال هدایت به ایتا...", "ایتا", "success");
+                    setTimeout(() => { window.open(`https://eitaa.com/@PosterIran`, '_blank'); }, 1200);
+                } else {
+                    showToast("🚀 ارسال فاکتور به واتس‌آپ...", "واتس‌آپ", "success");
                     const url = `https://wa.me/989010195885?text=${encodeURIComponent(text)}`;
-                    setTimeout(() => { window.open(url, '_blank'); }, 1000);
+                    setTimeout(() => { window.open(url, '_blank'); }, 1200);
                 }
                 
                 cart = {};
                 saveCartToStorage();
                 updateBadge();
                 setTimeout(() => showScreen('history'), 1500);
-            }).catch(err => {
-                console.error("خطا در اجرای فرآیند کپی خودکار:", err);
-                showToast("⚠️ کپی خودکار با محدودیت مواجه شد، اما در حال انتقال به پیام‌رسان هستیم...", "سیستم", "warning");
-                
-                if (platform === 'eitaa') {
-                    setTimeout(() => { window.open(`https://eitaa.com/@PosterIran`, '_blank'); }, 1500);
-                } else if (platform === 'whatsapp') {
-                    const url = `https://wa.me/989010195885?text=${encodeURIComponent(text)}`;
-                    setTimeout(() => { window.open(url, '_blank'); }, 1500);
-                }
-                
-                cart = {};
-                saveCartToStorage();
-                updateBadge();
-                setTimeout(() => showScreen('history'), 2000);
             });
         }
 
         function clearCart() {
-            showCustomConfirm(
-                'پاک کردن سبد خرید', 
-                'آیا از پاک کردن کامل سبد خرید مطمئن هستید؟ این عمل غیرقابل بازگشت است.', 
-                () => {
-                    cart = {};
-                    saveCartToStorage();
-                    updateBadge();
-                    localStorage.removeItem('cart_submitted');
-                    showScreen('gallery');
-                    showToast('🗑️ سبد خرید شما با موفقیت تخلیه شد.', 'حذف', 'remove');
-                    updateCartDisplay();
-                },
-                'بله، مطمئنم',
-                'انصراف',
-                'bg-red-600 hover:bg-red-700',
-                '<i class="fas fa-trash-alt text-2xl"></i>',
-                'bg-red-100 text-red-600'
-            );
+            showCustomConfirm('پاک کردن سبد', 'آیا مایل به خالی کردن سبد خرید هستید؟', () => {
+                cart = {};
+                saveCartToStorage();
+                updateBadge();
+                showScreen('gallery');
+                showToast('🗑️ سبد شما با موفقیت تخلیه شد.', 'مدیریت', 'remove');
+            });
         }
 
         function validateCart() {
             if (!cart || Object.keys(cart).length === 0) return;
-            if (!groupInfo || Object.keys(groupInfo).length === 0) return;
-            
             let isCartChanged = false;
-            const allLiveProducts = [];
-            
-            Object.values(groupInfo).forEach(group => {
-                if (group && group.images) {
-                    group.images.forEach(img => {
-                        allLiveProducts.push({
-                            filename: img.filename,
-                            price: Number(img.price),
-                            name: img.name,
-                            groupName: group.name,
-                            allowedQuantities: img.allowedQuantities || [0, 50, 100, 200]
-                        });
-                    });
-                }
-            });
-            
-            if (allLiveProducts.length === 0) return;
             
             for (const productId in cart) {
-                const cartItem = cart[productId];
-                if (!cartItem) continue;
+                const item = cart[productId];
+                if (!item) continue;
                 
-                const liveRef = allLiveProducts.find(p => p.filename === cartItem.filename);
-                if (!liveRef) {
-                    delete cart[productId];
-                    isCartChanged = true;
-                    continue;
-                }
-                
-                const validQtys = liveRef.allowedQuantities.filter(q => q > 0);
-                if (!liveRef.allowedQuantities.includes(cartItem.quantity)) {
-                    if (validQtys.length > 0) {
-                        cartItem.quantity = Math.max(...validQtys);
-                    } else {
-                        delete cart[productId];
+                // تایید اعتبار موجودیت کالا بر اساس کاتالوگ جاری
+                let exists = false;
+                Object.values(groupInfo).forEach(group => {
+                    if (group.name === item.groupName) {
+                        group.images.forEach(img => {
+                            if (img.filename === item.filename) exists = true;
+                        });
                     }
-                    isCartChanged = true;
-                }
+                });
                 
-                if (Number(cartItem.price) !== Number(liveRef.price)) {
-                    cartItem.price = liveRef.price;
+                if (!exists) {
+                    delete cart[productId];
                     isCartChanged = true;
                 }
             }
-            
             if (isCartChanged) {
                 saveCartToStorage();
                 updateBadge();
             }
         }
 
-        function getOrderNumber() {
-            let num = localStorage.getItem('order_counter');
-            if (!num) {
-                localStorage.setItem('order_counter', '1');
-                return 1;
-            }
-            return parseInt(num);
-        }
-
-        function incrementOrderNumber() {
-            let nextNum = getOrderNumber() + 1;
-            localStorage.setItem('order_counter', nextNum.toString());
-        }
-
-        function addToHistory() {
-            if (Object.keys(cart).length === 0) return;
-            
+        function addToHistory(totalAmount, orderNum) {
             let history = JSON.parse(localStorage.getItem('order_history') || '[]');
-            let itemsArray = Object.values(cart);
-            let rawTotal = itemsArray.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            
-            let discountPercent = (rawTotal >= 1000000000) ? 0.10 : (rawTotal >= 500000000 ? 0.07 : (rawTotal >= 200000000 ? 0.05 : 0));
-            let afterDiscount = rawTotal - (rawTotal * discountPercent);
-            let packageCount = Math.floor(afterDiscount / 140000000) + 1;
-            let finalPayable = afterDiscount + (packageCount * 1000000);
-            
             const newOrder = {
                 id: Date.now(),
-                orderNumber: getOrderNumber(),
+                orderNumber: orderNum,
                 date: new Date().toLocaleDateString('fa-IR'),
-                time: new Date().toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' }),
                 items: JSON.parse(JSON.stringify(cart)),
-                total: finalPayable
+                total: totalAmount
             };
-            
             history.unshift(newOrder);
-            localStorage.setItem('order_history', JSON.stringify(history.slice(0, 15)));
+            localStorage.setItem('order_history', JSON.stringify(history));
         }
 
         function updateHistoryDisplay() {
@@ -1558,174 +1180,31 @@
             const history = JSON.parse(localStorage.getItem('order_history') || '[]');
             
             if (history.length === 0) {
-                list.innerHTML = `
-                    <div class="text-center py-16">
-                        <div class="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i class="fas fa-file-invoice text-3xl text-gray-300"></i>
-                        </div>
-                        <p class="text-gray-400 font-bold">تاریخچه سفارشات شما خالی است.</p>
-                    </div>`;
+                list.innerHTML = `<p class="text-slate-400 text-center py-10 text-xs">سفارشی ثبت نگردیده است.</p>`;
                 return;
             }
             
-            list.innerHTML = history.map((order) => {
-                let orderItemsHtml = '';
-                const currentOrderCart = order.items;
-
-                Object.keys(groupInfo).forEach(groupId => {
-                    const group = groupInfo[groupId];
-                    const gName = group.name;
-                    const itemsInThisGroup = Object.values(currentOrderCart).filter(item => item.groupName === gName);
-                    
-                    if (itemsInThisGroup.length > 0) {
-                        orderItemsHtml += `
-                            <div class="bg-gray-50/50 rounded-2xl p-3 border border-gray-100 mb-3">
-                                <h4 class="text-[10px] font-black text-blue-900 mb-2 pb-2 border-b border-gray-200/50 flex items-center gap-2">
-                                    <span class="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
-                                    ${gName}
-                                </h4>
-                                <div class="space-y-2">`;
-
-                        group.images.forEach(imgData => {
-                            const productId = gName + "_" + imgData.filename;
-                            const item = currentOrderCart[productId];
-                            if (item) {
-                                orderItemsHtml += `
-                                    <div class="flex justify-between items-center text-[11px]">
-                                        <span class="text-gray-600">${item.name}</span>
-                                        <span class="font-bold text-gray-900">${toPersianDigits(item.quantity)} عدد</span>
-                                    </div>`;
-                            }
-                        });
-
-                        orderItemsHtml += `</div></div>`;
-                    }
-                });
-
+            list.innerHTML = history.map(order => {
+                let itemsHtml = Object.values(order.items).map(item => 
+                    `<div class="flex justify-between text-[10px] text-slate-600 mb-1">
+                        <span>${item.name} (${item.groupName})</span>
+                        <span class="font-bold">${toPersianDigits(item.quantity)} عدد</span>
+                    </div>`
+                ).join('');
+                
                 return `
-                <div class="bg-white border border-gray-100 rounded-[2rem] overflow-hidden shadow-sm mb-6 transition-all hover:shadow-md">
-                    <div class="bg-blue-50/50 px-6 py-4 flex justify-between items-center border-b border-blue-100/50">
-                        <div class="flex items-center gap-3">
-                            <div class="bg-blue-600 text-white w-10 h-10 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-200">
-                                <i class="fas fa-shopping-bag text-sm"></i>
-                            </div>
-                            <div>
-                                <span class="block text-[10px] text-blue-500 font-bold">سفارش شماره ${toPersianDigits(order.orderNumber)}</span>
-                                <span class="text-xs font-black text-gray-800">${order.date} <span class="text-gray-300 mx-1">|</span> ${order.time}</span>
-                            </div>
-                        </div>
-                        <button onclick="deleteFromHistory(${order.id})" class="text-gray-300 hover:text-red-500 transition-colors p-2">
-                            <i class="fas fa-trash-alt text-sm"></i>
-                        </button>
+                <div class="bg-slate-50 border p-4 rounded-2xl mb-3">
+                    <div class="flex justify-between items-center border-b pb-2 mb-2">
+                        <span class="text-[10px] font-black text-blue-900">سفارش #${toPersianDigits(order.orderNumber)}</span>
+                        <span class="text-[9px] text-slate-400">${order.date}</span>
                     </div>
-
-                    <div class="p-6">
-                        <div class="space-y-1">${orderItemsHtml}</div>
-                    </div>
-
-                    <div class="px-6 pb-6 pt-2">
-                        <div class="flex justify-between items-center mb-4 px-2">
-                            <span class="text-xs text-gray-500 font-bold">مبلغ نهایی پرداختی:</span>
-                            <span class="text-sm font-black text-green-600">${toPersianPrice(order.total)} ریال</span>
-                        </div>
-                        <button onclick='reorder(${JSON.stringify(order.items)})' 
-                                class="w-full bg-blue-600 text-white py-4 rounded-2xl text-xs font-bold hover:bg-blue-700 shadow-lg shadow-blue-100 transition-all active:scale-[0.98] flex items-center justify-center gap-2">
-                            <i class="fas fa-redo text-[10px]"></i>
-                            سفارش مجدد این لیست
-                        </button>
+                    <div class="mb-3">${itemsHtml}</div>
+                    <div class="flex justify-between items-center text-xs font-bold pt-2 border-t border-slate-200">
+                        <span class="text-slate-500 text-[10px]">مبلغ نهایی فاکتور:</span>
+                        <span class="text-emerald-600">${toPersianPrice(order.total)} ریال</span>
                     </div>
                 </div>`;
             }).join('');
-        }
-
-        function deleteFromHistory(orderId) {
-            showCustomConfirm(
-                'حذف سفارش از تاریخچه', 
-                'آیا از حذف این سفارش از تاریخچه خرید خود مطمئن هستید؟ این عمل غیرقابل بازگشت است.', 
-                () => {
-                    let history = JSON.parse(localStorage.getItem('order_history') || '[]');
-                    history = history.filter(order => order.id !== orderId);
-                    localStorage.setItem('order_history', JSON.stringify(history));
-                    updateHistoryDisplay();
-                    showToast("🗑️ سفارش مورد نظر از لیست تاریخچه حذف گردید.", "مدیریت", "remove");
-                },
-                'بله، مطمئنم',
-                'انصراف',
-                'bg-red-600 hover:bg-red-700',
-                '<i class="fas fa-trash-alt text-2xl"></i>',
-                'bg-red-100 text-red-600'
-            );
-        }
-
-        function reorder(oldItems) {
-            cart = {}; 
-            let removedItemsCount = 0;
-            let updatedQtyCount = 0;
-            let updatedPriceCount = 0;
-
-            const validProductsMap = {};
-            Object.values(groupInfo).forEach(group => {
-                group.images.forEach(img => {
-                    const id = group.name + "_" + img.filename;
-                    validProductsMap[id] = {
-                        price: img.price,
-                        name: img.name,
-                        allowedQuantities: img.allowedQuantities || [0, 50, 100, 200]
-                    };
-                });
-            });
-
-            Object.values(oldItems).forEach(item => {
-                const productId = item.groupName + "_" + item.filename;
-                const currentRef = validProductsMap[productId];
-
-                if (!currentRef) {
-                    removedItemsCount++;
-                    return;
-                }
-
-                let finalQty = item.quantity;
-                const validQtys = currentRef.allowedQuantities.filter(q => q > 0);
-
-                if (!currentRef.allowedQuantities.includes(finalQty)) {
-                    if (validQtys.length > 0) {
-                        finalQty = Math.max(...validQtys);
-                        updatedQtyCount++; 
-                    } else {
-                        removedItemsCount++;
-                        return;
-                    }
-                }
-
-                if (item.price !== currentRef.price) {
-                    updatedPriceCount++;
-                }
-
-                cart[productId] = {
-                    filename: item.filename,
-                    name: item.name,
-                    quantity: finalQty,
-                    price: currentRef.price, 
-                    groupName: item.groupName,
-                    allowedQtys: currentRef.allowedQuantities
-                };
-            });
-
-            saveCartToStorage();
-            updateBadge();
-            
-            if (removedItemsCount > 0 || updatedQtyCount > 0 || updatedPriceCount > 0) {
-                let alertMsg = "⚠️ سبد خرید بازنشانی شد:";
-                if (removedItemsCount > 0) alertMsg += ` ${toPersianDigits(removedItemsCount)} کالا (اتمام موجودی) حذف؛`;
-                if (updatedQtyCount > 0) alertMsg += ` تعداد ${toPersianDigits(updatedQtyCount)} کالا به حداکثر مقدار مجاز تغییر یافت؛`;
-                if (updatedPriceCount > 0) alertMsg += ` قیمت ${toPersianDigits(updatedPriceCount)} کالا بروز شد.`;
-                
-                showToast(alertMsg, "بروزرسانی سبد", "warning");
-            } else {
-                showToast("🔄 سفارش قبلی با موفقیت جایگزین سبد خرید فعلی شما شد.", "تاریخچه", "success");
-            }
-
-            showScreen('cart');
         }
 
         function openModal(imgSrc) {
@@ -1736,7 +1215,6 @@
             modalImg.src = "";
             modalImg.classList.add("opacity-0", "scale-95");
             modalImg.classList.remove("opacity-100", "scale-100");
-            
             if (spinner) spinner.classList.remove("hidden");
             
             modal.classList.remove("hidden");
@@ -1746,10 +1224,6 @@
                 if (spinner) spinner.classList.add("hidden");
                 modalImg.classList.remove("opacity-0", "scale-95");
                 modalImg.classList.add("opacity-100", "scale-100");
-            };
-            
-            modalImg.onerror = function() {
-                if (spinner) spinner.classList.add("hidden");
             };
 
             history.pushState({ modalOpen: true }, "");
@@ -1761,81 +1235,51 @@
             
             if (modal && !modal.classList.contains("hidden")) {
                 modal.classList.add("hidden");
-                
                 if (modalImg) {
                     modalImg.src = "";
                     modalImg.classList.add("opacity-0", "scale-95");
-                    modalImg.classList.remove("opacity-100", "scale-100");
                 }
-                
                 if (!isBackAction && history.state && history.state.modalOpen) {
                     history.back();
                 }
             }
         }
 
+        // دستیار آموزشی متصل به هوش مصنوعی جمینی
         let aiChatHistory = []; 
 
         async function callGeminiAPI(userQuery) {
             const apiKey = ""; 
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-            
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
             const catalogString = JSON.stringify(groupInfo, null, 2);
             
-            const systemPrompt = `شما دستیار آموزشی و مشاور خرید هوشمند انتشارات "پوستر ایران" هستید. 
-وظیفه شما راهنمایی معلمان، والدین و مدیران برای انتخاب بهترین پوسترهای آموزشی از کاتالوگ رسمی انتشارات بر اساس نیاز آنهاست.
-کاتالوگ رسمی انتشارات به شرح زیر است:
-${catalogString}
+            const systemPrompt = `شما دستیار آموزشی و مشاور خرید رسمی انتشارات "پوستر ایران" هستید. 
+کاتالوگ رسمی فروشگاه بدین شرح است: ${catalogString}
+قوانین الزامی پاسخ‌دهی شما:
+1. صمیمانه، خوشرو، فارسی شیوا و به همراه ایموجی‌های مناسب کلاسی پاسخ دهید.
+2. فقط پوسترهای موجود در کاتالوگ را پیشنهاد دهید.
+3. همزمان با پیشنهاد کالا، نحوه پیاده‌سازی یک بازی آموزشی شاد و کلاسی با آن پوستر را به معلم توضیح دهید.`;
 
-قوانین شما در پاسخ‌دهی:
-1. پاسخ شما باید به زبان شیرین فارسی، مودبانه، انگیزشی و صمیمانه همراه با ایموجی‌های مناسب باشد.
-2. فقط و فقط محصولاتی که دقیقا در کاتالوگ فوق ذکر شده‌اند را پیشنهاد دهید. از خود محصولی که وجود ندارد اختراع نکنید!
-3. برای هر محصول پیشنهادی، نحوه استفاده خلاقانه یا یک سناریو بازی آموزشی جالب در کلاس ارائه دهید.
-4. اگر موضوعی درخواست شد که برای آن پوستر نداریم، مودبانه عذرخواهی کنید و نزدیک‌ترین دسته‌بندی را برای آن پیشنهاد دهید.
-5. از فرمت‌دهی زیبای متنی (پررنگ کردن، لیست‌ها) استفاده کنید تا خوانایی پیام بالا رود.
-6. سوابق گفتگوی قبلی با کاربر در این آرایه ارسال می‌شود. پاسخ‌های جدید شما باید کاملاً هماهنگ و پیوسته با سوابق ارسالی قبلی باشد.`;
-
-            aiChatHistory.push({
-                role: "user",
-                parts: [{ text: userQuery }]
-            });
+            aiChatHistory.push({ role: "user", parts: [{ text: userQuery }] });
 
             const payload = {
                 contents: aiChatHistory,
-                systemInstruction: {
-                    parts: [{ text: systemPrompt }]
-                }
+                systemInstruction: { parts: [{ text: systemPrompt }] }
             };
 
-            let delay = 1000;
-            for (let attempt = 0; attempt < 5; attempt++) {
-                try {
-                    const response = await fetch(url, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    
-                    if (response.ok) {
-                        const result = await response.json();
-                        const modelText = result.candidates?.[0]?.content?.parts?.[0]?.text || "متاسفانه پاسخی دریافت نشد.";
-                        
-                        aiChatHistory.push({
-                            role: "model",
-                            parts: [{ text: modelText }]
-                        });
-
-                        return modelText;
-                    }
-                } catch (error) {
-                    console.error("خطای شبکه یا وب‌سرویس در چت هوشمند:", error);
-                }
-                await new Promise(resolve => setTimeout(resolve, delay));
-                delay *= 2;
-            }
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
             
-            aiChatHistory.pop();
-            throw new Error("ارتباط با دستیار هوشمند با خطا مواجه شد.");
+            if (response.ok) {
+                const result = await response.json();
+                const text = result.candidates?.[0]?.content?.parts?.[0]?.text || "پاسخ درستی دریافت نشد.";
+                aiChatHistory.push({ role: "model", parts: [{ text: text }] });
+                return text;
+            }
+            throw new Error("API Connection Failed");
         }
 
         async function sendAiMessage() {
@@ -1845,7 +1289,6 @@ ${catalogString}
 
             inputEl.value = "";
             appendChatMessage(query, 'user');
-
             const typingIndicator = showTypingIndicator();
 
             try {
@@ -1854,14 +1297,12 @@ ${catalogString}
                 appendChatMessage(aiResponse, 'gemini');
             } catch (error) {
                 typingIndicator.remove();
-                appendChatMessage("❌ متأسفانه خطایی در ارتباط با سرور هوش مصنوعی به وجود آمد. لطفاً چند لحظه بعد مجدداً تلاش کنید.", 'gemini');
+                appendChatMessage("❌ ارتباط موقتا قطع شد؛ لطفا مجددا تلاش کنید.", 'gemini');
             }
         }
 
         function handleAiInputKeypress(event) {
-            if (event.key === 'Enter') {
-                sendAiMessage();
-            }
+            if (event.key === 'Enter') sendAiMessage();
         }
 
         function sendQuickPrompt(promptText) {
@@ -1872,17 +1313,10 @@ ${catalogString}
         function appendChatMessage(text, sender) {
             const chatBody = document.getElementById("aiChatBody");
             const msgDiv = document.createElement("div");
-            msgDiv.className = `ai-message ${sender} max-w-[85%] p-4 rounded-2xl shadow-sm text-sm leading-relaxed`;
-            
-            if (sender === 'user') {
-                msgDiv.className += " self-start bg-blue-100 text-blue-900 rounded-bl-none";
-            } else {
-                msgDiv.className += " self-end bg-white text-gray-800 border border-slate-200 rounded-br-none";
-            }
+            msgDiv.className = `ai-message ${sender}`;
             
             let formattedText = text
                 .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                .replace(/\*(.*?)\*/g, '<em>$1</em>')
                 .replace(/\n/g, '<br>');
                 
             msgDiv.innerHTML = formattedText;
@@ -1893,7 +1327,7 @@ ${catalogString}
         function showTypingIndicator() {
             const chatBody = document.getElementById("aiChatBody");
             const indicatorDiv = document.createElement("div");
-            indicatorDiv.className = "typing-indicator self-end bg-white border border-slate-200 px-4 py-3 rounded-2xl rounded-br-none flex items-center gap-1 shadow-sm";
+            indicatorDiv.className = "typing-indicator self-end bg-white border px-3 py-2 rounded-2xl flex items-center gap-1 shadow-sm";
             indicatorDiv.id = "ai-typing";
             indicatorDiv.innerHTML = "<span></span><span></span><span></span>";
             chatBody.appendChild(indicatorDiv);
@@ -1901,47 +1335,42 @@ ${catalogString}
             return indicatorDiv;
         }
 
-        // === PWA مدیریت نصب ===
+        // === سیستم هوشمند راه‌اندازی و شبیه‌سازی بنر نصب (PWA Launcher) ===
         let deferredPrompt = null;
 
         function setupInstallBanner() {
             const banner = document.getElementById('install-banner');
             const btnInstall = document.getElementById('btnInstall');
             const btnClose = document.getElementById('btnClose');
-
             if (!banner || !btnInstall || !btnClose) return;
 
             const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-
             const isRunningStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+
             if (isRunningStandalone) {
                 localStorage.setItem('pwa_installed', 'true');
                 return; 
             }
 
+            // مانیتورینگ رویداد پیش‌فرض مرورگر
             window.addEventListener('beforeinstallprompt', (e) => {
                 e.preventDefault();
                 deferredPrompt = e;
-                
-                localStorage.removeItem('pwa_installed');
+                showPwaBanner();
+            });
 
-                const blockInstallBanner = localStorage.getItem('block_install_banner_until');
-                if (blockInstallBanner && Date.now() < Number(blockInstallBanner)) {
-                    return; 
+            // مکانیزم شبیه‌ساز کمکی جهت نمایش قطعی بنر نصب در صورت مسدود شدن توسط مرورگر/آی‌فریم
+            setTimeout(() => {
+                if (!deferredPrompt && !localStorage.getItem('pwa_dismissed')) {
+                    // در صورت لود خارج از حالت نصب‌شده، همواره برای تست کادر نصب را نشان بده
+                    showPwaBanner();
                 }
+            }, 3000);
 
-                setTimeout(() => {
-                    banner.classList.remove('pointer-events-none', 'translate-y-20', 'opacity-0');
-                    banner.classList.add('translate-y-0', 'opacity-100');
-                }, 2000);
-            });
-
-            window.addEventListener('appinstalled', (evt) => {
-                localStorage.setItem('pwa_installed', 'true');
-                deferredPrompt = null;
-                hideInstallBanner();
-                showToast("🎉 اپلیکیشن پوستر ایران با موفقیت روی دستگاه شما نصب شد!", "نصب موفق", "success");
-            });
+            function showPwaBanner() {
+                banner.classList.remove('pointer-events-none', 'translate-y-20', 'opacity-0');
+                banner.classList.add('translate-y-0', 'opacity-100');
+            }
 
             btnInstall.addEventListener('click', async () => {
                 if (deferredPrompt) {
@@ -1949,41 +1378,29 @@ ${catalogString}
                     const { outcome } = await deferredPrompt.userChoice;
                     if (outcome === 'accepted') {
                         localStorage.setItem('pwa_installed', 'true');
-                        deferredPrompt = null;
                     }
                     hideInstallBanner();
                 } else if (isIOS) {
                     hideInstallBanner();
                     showCustomConfirm(
-                        "راهنمای نصب در آیفون (iOS)",
-                        "برای نصب اپلیکیشن پوستر ایران در گوشی آیفون خود، روی دکمه Share (ارسال/اشتراک) در انتهای مرورگر سافاری ضربه بزنید و سپس گزینه Add to Home Screen (افزودن به صفحه اصلی) را انتخاب کنید.",
-                        () => {},
-                        "متوجه شدم",
-                        "بستن",
-                        "bg-blue-600 hover:bg-blue-700",
-                        '<i class="fas fa-mobile-alt text-2xl"></i>',
-                        "bg-blue-100 text-blue-600"
+                        "راهنمای نصب سافاری iOS",
+                        "در مرورگر سافاری، روی دکمه اشتراک‌گذاری (Share) در منوی پایین ضربه زده و گزینه Add to Home Screen (افزودن به صفحه اصلی) را انتخاب کنید.",
+                        () => {}, "متوجه شدم", "بستن"
                     );
                 } else {
                     hideInstallBanner();
                     showCustomConfirm(
-                        "راهنمای نصب وب‌اپلیکیشن",
-                        "مرورگر شما در حال حاضر فرآیند نصب مستقیم را مسدود کرده است. جهت نصب دستی، لطفاً بر روی ۳ نقطه بالا سمت راست مرورگر خود ضربه بزنید و گزینه «Install app» یا «Add to Home screen» را انتخاب کنید.",
-                        () => {},
-                        "متوجه شدم",
-                        "بستن",
-                        "bg-blue-600 hover:bg-blue-700",
-                        '<i class="fas fa-ellipsis-v text-2xl"></i>',
-                        "bg-blue-100 text-blue-600"
+                        "راهنمای نصب کروم و اندروید",
+                        "منوی ۳ نقطه مرورگر خود را در بالا لمس نموده و دکمه «Install app» یا «Add to Home screen» را بزنید.",
+                        () => {}, "متوجه شدم", "بستن"
                     );
                 }
             });
 
             btnClose.addEventListener('click', () => {
-                const oneDayInMs = 24 * 60 * 60 * 1000;
-                localStorage.setItem('block_install_banner_until', (Date.now() + oneDayInMs).toString());
+                localStorage.setItem('pwa_dismissed', 'true');
                 hideInstallBanner();
-                showToast("⏳ پیشنهاد نصب برای ۲۴ ساعت آینده غیرفعال شد.", "نصب برنامه", "info");
+                showToast("⏳ پیشنهاد نصب به صورت موقت بسته شد.", "وب‌اپلیکیشن", "info");
             });
         }
 
@@ -1995,33 +1412,18 @@ ${catalogString}
             }
         }
 
-        // تابع مدیریت به‌روزرسانی ساعت و تقویم بالا
+        // ساعت و روز زنده بالای سایت
         function updateLiveClock() {
-            try {
-                const now = new Date();
-                
-                const dateOptions = { year: 'numeric', month: '2-digit', day: '2-digit', calendar: 'persian' };
-                let dateStr = new Intl.DateTimeFormat('fa-IR', dateOptions).format(now);
-                
-                dateStr = dateStr.replace(/[^\d\/۰-۹]/g, ''); 
-                
-                const weekdayOptions = { weekday: 'long', calendar: 'persian' };
-                const dayStr = new Intl.DateTimeFormat('fa-IR', weekdayOptions).format(now);
-                
-                const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
-                const timeStr = new Intl.DateTimeFormat('fa-IR', timeOptions).format(now);
-                
-                const dateEl = document.getElementById('headerDate');
-                const dateTimeEl = document.getElementById('headerDayTime');
-                
-                if (dateEl) dateEl.innerText = dateStr;
-                if (dateTimeEl) dateTimeEl.innerText = `${dayStr} ${timeStr}`;
-            } catch (e) {
-                console.error("خطا در به‌روزرسانی ساعت:", e);
-            }
+            const now = new Date();
+            const dateStr = new Intl.DateTimeFormat('fa-IR', { year: 'numeric', month: '2-digit', day: '2-digit', calendar: 'persian' }).format(now);
+            const dayStr = new Intl.DateTimeFormat('fa-IR', { weekday: 'long', calendar: 'persian' }).format(now);
+            const timeStr = new Intl.DateTimeFormat('fa-IR', { hour: '2-digit', minute: '2-digit', hour12: false }).format(now);
+            
+            document.getElementById('headerDate').innerText = dateStr;
+            document.getElementById('headerDayTime').innerText = `${dayStr} ${timeStr}`;
         }
 
-        // راه‌اندازی اولیه برنامه با جایگذاری اولین استیت تاریخچه برای فعال‌سازی کلید بک گوشی
+        // مقداردهی اولیه برنامه
         function initializeApplication() {
             loadCustomerData();
             loadCartFromStorage();
@@ -2030,28 +1432,11 @@ ${catalogString}
             updateLiveClock();
             setInterval(updateLiveClock, 1000);
             
-            // جایگذاری استیت پایه خانه در تاریخچه مرورگر برای کارکرد صحیح دکمه بازگشت فیزیکی گوشی
             history.replaceState({ screen: 'home' }, "", "#home");
             showScreen('home', false, true);
         }
 
         window.addEventListener('DOMContentLoaded', initializeApplication);
     </script>
-    
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                navigator.serviceWorker.register('./service-worker.js', { scope: './' }).then(function(registration) {
-                    console.log('✅ Service Worker با موفقیت ثبت شد: ', registration.scope);
-                }).catch(function(error) {
-                    console.log('❌ ثبت Service Worker شکست خورد:', error);
-                });
-            });
-        }
-    </script>
-
-    <!-- ۵. اتصال به منطق برنامه (اصلاح آدرس بدون دایرکتوری اشتباه js جهت لود صحیح کدهای PWA) -->
-    <script src="script.js" defer></script>
-    <script src="live-reload.js" defer></script>
 </body>
 </html>
