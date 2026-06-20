@@ -220,34 +220,16 @@
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center gap-2 cursor-pointer" onclick="showScreen('home')">
                 <img src="https://posteriran.github.io/pixel/icons/logo.png" alt="Logo" class="h-10 w-10">
-                <span class="text-xl font-bold text-blue-900">پوستر ایران</span>
+                <span class="text-xl font-black text-blue-900">پوستر ایران</span>
             </div>
-            <nav class="hidden md:flex gap-8 font-medium">
-                <a href="#benefits" class="hover:text-blue-600 transition">مزایا</a>
-                <a href="#products" class="hover:text-blue-600 transition">محصولات</a>
-                <a href="#faq" class="hover:text-blue-600 transition">سوالات متداول</a>
-            </nav>
+            
             <div class="flex items-center gap-3">
-                <!-- تقویم شمسی و ساعت پویا -->
-                <div id="solarDateTimeWidget" class="flex items-center gap-2">
-                    <!-- نمایش دسکتاپ -->
-                    <div class="hidden sm:flex items-center gap-2 bg-slate-50 border border-slate-100 px-3 py-1.5 rounded-xl">
-                        <div class="flex flex-col text-right">
-                            <span class="text-[10px] font-black text-slate-800 leading-tight" id="headerDate">بارگذاری...</span>
-                            <span class="text-[9px] font-medium text-slate-500 mt-0.5" id="headerTime">۰۰:۰۰:۰۰</span>
-                        </div>
-                        <div class="w-7 h-7 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center text-xs shadow-sm">
-                            <i class="far fa-calendar-alt"></i>
-                        </div>
-                    </div>
-                    <!-- نمایش موبایل بسیار فشرده -->
-                    <div class="flex sm:hidden items-center gap-1.5 bg-slate-50 border border-slate-100 px-2 py-1 rounded-lg">
-                        <span class="text-[9px] font-black text-slate-700" id="headerMobileTime">۰۰:۰۰</span>
-                        <div class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></div>
-                    </div>
+                <!-- ویجت جدید زمان و تاریخ شمسی: روز و ساعت بالا، تاریخ ۴ رقمی خوانا در پایین -->
+                <div class="flex flex-col items-center justify-center text-center bg-blue-50/90 px-3 py-1.5 rounded-2xl border border-blue-100/50 shadow-sm min-w-[125px]">
+                    <span id="headerDayTime" class="text-[10px] md:text-[11px] font-bold text-blue-600 leading-none">--- --:--:--</span>
+                    <span id="headerDate" class="text-xs md:text-sm font-black text-blue-900 tracking-wider mt-1 leading-none">----/--/--</span>
                 </div>
 
-                <!-- آیکون سبد خرید در هدر با آیکون استاندارد FontAwesome جایگزین شد -->
                 <button onclick="showScreen('cart')" class="relative bg-blue-100 text-blue-800 p-2.5 rounded-full hover:bg-blue-200 transition flex items-center justify-center w-10 h-10">
                     <i class="fas fa-shopping-cart text-base"></i>
                     <span class="cartBadge absolute -top-1 -right-1 bg-red-500 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full hidden">0</span>
@@ -256,7 +238,7 @@
         </div>
     </header>
 
-    <main class="pt-20">
+    <main class="pt-24">
         <!-- صفحه اصلی -->
         <section id="homeScreen">
             <div id="resumeOrder" class="hidden bg-yellow-400/20 border border-yellow-500 p-3 rounded-2xl mb-6 flex items-center justify-between animate-bounce">
@@ -1642,6 +1624,7 @@
             history.pushState({ modalOpen: true }, "");
         }
 
+        // بستن مودال تصویر
         function closeModal() {
             const modal = document.getElementById("imageModal");
             const modalImg = document.getElementById("modalImage");
@@ -1807,7 +1790,7 @@ ${catalogString}
             return indicatorDiv;
         }
 
-        // === مدیریت هوشمند نصب اپلیکیشن PWA (پاپ آپ مستقل و ذخیره وضعیت در حافظه محلی) ===
+        // === PWA مدیریت نصب ===
         let deferredPrompt = null;
 
         function setupInstallBanner() {
@@ -1911,27 +1894,32 @@ ${catalogString}
             }
         }
 
-        // تقویم و ساعت شمسی پویا
-        function updateSolarDateTime() {
+        // تابع مدیریت به‌روزرسانی ساعت و تقویم بالا (فرمت yyyy/mm/dd و حذف خط فاصله)
+        function updateLiveClock() {
             try {
                 const now = new Date();
                 
-                // فرمت تاریخ خورشیدی به فارسی: مانند "پنجشنبه، ۲۸ خرداد"
-                const dateStr = new Intl.DateTimeFormat('fa-IR', { weekday: 'long', day: 'numeric', month: 'long' }).format(now);
+                // استفاده از گزینه numeric برای تولید سال ۴ رقمی کامل (مانند ۱۴۰۵)
+                const dateOptions = { year: 'numeric', month: '2-digit', day: '2-digit', calendar: 'persian' };
+                let dateStr = new Intl.DateTimeFormat('fa-IR', dateOptions).format(now);
                 
-                // فرمت ساعت پویا به همراه ثانیه‌شمار
-                const timeStr = new Intl.DateTimeFormat('fa-IR', { hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(now);
-                const mobileTimeStr = new Intl.DateTimeFormat('fa-IR', { hour: '2-digit', minute: '2-digit' }).format(now);
-
-                const headerDate = document.getElementById('headerDate');
-                const headerTime = document.getElementById('headerTime');
-                const headerMobileTime = document.getElementById('headerMobileTime');
-
-                if (headerDate) headerDate.innerText = dateStr;
-                if (headerTime) headerTime.innerText = `ساعت ${timeStr}`;
-                if (headerMobileTime) headerMobileTime.innerText = mobileTimeStr;
+                // پاک‌سازی رشته از نمادهای نامربوط جهت دسترسی به فرمت عددی تمیز
+                dateStr = dateStr.replace(/[^\d\/۰-۹]/g, ''); 
+                
+                const weekdayOptions = { weekday: 'long', calendar: 'persian' };
+                const dayStr = new Intl.DateTimeFormat('fa-IR', weekdayOptions).format(now);
+                
+                const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+                const timeStr = new Intl.DateTimeFormat('fa-IR', timeOptions).format(now);
+                
+                const dateEl = document.getElementById('headerDate');
+                const dateTimeEl = document.getElementById('headerDayTime');
+                
+                if (dateEl) dateEl.innerText = dateStr;
+                // حذف علامت خط تیره (-) مابین نام روز و ساعت طبق درخواست شما
+                if (dateTimeEl) dateTimeEl.innerText = `${dayStr} ${timeStr}`;
             } catch (e) {
-                console.error("خطا در محاسبه تقویم شمسی:", e);
+                console.error("خطا در به‌روزرسانی ساعت:", e);
             }
         }
 
@@ -1940,11 +1928,12 @@ ${catalogString}
             loadCustomerData();
             loadCartFromStorage();
             setupInstallBanner();
-            showScreen('home');
             
-            // اجرای فوری و راه‌اندازی تایمر ثانیه‌شمار ساعت
-            updateSolarDateTime();
-            setInterval(updateSolarDateTime, 1000);
+            // اجرای اولیه و استارت تایمر ساعت شمسی زنده کلاس درس
+            updateLiveClock();
+            setInterval(updateLiveClock, 1000);
+            
+            showScreen('home');
         }
 
         window.addEventListener('DOMContentLoaded', initializeApplication);
@@ -1953,12 +1942,9 @@ ${catalogString}
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
-                // ثبت سرویس ورکر با متد اصولی و Scope ریشه برای عملکرد همیشگی
+                // ثبت سرویس ورکر با محدوده صریح برای به رسمیت شناخته شدن Scope در مرورگر گوشی
                 navigator.serviceWorker.register('./service-worker.js', { scope: './' }).then(function(registration) {
                     console.log('✅ Service Worker با موفقیت ثبت شد: ', registration.scope);
-                    
-                    // بررسی بروزرسانی خودکار فایل سرویس ورکر در هر بار لود سایت
-                    registration.update();
                 }).catch(function(error) {
                     console.log('❌ ثبت Service Worker شکست خورد:', error);
                 });
