@@ -12,8 +12,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
-    <!-- ۲. اتصال به استایل‌ها (CSS) -->
-    <link rel="stylesheet" href="./css/style.css">
+    <!-- ۲. اتصال به استایل‌ها (CSS) همراه با Cache-Busting جهت هماهنگی با آپدیت‌ها -->
+    <link rel="stylesheet" href="./css/style.css?v=2.1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -2047,19 +2047,58 @@ ${catalogString}
     </script>
     
     <script>
+        /* -------------------------------------------------------------------------
+           سیستم پیشرفته کنترل و مانیتورینگ زنده سرویس‌ورکر (ثبت تغییرات آنی کدهای کلاینت)
+        ------------------------------------------------------------------------- */
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
-                navigator.serviceWorker.register('./service-worker.js', { scope: './' }).then(function(registration) {
+                navigator.serviceWorker.register('./service-worker.js', { scope: './' })
+                .then(function(registration) {
                     console.log('✅ Service Worker با موفقیت ثبت شد: ', registration.scope);
+                    
+                    // بررسی و اعمال بروزرسانی زنده سرویس‌ورکر در هر لود صفحه
+                    registration.update();
+
+                    // اگر ورکر جدیدی دانلود شده و آماده فعال شدن است
+                    if (registration.waiting) {
+                        applyNewServiceWorker(registration.waiting);
+                    }
+
+                    // گوش دادن به ورکر در حال نصب جدید برای رصد آپدیت
+                    registration.addEventListener('updatefound', () => {
+                        const installingWorker = registration.installing;
+                        installingWorker.addEventListener('statechange', () => {
+                            if (installingWorker.state === 'installed') {
+                                if (navigator.serviceWorker.controller) {
+                                    // سرویس‌ورکر جدید آماده است
+                                    applyNewServiceWorker(installingWorker);
+                                }
+                            }
+                        });
+                    });
                 }).catch(function(error) {
                     console.log('❌ ثبت Service Worker شکست خورد:', error);
                 });
+
+                // ریلود خودکار کلاینت وقتی سرویس‌ورکر جدید کنترل صفحه را به دست می‌گیرد
+                let isRefreshing = false;
+                navigator.serviceWorker.addEventListener('controllerchange', () => {
+                    if (!isRefreshing) {
+                        isRefreshing = true;
+                        window.location.reload();
+                    }
+                });
             });
+
+            // دستور به سرویس‌ورکر جدید برای عبور فوری از وضعیت آماده‌باش (Skip Waiting)
+            function applyNewServiceWorker(waitingWorker) {
+                waitingWorker.postMessage({ action: 'skipWaiting' });
+                showToast("✨ نسخه جدید برنامه بارگذاری شد؛ سیستم به روزرسانی شد.", "سیستم PWA", "info");
+            }
         }
     </script>
 
-    <!-- ۵. اتصال به منطق برنامه -->
-    <script src="./js/script.js" defer></script>
-<script src="live-reload.js" defer></script>
+    <!-- ۵. اتصال به منطق برنامه همراه با برچسب کش شکن جدید -->
+    <script src="./js/script.js?v=2.1.0" defer></script>
 </body>
 </html>
