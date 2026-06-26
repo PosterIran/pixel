@@ -1,14 +1,15 @@
+```javascript
 // نام کانتینر کش به همراه شماره نسخه جدید جهت پاکسازی کش قدیمی در صورت تغییر نسخه
-// نام کانتینر کش به همراه شماره نسخه جدید (اگر تغییر دادید این ورژن را بالا ببرید مثلا v2.1.1)
-const CACHE_NAME = 'poster-iran-cache-v2.1.0';
+// نسخه جدید v2.1.1 برای خنثی کردن کش‌های قبلی فایرفاکس
+const CACHE_NAME = 'poster-iran-cache-v2.1.1';
 
 // لیست فایل‌های کلیدی - آیکون‌ها و مانیفست برای فایرفاکس الزامی هستند
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './manifest.json',
-  './css/style.css?v=2.1.0',
-  './js/script.js?v=2.1.0',
+  './css/style.css?v=2.1.1',
+  './js/script.js?v=2.1.1',
   './icons/icon-192x192.png',
   './icons/icon-512x512.png',
   'https://cdn.tailwindcss.com',
@@ -16,14 +17,23 @@ const ASSETS_TO_CACHE = [
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css'
 ];
 
-// مابقی کدهای فایل service-worker.js شما بدون تغییر باقی بماند...
-
-// نصب سرویس‌ورکر و کش کردن کدهای هسته اولیه
+// نصب سرویس‌ورکر و کش کردن کدهای هسته اولیه با اضافه کردن هدرهای کش‌شکن در درخواست‌های نصب
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log('📦 کش‌گذاری فایل‌های پایه انجام شد.');
-      return cache.addAll(ASSETS_TO_CACHE);
+      console.log('📦 کش‌گذاری فایل‌های پایه نسخه v2.1.1 انجام شد.');
+      
+      // برای رفع باگ کش مرورگر در زمان نصب، درخواست‌ها را با هدر عدم ذخیره‌سازی کش ارسال می‌کنیم
+      const cachePromises = ASSETS_TO_CACHE.map((url) => {
+        const request = new Request(url, { cache: 'reload' });
+        return fetch(request).then((response) => {
+          if (response.ok) {
+            return cache.put(url, response);
+          }
+          throw new Error(`خطا در دریافت فایل نصب: ${url}`);
+        });
+      });
+      return Promise.all(cachePromises);
     }).then(() => self.skipWaiting()) // آماده‌سازی ورکر جدید برای فعال‌سازی فوری
   );
 });
@@ -82,3 +92,5 @@ self.addEventListener('message', (event) => {
     self.skipWaiting();
   }
 });
+
+```
