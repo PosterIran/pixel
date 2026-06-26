@@ -1,16 +1,22 @@
 // نام کانتینر کش به همراه شماره نسخه جدید جهت پاکسازی کش قدیمی در صورت تغییر نسخه
+// نام کانتینر کش به همراه شماره نسخه جدید (اگر تغییر دادید این ورژن را بالا ببرید مثلا v2.1.1)
 const CACHE_NAME = 'poster-iran-cache-v2.1.0';
 
-// لیست فایل‌های کلیدی و پایه که در اولین لود در کلاینت ذخیره می‌شوند
+// لیست فایل‌های کلیدی - آیکون‌ها و مانیفست برای فایرفاکس الزامی هستند
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
+  './manifest.json',
   './css/style.css?v=2.1.0',
   './js/script.js?v=2.1.0',
+  './icons/icon-192x192.png',
+  './icons/icon-512x512.png',
   'https://cdn.tailwindcss.com',
   'https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap',
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css'
 ];
+
+// مابقی کدهای فایل service-worker.js شما بدون تغییر باقی بماند...
 
 // نصب سرویس‌ورکر و کش کردن کدهای هسته اولیه
 self.addEventListener('install', (event) => {
@@ -41,7 +47,7 @@ self.addEventListener('activate', (event) => {
 // استراتژی کش ترکیبی: Network First برای دریافت آخرین تغییرات و Cache Fallback برای مواقع آفلاین کلاینت
 self.addEventListener('fetch', (event) => {
   const requestUrl = new URL(event.request.url);
-
+  
   // برای درخواست‌های سمت تصاویر بزرگ، کاتالوگ ابری و APIها نیازی به کش‌گذاری سخت‌گیرانه لوکال نیست
   if (requestUrl.host.includes('generativelanguage.googleapis.com') || requestUrl.pathname.includes('/Image/')) {
     event.respondWith(
@@ -49,24 +55,24 @@ self.addEventListener('fetch', (event) => {
     );
     return;
   }
-
+  
   // استراتژی Network-First برای فایل‌های اصلی کلاینت جهت بروزرسانی آنی تغییرات هنگام اتصال اینترنت
   event.respondWith(
     fetch(event.request)
-      .then((networkResponse) => {
-        // اگر پاسخ دریافتی از سرور معتبر بود، کش را با داده جدید آپدیت می‌کنیم
-        if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
-          const responseToCache = networkResponse.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseToCache);
-          });
-        }
-        return networkResponse;
-      })
-      .catch(() => {
-        // در صورت قطع بودن اینترنت یا خطا، فایل از کش لوکال لود می‌شود
-        return caches.match(event.request);
-      })
+    .then((networkResponse) => {
+      // اگر پاسخ دریافتی از سرور معتبر بود، کش را با داده جدید آپدیت می‌کنیم
+      if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
+        const responseToCache = networkResponse.clone();
+        caches.open(CACHE_NAME).then((cache) => {
+          cache.put(event.request, responseToCache);
+        });
+      }
+      return networkResponse;
+    })
+    .catch(() => {
+      // در صورت قطع بودن اینترنت یا خطا، فایل از کش لوکال لود می‌شود
+      return caches.match(event.request);
+    })
   );
 });
 
