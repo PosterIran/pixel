@@ -324,9 +324,9 @@
             
             <div class="flex items-center gap-3">
                 <!-- ویجت زمان و تاریخ شمسی -->
-                <div class="flex flex-col items-center justify-center text-center bg-blue-50/90 px-3 py-1.5 rounded-2xl border border-blue-100/50 shadow-sm min-w-[135px]">
-                    <span id="headerDayTime" class="text-[10px] md:text-[11px] font-bold text-blue-600 leading-none">--- --:--</span>
-                    <span id="headerDate" class="text-xs md:text-sm font-black text-blue-900 tracking-wider mt-1 leading-none">---- -- ----</span>
+                <div class="flex flex-col items-center justify-center text-center bg-blue-50/90 px-3 py-1.5 rounded-2xl border border-blue-100/50 shadow-sm min-w-[125px]">
+                    <span id="headerDayTime" class="text-[10px] md:text-[11px] font-bold text-blue-600 leading-none">--- --:--:--</span>
+                    <span id="headerDate" class="text-xs md:text-sm font-black text-blue-900 tracking-wider mt-1 leading-none">----/--/--</span>
                 </div>
 
                 <button onclick="showScreen('cart')" class="relative bg-blue-100 text-blue-800 p-2.5 rounded-full hover:bg-blue-200 transition flex items-center justify-center w-10 h-10">
@@ -584,7 +584,7 @@
 
 پوسترهای آموزشی با طراحی حرفه‌ای، چاپ تمام‌رنگی، با کیفیت عالی و محتوای استاندارد، ابزاری کارآمد برای معلمان، دانش‌آموزان و مدارس در سراسر کشور به شمار می‌آیند. "پوستر ایران" همواره در تلاش است تا با نوآوری و پایبندی به اصول آموزشی، نقش مؤثری در ارتقاء سطح آموزش ایفا کند.</p>
                 <div class="space-y-4 text-gray-600">
-                    <p> تهران: خیابان پانزده خرداد ، بازار آهنگران ، کوچه مسجدجامع ، پاساژ کاغذوتحریر، زیرزمن اول ، پلاک ۷۴</p>
+                    <p> تهران: خیابان پانزده خرداد ، بازار آهنگران ، کوچه مسجدجامع ، پاساژ کاغذوتحریر، زیرزمن اول ، پلاک ۷۴ . ۷۵ ، ۷۶ و ۷۷</p>
                     <p> <a href="https://maps.google.com/?cid=1396884775989221050&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNl" target="_blank" class="text-blue-500 font-bold hover:underline">  (مشاهده در نقشه)</a></p>
                 
                     <!-- افزودن قابلیت شماره‌گیری مستقیم با لمس شماره‌ها -->
@@ -1725,7 +1725,7 @@
                 
                 showToast(alertMsg, "بروزرسانی سبد", "warning");
             } else {
-                showToast("🔄 سفارش قبلی با موفقیت جایگزین سبد خرید فعلی شما شد.", "تاریخچه", "success");
+                showToast("🔄 سفارش قبلی با موفقیت جایگزین سبد خرید علی شما شد.", "تاریخچه", "success");
             }
 
             showScreen('cart');
@@ -2008,53 +2008,22 @@ ${catalogString}
             try {
                 const now = new Date();
                 
-                // لیست آرایه ماه‌های شمسی برای تبدیل عددی به اسم ماه
-                const persianMonths = [
-                    'فروردین', 'اردیبهشت', 'خرداد', 
-                    'تیر', 'مرداد', 'شهریور', 
-                    'مهر', 'آبان', 'آذر', 
-                    'دی', 'بهمن', 'اسفند'
-                ];
-
-                // دریافت اجزای تاریخ به صورت مجزا بر اساس تقویم شمسی
-                const formatterYear = new Intl.DateTimeFormat('fa-IR', { year: 'numeric', calendar: 'persian' });
-                const formatterMonth = new Intl.DateTimeFormat('fa-IR', { month: 'numeric', calendar: 'persian' });
-                const formatterDay = new Intl.DateTimeFormat('fa-IR', { day: 'numeric', calendar: 'persian' });
-
-                let yearStr = formatterYear.format(now);
-                let monthStr = formatterMonth.format(now);
-                let dayStr = formatterDay.format(now);
-
-                // تبدیل کاراکترهای عددی فارسی ماه به عدد انگلیسی برای دسترسی صحیح به آرایه
-                const farsiDigits = { '۰':0, '۱':1, '۲':2, '۳':3, '۴':4, '۵':5, '۶':6, '۷':7, '۸':8, '۹':9 };
-                let englishMonthIndex = '';
-                for (let i = 0; i < monthStr.length; i++) {
-                    const char = monthStr[i];
-                    if (farsiDigits[char] !== undefined) {
-                        englishMonthIndex += farsiDigits[char];
-                    } else if (!isNaN(parseInt(char))) {
-                        englishMonthIndex += char;
-                    }
-                }
-                const monthIndex = parseInt(englishMonthIndex) - 1; // تبدیل به مبنای صفر
-                const monthName = (monthIndex >= 0 && monthIndex < 12) ? persianMonths[monthIndex] : monthStr;
-
-                // فرمت نهایی تاریخ: ۲۴ تیر ۱۴۰۵
-                const finalPersianDate = `${dayStr} ${monthName} ${yearStr}`;
+                const dateOptions = { year: 'numeric', month: '2-digit', day: '2-digit', calendar: 'persian' };
+                let dateStr = new Intl.DateTimeFormat('fa-IR', dateOptions).format(now);
                 
-                // دریافت روز هفته
+                dateStr = dateStr.replace(/[^\d\/۰-۹]/g, ''); 
+                
                 const weekdayOptions = { weekday: 'long', calendar: 'persian' };
-                const weekdayName = new Intl.DateTimeFormat('fa-IR', weekdayOptions).format(now);
+                const dayStr = new Intl.DateTimeFormat('fa-IR', weekdayOptions).format(now);
                 
-                // دریافت زمان بدون ثانیه (ساعت و دقیقه)
-                const timeOptions = { hour: '2-digit', minute: '2-digit', hour12: false };
+                const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
                 const timeStr = new Intl.DateTimeFormat('fa-IR', timeOptions).format(now);
                 
                 const dateEl = document.getElementById('headerDate');
                 const dateTimeEl = document.getElementById('headerDayTime');
                 
-                if (dateEl) dateEl.innerText = finalPersianDate;
-                if (dateTimeEl) dateTimeEl.innerText = `${weekdayName} ${timeStr}`;
+                if (dateEl) dateEl.innerText = dateStr;
+                if (dateTimeEl) dateTimeEl.innerText = `${dayStr} ${timeStr}`;
             } catch (e) {
                 console.error("خطا در به‌روزرسانی ساعت:", e);
             }
