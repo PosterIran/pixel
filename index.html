@@ -13,7 +13,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
     <!-- ۲. اتصال به استایل‌ها (CSS) همراه با Cache-Busting جهت هماهنگی با آپدیت‌ها -->
-    <link rel="stylesheet" href="./css/style.css?v=2.1.1">
+    <link rel="stylesheet" href="./css/style.css?v=2.1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -304,7 +304,7 @@
     <div class="container mx-auto">
 
     <!-- اعلان پاپ‌آپ سراسری -->
-    <div id="toast" class="fixed top-0 left-1/2 -translate-x-1/2 z- px-6 py-3 rounded-2xl flex flex-col items-center gap-1 border border-white/40 bg-white/80 text-blue-900 shadow-xl toast-hidden">
+    <div id="toast" class="fixed top-0 left-1/2 -translate-x-1/2 z-[1000] px-6 py-3 rounded-2xl flex flex-col items-center gap-1 border border-white/40 bg-white/80 text-blue-900 shadow-xl toast-hidden">
         <div class="flex items-center gap-3">
             <div id="toastIconContainer" class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-white shadow-sm transition-all duration-300">
                 <i id="toastIcon" class="fas fa-check text-[10px]"></i>
@@ -319,7 +319,7 @@
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center gap-2 cursor-pointer" onclick="showScreen('home')">
                 <img src="https://PosterIran.github.io/pixel/icons/logo.png" alt="Logo" class="h-10 w-10 logo-img" width="40" height="40">
-                <span class="text-xl font-black text-blue-900">پوستر یران</span>
+                <span class="text-xl font-black text-blue-900">پوستر ایران</span>
             </div>
             
             <div class="flex items-center gap-3">
@@ -355,7 +355,7 @@
 
                 <div class="flex flex-col gap-4 justify-center items-center max-w-md mx-auto">
                     <button onclick="showScreen('gallery')" class="w-full bg-yellow-500 text-blue-900 px-8 py-4 rounded-2xl text-xl font-bold hover:bg-yellow-400 transition transform hover:scale-105 shadow-2xl">
-                        مشاهد گالری محصولات
+                        مشاهده گالری محصولات
                     </button>
                     
                     <div id="pendingOrderNotice" class="hidden w-full mt-4 p-4 bg-yellow-50 border-2 border-yellow-400 rounded-2xl flex items-center justify-between animate-pulse">
@@ -580,7 +580,7 @@
         <section id="aboutScreen" class="hidden-section container mx-auto px-4 py-10 max-w-4xl">
             <div class="bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
                 <h2 class="text-3xl font-bold text-blue-900 mb-6">پوستر ایران</h2>
-                <p class="text-gray-700 leading-8 mb-6 text-justify">انتشارات پوستر ایران با افتخار یکی از پیشگامان در زمینه تولید و چاپ پوستر در کشور است. ما با تکیه بر سال‌ها تجربه در زمینه چاپ و شناخت دقیق از نیازهای نظام آموزشی, مجموعه‌ای از پوسترهای جذاب، کاربردی و هماهنگ با محتوای کتب درسی مدارس تهیه کرده‌ایم تا فرآیند یادگیری را برای دانش‌آموزان ساده‌تر، عمیق‌تر و لذت‌بخش‌تر کنیم.
+                <p class="text-gray-700 leading-8 mb-6 text-justify">انتشارات پوستر ایران با افتخار یکی از پیشگامان در زمینه تولید و چاپ پوستر در کشور است. ما با تکیه بر سال‌ها تجربه در زمینه چاپ و شناخت دقیق از نیازهای نظام آموزشی, مجموعه‌ای از پوسترهای جذاب، کاربردی و هماهنگ با محتوای کتب درسی مدارس تهیه کرده‌یم تا فرآیند یادگیری را برای دانش‌آموزان ساده‌تر، عمیق‌تر و لذت‌بخش‌تر کنیم.
 
 پوسترهای آموزشی با طراحی حرفه‌ای، چاپ تمام‌رنگی، با کیفیت عالی و محتوای استاندارد، ابزاری کارآمد برای معلمان، دانش‌آموزان و مدارس در سراسر کشور به شمار می‌آیند. "پوستر ایران" همواره در تلاش است تا با نوآوری و پایبندی به اصول آموزشی، نقش مؤثری در ارتقاء سطح آموزش ایفا کند.</p>
                 <div class="space-y-4 text-gray-600">
@@ -606,7 +606,7 @@
     </main>
 
     <!-- منوی پایینی چسبنده با استایل جدید (بزرگ‌نمایی و شناور شدن منوی فعال) -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-lg border-t border-gray-200 z- flex justify-around items-center py-2 shadow-lg">
+    <nav class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-lg border-t border-gray-200 z-[100] flex justify-around items-center py-2 shadow-lg">
         <button onclick="showScreen('home')" id="nav-home" class="flex flex-col items-center gap-1 text-blue-700 transition flex-1">
             <svg width="24" height="24" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
             <span class="text-[9px] font-bold">خانه</span>
@@ -642,7 +642,7 @@
     </nav>
 
     <!-- کانتینر مودال تایید اختصاصی -->
-    <div id="confirmModal" class="fixed inset-0 z- hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div id="confirmModal" class="fixed inset-0 z-[300] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl border border-gray-100 text-center">
             <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4 text-red-600">
                 <i class="fas fa-exclamation-triangle text-2xl"></i>
@@ -657,8 +657,8 @@
     </div>
 
     <!-- مودال بزرگنمایی تصویر با قابلیت Spinner -->
-    <div id="imageModal" class="fixed inset-0 z- hidden bg-black/95 flex items-center justify-center p-4 backdrop-blur-md" onclick="closeModal()">
-        <span class="absolute top-5 right-5 text-white text-5xl cursor-pointer hover:text-red-500 transition-colors z-">&times;</span>
+    <div id="imageModal" class="fixed inset-0 z-[200] hidden bg-black/95 flex items-center justify-center p-4 backdrop-blur-md" onclick="closeModal()">
+        <span class="absolute top-5 right-5 text-white text-5xl cursor-pointer hover:text-red-500 transition-colors z-[210]">&times;</span>
         
         <!-- انیمیشن بارگذاری سفارشی (Spinner) -->
         <div id="modalSpinner" class="absolute inset-0 flex items-center justify-center z-10">
@@ -670,7 +670,7 @@
     </div>
 
     <!-- پاپ‌آپ نصب PWA -->
-    <div id="install-banner" class="fixed bottom-24 left-4 right-4 md:left-auto md:right-4 md:max-w-sm z- p-5 rounded-3xl border border-white/30 bg-white/80 backdrop-blur-xl shadow-2xl flex flex-col gap-4 transform translate-y-20 opacity-0 pointer-events-none transition-all duration-700">
+    <div id="install-banner" class="fixed bottom-24 left-4 right-4 md:left-auto md:right-4 md:max-w-sm z-[9999] p-5 rounded-3xl border border-white/30 bg-white/80 backdrop-blur-xl shadow-2xl flex flex-col gap-4 transform translate-y-20 opacity-0 pointer-events-none transition-all duration-700">
         <div class="flex items-start gap-3">
             <div class="w-12 h-12 rounded-2xl bg-white border border-blue-100 flex items-center justify-center p-1 shadow-md shrink-0">
                 <img src="https://PosterIran.github.io/pixel/icons/logo.png" alt="پوستر ایران" class="w-full h-full object-contain">
@@ -850,63 +850,63 @@
 
         const groupInfo = {
             1: { name: "سایز ۲۹×۲۱ دوروچاپ", images: [
-                { filename: "جدول دوستی تمرینی.jpg", name: "جدول دوستی تمرینی", price: 200000, allowedQuantities: },
-                { filename: "جدول دوستی کامل.jpg", name: "جدول دوستی کامل", price: 200000, allowedQuantities: },
-                { filename: "ضرب و تقسیم حیوانات.jpg", name: "ضرب و تقسیم حیوانات", price: 200000, allowedQuantities: },
-                { filename: "ضرب و تقسیم تمرینی.jpg", name: "ضرب و تقسیم تمرینی", price: 200000, allowedQuantities: },
-                { filename: "ضرب و تمرین ضرب.jpg", name: "ضرب و تمرین ضرب", price: 200000, allowedQuantities: },
-                { filename: "حساب آموز ششم.jpg", name: "حساب آموز ششم", price: 200000, allowedQuantities: },
-                { filename: "حساب آموز پنجم.jpg", name: "حساب آموز پنجم", price: 200000, allowedQuantities: },
-                { filename: "حساب آموز چهارم.jpg", name: "حساب آموز چهارم", price: 200000, allowedQuantities: },
-                { filename: "حساب آموز سوم.jpg", name: "حساب آموز سوم", price: 200000, allowedQuantities: },
-                { filename: "حساب آموز دوم (افقی).jpg", name: "حساب آموز دوم (افقی)", price: 200000, allowedQuantities: },
-                { filename: "حساب آموز دوم (عمودی).jpg", name: "حساب آموز دوم (عمودی)", price: 200000, allowedQuantities: },
-                { filename: "حساب آموز اول (افقی).jpg", name: "حساب آموز اول (افقی)", price: 200000, allowedQuantities: },
-                { filename: "حساب آموز اول (عمودی).jpg", name: "حساب آموز اول (عمودی)", price: 200000, allowedQuantities: },
-                { filename: "اعداد.jpg", name: "اعداد ساده", price: 200000, allowedQuantities: },
-                { filename: "اعداد با ساعت و محور.jpg", name: " اعداد با ساعت و محور", price: 200000, allowedQuantities: },
-                { filename: "جمع و تفریق.jpg", name: "جمع و تفریق", price: 200000, allowedQuantities: },
-                { filename: "آموزش زمان و ساعت.jpg", name: "آموزش زمان و ساعت", price: 200000, allowedQuantities: },
-                { filename: "الفبای فارسی و انگلیسی.jpg", name: "الفبای فارسی و انگلیسی", price: 200000, allowedQuantities: },
-                { filename: "محیط و مساحت اشکال هندسی.jpg", name: "محیط و مساحت اشکال هندسی", price: 200000, allowedQuantities: },
+                { filename: "جدول دوستی تمرینی.jpg", name: "جدول دوستی تمرینی", price: 200000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500] },
+                { filename: "جدول دوستی کامل.jpg", name: "جدول دوستی کامل", price: 200000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500] },
+                { filename: "ضرب و تقسیم حیوانات.jpg", name: "ضرب و تقسیم حیوانات", price: 200000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500] },
+                { filename: "ضرب و تقسیم تمرینی.jpg", name: "ضرب و تقسیم تمرینی", price: 200000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500] },
+                { filename: "ضرب و تمرین ضرب.jpg", name: "ضرب و تمرین ضرب", price: 200000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500] },
+                { filename: "حساب آموز ششم.jpg", name: "حساب آموز ششم", price: 200000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500] },
+                { filename: "حساب آموز پنجم.jpg", name: "حساب آموز پنجم", price: 200000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500] },
+                { filename: "حساب آموز چهارم.jpg", name: "حساب آموز چهارم", price: 200000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500] },
+                { filename: "حساب آموز سوم.jpg", name: "حساب آموز سوم", price: 200000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500] },
+                { filename: "حساب آموز دوم (افقی).jpg", name: "حساب آموز دوم (افقی)", price: 200000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500] },
+                { filename: "حساب آموز دوم (عمودی).jpg", name: "حساب آموز دوم (عمودی)", price: 200000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500] },
+                { filename: "حساب آموز اول (افقی).jpg", name: "حساب آموز اول (افقی)", price: 200000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500] },
+                { filename: "حساب آموز اول (عمودی).jpg", name: "حساب آموز اول (عمودی)", price: 200000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500] },
+                { filename: "اعداد.jpg", name: "اعداد ساده", price: 200000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500] },
+                { filename: "اعداد با ساعت و محور.jpg", name: " اعداد با ساعت و محور", price: 200000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500] },
+                { filename: "جمع و تفریق.jpg", name: "جمع و تفریق", price: 200000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500] },
+                { filename: "آموزش زمان و ساعت.jpg", name: "آموزش زمان و ساعت", price: 200000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500] },
+                { filename: "الفبای فارسی و انگلیسی.jpg", name: "الفبای فارسی و انگلیسی", price: 200000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500] },
+                { filename: "محیط و مساحت اشکال هندسی.jpg", name: "محیط و مساحت اشکال هندسی", price: 200000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500] },
             ]},
             3: { name: "سایز ۵۰×۳۵ دوروچاپ", images: [
-                { filename: "جدول دوستی کامل.jpg", name: "جدول دوستی کامل", price: 400000, allowedQuantities: },
-                { filename: "آموزش زمان و ساعت.jpg", name: "آموزش زمان و ساعت", price: 400000, allowedQuantities: },
-                { filename: "ضرب و تقسیم تمرینی.jpg", name: "ضرب و تقسیم تمرینی", price: 400000, allowedQuantities: },
+                { filename: "جدول دوستی کامل.jpg", name: "جدول دوستی کامل", price: 400000, allowedQuantities: [0, 50, 100, 200] },
+                { filename: "آموزش زمان و ساعت.jpg", name: "آموزش زمان و ساعت", price: 400000, allowedQuantities: [0, 50, 100, 200] },
+                { filename: "ضرب و تقسیم تمرینی.jpg", name: "ضرب و تقسیم تمرینی", price: 400000, allowedQuantities: [0, 50, 100, 200] },
             ]},
             4: { name: "سایز ۷۰×۵۰ یکروچاپ", images: [
-                { filename: "الفبای فارسی شکل دار.jpg", name: "الفبای فارسی شکل دار", price: 400000, allowedQuantities: },
-                { filename: "جدول دوستی.jpg", name: "جدول دوستی", price: 400000, allowedQuantities: },
-                { filename: "جدول ضرب.jpg", name: "جدول ضرب", price: 400000, allowedQuantities: },
-                { filename: "اعداد 1 تا 100.jpg", name: "اعداد 1 تا 100", price: 400000, allowedQuantities: },
+                { filename: "الفبای فارسی شکل دار.jpg", name: "الفبای فارسی شکل دار", price: 400000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500] },
+                { filename: "جدول دوستی.jpg", name: "جدول دوستی", price: 400000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500] },
+                { filename: "جدول ضرب.jpg", name: "جدول ضرب", price: 400000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500] },
+                { filename: "اعداد 1 تا 100.jpg", name: "اعداد 1 تا 100", price: 400000, allowedQuantities: [0, 20, 50, 100, 200] },
             ]},
             5: { name: "سایز ۷۰×۵۰ یووی‌دار", images: [
-                { filename: "شهرک الفبا.jpg", name: "شهرک الفبا", price: 550000, allowedQuantities: },
-                { filename: "آناتـومی بـدن انسـان.jpg", name: "آناتـومی بـدن انسـان", price: 550000, allowedQuantities: },
-                { filename: "بـدن من.jpg", name: "بـدن من", price: 550000, allowedQuantities: },
-                { filename: "شکل صداها و الفبای فارسی.jpg", name: "شکل صداها و الفبای فارسی", price: 550000, allowedQuantities: },
-                { filename: "آموزش زمان وساعت.jpg", name: "آموزش زمان وساعت", price: 550000, allowedQuantities: },
-                { filename: "ضرب تمرینی ستونی.jpg", name: "ضرب تمرینی ستونی", price: 550000, allowedQuantities: },
-                { filename: "ضرب تمرینی مربعی.jpg", name: "ضرب تمرینی مربعی", price: 550000, allowedQuantities: },
-                { filename: "اعداد یک تا صد.jpg", name: "اعداد یک تا صد", price: 550000, allowedQuantities: },
-                { filename: "اعداد ده تا هزار.jpg", name: "اعداد ده تا هزار", price: 550000, allowedQuantities: },
-                { filename: "جدول تناوبی عناصر.jpg", name: "جدول تناوبی عناصر", price: 550000, allowedQuantities: },
-                { filename: "برنامه هفتگی.jpg", name: "برنامه هفتگی", price: 550000, allowedQuantities: },
-                { filename: "نقشـه ایـران.webp", name: "نقشـه ایـران", price: 550000, allowedQuantities: },
-                { filename: "نقشـه جهـان.webp", name: "نقشـه جهـان" , price: 550000, allowedQuantities: },
+                { filename: "شهرک الفبا.jpg", name: "شهرک الفبا", price: 550000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500] },
+                { filename: "آناتـومی بـدن انسـان.jpg", name: "آناتـومی بـدن انسـان", price: 550000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500] },
+                { filename: "بـدن من.jpg", name: "بـدن من", price: 550000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500] },
+                { filename: "شکل صداها و الفبای فارسی.jpg", name: "شکل صداها و الفبای فارسی", price: 550000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500] },
+                { filename: "آموزش زمان وساعت.jpg", name: "آموزش زمان وساعت", price: 550000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500] },
+                { filename: "ضرب تمرینی ستونی.jpg", name: "ضرب تمرینی ستونی", price: 550000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500] },
+                { filename: "ضرب تمرینی مربعی.jpg", name: "ضرب تمرینی مربعی", price: 550000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500] },
+                { filename: "اعداد یک تا صد.jpg", name: "اعداد یک تا صد", price: 550000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500] },
+                { filename: "اعداد ده تا هزار.jpg", name: "اعداد ده تا هزار", price: 550000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500] },
+                { filename: "جدول تناوبی عناصر.jpg", name: "جدول تناوبی عناصر", price: 550000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500] },
+                { filename: "برنامه هفتگی.jpg", name: "برنامه هفتگی", price: 550000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500] },
+                { filename: "نقشـه ایـران.webp", name: "نقشـه ایـران", price: 550000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500] },
+                { filename: "نقشـه جهـان.webp", name: "نقشـه جهـان" , price: 550000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500] },
             ]},
             6: { name: "سایر محصولات", images: [
-                { filename: "دفترچه ای بزرگ ضرب.jpg", name: "دفترچه ای بزرگ ضرب", price: 500000, allowedQuantities: },
-                { filename: "دفترچه ای کوچک ضرب.jpg", name: "دفترچه ای کوچک ضرب", price: 380000, allowedQuantities: },
-                { filename: "دفترچه ای بزرگ الفبا.jpg", name: "دفترچه ای بزرگ الفبا", price: 500000, allowedQuantities: },
-                { filename: "دفترچه ای کوچک الفبا.jpg", name: "دفترچه ای کوچک الفبا", price: 380000, allowedQuantities: },
-                { filename: "دفترچه ای بزرگ دوستی.jpg", name: "دفترچه ای بزرگ دوستی", price: 500000, allowedQuantities: },
-                { filename: "دفترچه ای کوچک دوستی.jpg", name: "دفترچه ای کوچک دوستی", price: 380000, allowedQuantities: },
-                { filename: "فلش کارت اعداد.jpg", name: "فلش کارت اعداد", price: 450000, allowedQuantities: },
-                { filename: "فلش کارت نگاره ها و نشانه ها.jpg", name: "فلش کارت نگاره‌ها و نشانه‌ها", price: 450000, allowedQuantities: },
-                { filename: "فلش کارت الفبا.jpg", name: "فلش کارت الفبا", price: 380000, allowedQuantities: },
-                { filename: "استیکر A4.jpg", name: "استیکر A4", price: 150000, allowedQuantities: },
+                { filename: "دفترچه ای بزرگ ضرب.jpg", name: "دفترچه ای بزرگ ضرب", price: 500000, allowedQuantities: [0, 60, 120, 240, 480] },
+                { filename: "دفترچه ای کوچک ضرب.jpg", name: "دفترچه ای کوچک ضرب", price: 380000, allowedQuantities: [0, 60, 120, 240, 480] },
+                { filename: "دفترچه ای بزرگ الفبا.jpg", name: "دفترچه ای بزرگ الفبا", price: 500000, allowedQuantities: [0, 60, 120, 240, 480] },
+                { filename: "دفترچه ای کوچک الفبا.jpg", name: "دفترچه ای کوچک الفبا", price: 380000, allowedQuantities: [0, 60, 120, 240, 480] },
+                { filename: "دفترچه ای بزرگ دوستی.jpg", name: "دفترچه ای بزرگ دوستی", price: 500000, allowedQuantities: [0, 60, 120, 240, 480] },
+                { filename: "دفترچه ای کوچک دوستی.jpg", name: "دفترچه ای کوچک دوستی", price: 380000, allowedQuantities: [0, 60, 120, 240, 480] },
+                { filename: "فلش کارت اعداد.jpg", name: "فلش کارت اعداد", price: 450000, allowedQuantities: [0, 60, 120, 240, 480] },
+                { filename: "فلش کارت نگاره ها و نشانه ها.jpg", name: "فلش کارت نگاره‌ها و نشانه‌ها", price: 450000, allowedQuantities: [0, 60, 120, 240, 480] },
+                { filename: "فلش کارت الفبا.jpg", name: "فلش کارت الفبا", price: 380000, allowedQuantities: [0] },
+                { filename: "استیکر A4.jpg", name: "استیکر A4", price: 150000, allowedQuantities: [0, 100, 200, 300, 400, 500, 1200, 2400] },
             ]}
         };
 
@@ -1050,7 +1050,7 @@
             info.images.forEach(img => {
                 const productId = info.name + "_" + img.filename;
                 const currentQty = cart[productId]?.quantity || 0;
-                const qtys = img.allowedQuantities ||;
+                const qtys = img.allowedQuantities || [0, 50, 100, 200];
                 
                 const box = document.createElement('div');
                 box.className = 'image-box bg-white p-3 rounded-2xl border shadow-sm flex flex-col items-center';
@@ -1179,7 +1179,7 @@
                         
                         if (item) {
                             total += (item.quantity * item.price);
-                            const qtys = imgData.allowedQuantities ||;
+                            const qtys = imgData.allowedQuantities || [0, 50, 100, 200];
                             let optionsHtml = qtys.map(q => `<option value="${q}" ${q === item.quantity ? 'selected' : ''}>${q === 0 ? 'حذف' : toPersianDigits(q) + ' عدد'}</option>`).join('');
                             
                             const thumbSrc = getThumbnailUrl(item.groupName, item.filename);
@@ -1476,7 +1476,7 @@
                             price: Number(img.price),
                             name: img.name,
                             groupName: group.name,
-                            allowedQuantities: img.allowedQuantities ||
+                            allowedQuantities: img.allowedQuantities || [0, 50, 100, 200]
                         });
                     });
                 }
@@ -1673,7 +1673,7 @@
                     validProductsMap[id] = {
                         price: img.price,
                         name: img.name,
-                        allowedQuantities: img.allowedQuantities ||
+                        allowedQuantities: img.allowedQuantities || [0, 50, 100, 200]
                     };
                 });
             });
@@ -1821,7 +1821,7 @@ ${catalogString}
                     
                     if (response.ok) {
                         const result = await response.json();
-                        const modelText = result.candidates?.?.content?.parts?.?.text || "متاسفانه پاسخی دریافت نشد.";
+                        const modelText = result.candidates?.[0]?.content?.parts?.[0]?.text || "متاسفانه پاسخی دریافت نشد.";
                         
                         aiChatHistory.push({
                             role: "model",
@@ -2049,41 +2049,28 @@ ${catalogString}
     <script>
         /* -------------------------------------------------------------------------
            سیستم پیشرفته کنترل و مانیتورینگ زنده سرویس‌ورکر (ثبت تغییرات آنی کدهای کلاینت)
-           ایمن شده ویژه فایرفاکس با کنترل کش هدر و به‌روزرسانی اجباری دوره ای ۵ دقیقه ای
         ------------------------------------------------------------------------- */
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
-                // با اضافه کردن updateViaCache: 'none'، مرورگر فایرفاکس از کش کردن فایل سرویس‌ورکر جلوگیری می‌کند.
-                navigator.serviceWorker.register('./service-worker.js', { 
-                    scope: './',
-                    updateViaCache: 'none' 
-                })
+                navigator.serviceWorker.register('./service-worker.js', { scope: './' })
                 .then(function(registration) {
                     console.log('✅ Service Worker با موفقیت ثبت شد: ', registration.scope);
                     
-                    // بررسی دستی فوری در زمان لود اولیه صفحه
+                    // بررسی و اعمال بروزرسانی زنده سرویس‌ورکر در هر لود صفحه
                     registration.update();
 
-                    // سیستم به‌روزرسانی دوره‌ای بسیار دقیق (هر ۵ دقیقه یکبار)
-                    // این تابع بدون توجه به نوع مرورگر، فایل سرویس ورکر را روی سرور بررسی می‌کند
-                    setInterval(() => {
-                        registration.update()
-                        .then(() => console.log('🔄 بررسی خودکار ۵ دقیقه‌ای به‌روزرسانی سرویس‌ورکر انجام شد.'))
-                        .catch(err => console.error('❌ خطا در سیستم هماهنگ‌سازی دوره‌ای:', err));
-                    }, 300000); // 300,000 میلی‌ثانیه معادل ۵ دقیقه است.
-
-                    // اگر ورکر جدیدی دانلود شده و در حالت انتظار است
+                    // اگر ورکر جدیدی دانلود شده و آماده فعال شدن است
                     if (registration.waiting) {
                         applyNewServiceWorker(registration.waiting);
                     }
 
-                    // شنود رویداد برای تغییرات آینده سرویس‌ورکر
+                    // گوش دادن به ورکر در حال نصب جدید برای رصد آپدیت
                     registration.addEventListener('updatefound', () => {
                         const installingWorker = registration.installing;
                         installingWorker.addEventListener('statechange', () => {
                             if (installingWorker.state === 'installed') {
                                 if (navigator.serviceWorker.controller) {
-                                    // سرویس‌ورکر جدید دانلود و آماده اجرا شد
+                                    // سرویس‌ورکر جدید آماده است
                                     applyNewServiceWorker(installingWorker);
                                 }
                             }
@@ -2093,7 +2080,7 @@ ${catalogString}
                     console.log('❌ ثبت Service Worker شکست خورد:', error);
                 });
 
-                // ریلود خودکار کلاینت زمانی که سرویس‌ورکر جدید کنترل صفحات را در دست می‌گیرد
+                // ریلود خودکار کلاینت وقتی سرویس‌ورکر جدید کنترل صفحه را به دست می‌گیرد
                 let isRefreshing = false;
                 navigator.serviceWorker.addEventListener('controllerchange', () => {
                     if (!isRefreshing) {
@@ -2103,7 +2090,7 @@ ${catalogString}
                 });
             });
 
-            // اجرای فرآیند ارتقاء فوری سرویس‌ورکر (Skip Waiting)
+            // دستور به سرویس‌ورکر جدید برای عبور فوری از وضعیت آماده‌باش (Skip Waiting)
             function applyNewServiceWorker(waitingWorker) {
                 waitingWorker.postMessage({ action: 'skipWaiting' });
                 showToast("✨ نسخه جدید برنامه بارگذاری شد؛ سیستم به روزرسانی شد.", "سیستم PWA", "info");
@@ -2112,6 +2099,6 @@ ${catalogString}
     </script>
 
     <!-- ۵. اتصال به منطق برنامه همراه با برچسب کش شکن جدید -->
-    <script src="./js/script.js?v=2.1.1" defer></script>
+    <script src="./js/script.js?v=2.1.0" defer></script>
 </body>
 </html>
