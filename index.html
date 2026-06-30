@@ -21,15 +21,15 @@
     <style>
         body { font-family: 'Vazirmatn', sans-serif; scroll-behavior: smooth; }
         .hero-gradient  {
-     position: relative;
-     background: linear-gradient(135deg, #0f172a 0%, #1e40af 50%, #3b82f6 100%);
-     overflow: hidden;
-     width: 100vw;
-     margin-left: calc(-50vw + 50%);
-     margin-right: calc(-50vw + 50%);
-     padding-left: 1rem;
-     padding-right: 1rem;
- }
+            position: relative;
+            background: linear-gradient(135deg, #0f172a 0%, #1e40af 50%, #3b82f6 100%);
+            overflow: hidden;
+            width: 100vw;
+            margin-left: calc(-50vw + 50%);
+            margin-right: calc(-50vw + 50%);
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
         .image-box { transition: transform 0.3s ease; }
         .image-box:hover { transform: translateY(-5px); }
         .hidden-section { display: none; }
@@ -307,9 +307,47 @@
         .animate-spin-custom {
             animation: spin 1s linear infinite;
         }
+
+        /* ----------------------------------------------------
+           استایل‌های لایه نمایش قطع اتصال اینترنت (Offline Screen)
+        ---------------------------------------------------- */
+        #offlineOverlay {
+            position: fixed;
+            inset: 0;
+            background-color: #f2f2f2;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            text-align: center;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        #offlineOverlay.hidden-offline {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(1.05);
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-900 pb-28">
+
+    <!-- لایه هشدار قطع اتصال اینترنت پویا -->
+    <div id="offlineOverlay" class="hidden-offline">
+        <div class="bg-white p-8 md:p-12 rounded-3xl shadow-2xl border border-red-100 max-w-sm w-full flex flex-col items-center">
+            <div class="w-20 h-20 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-4xl mb-6 animate-pulse">
+                <i class="fas fa-wifi-slash"></i>
+            </div>
+            <h1 class="text-xl md:text-2xl font-black text-red-600 mb-3">🚫 اتصال اینترنت برقرار نیست</h1>
+            <p class="text-sm text-gray-600 leading-relaxed mb-6">لطفاً اتصال شبکه، وای‌فای یا اینترنت دیتا گوشی خود را بررسی کنید و دوباره تلاش نمایید.</p>
+            <button onclick="checkConnectionManually()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-2xl shadow-lg shadow-blue-100 transition-all flex items-center justify-center gap-2">
+                <i class="fas fa-sync-alt"></i>
+                بررسی مجدد اتصال
+            </button>
+        </div>
+    </div>
+
     <div class="container mx-auto">
 
     <!-- اعلان پاپ‌آپ سراسری -->
@@ -378,7 +416,6 @@
                         <button onclick="showScreen('cart')" class="bg-yellow-500 text-white px-4 py-2 rounded-xl font-bold text-xs shadow-md">مشاهده سبد</button>
                     </div>
                     
-                    <!-- تغییر دکمه به حالت ایمن و بدون تغییر هش آدرس جهت جلوگیری از پاپ آپ اشتباه خروج -->
                     <button onclick="scrollToBenefitsSection()" class="w-full border-2 border-white/30 bg-white/10 px-8 py-4 rounded-2xl text-xl font-bold hover:bg-white/20 transition text-center cursor-pointer">
                         چرا پوستر آموزشی؟
                     </button>
@@ -476,7 +513,6 @@
                 <h2 class="text-3xl font-bold text-blue-900">گالری محصولات</h2>
             </div>
 
-            <!-- تغییر موقعیت چسبندگی دسته‌بندی گالری متناسب با برداشته شدن هدر چسبنده -->
             <div class="sticky top-0 z-40 bg-white/95 backdrop-blur-md py-4 mb-8 -mx-4 px-4 border-b border-blue-50 shadow-sm">
                 <div class="max-w-md mx-auto relative group">
                     <label class="block text-[14px] font-bold text-indigo-500 mb-2 mr-2 flex items-center gap-1.5">
@@ -614,7 +650,7 @@
         </section>
     </main>
 
-    <!-- منوی پایینی چسبنده با استایل جدید (بزرگ‌نمایی و شناور شدن منوی فعال) -->
+    <!-- منوی پایینی چسبنده -->
     <nav class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-lg border-t border-gray-200 z-[100] flex justify-around items-center py-2 shadow-lg">
         <button onclick="showScreen('home')" id="nav-home" class="flex flex-col items-center gap-1 text-blue-700 transition flex-1">
             <svg width="24" height="24" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
@@ -895,7 +931,7 @@
                 { filename: "آناتـومی بـدن انسـان.jpg", name: "آناتـومی بـدن انسـان", price: 550000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500] },
                 { filename: "بـدن من.jpg", name: "بـدن من", price: 550000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500] },
                 { filename: "شکل صداها و الفبای فارسی.jpg", name: "شکل صداها و الفبای فارسی", price: 550000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500] },
-                { filename: "آموزش زمان وساعت.jpg", name: "آموزش زمان وساعت", price: 550000, allowedQuantities: [0, 20, 50, 100, 200] },
+                { filename: "آموزش زمان وساعت.jpg", name: "آموزش زمان وساعت", price: 550000, allowedQuantities: [0, 20, 50, 100] },
                 { filename: "ضرب تمرینی ستونی.jpg", name: "ضرب تمرینی ستونی", price: 550000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500] },
                 { filename: "ضرب تمرینی مربعی.jpg", name: "ضرب تمرینی مربعی", price: 550000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500] },
                 { filename: "اعداد یک تا صد.jpg", name: "اعداد یک تا صد", price: 550000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500] },
@@ -1250,9 +1286,10 @@
             });
             htmlContent += `</div></div>`;
             
-            let discountPercent = (total >= 1000000000) ? 0.1 : (total >= 700000000 ? 0.07 : (total >= 500000000 ? 0.05 : 0));
-            let discount = total * discountPercent;
-            let afterDiscount = total - discount;
+            let total_f = total;
+            let discountPercent = (total_f >= 1000000000) ? 0.1 : (total_f >= 700000000 ? 0.07 : (total_f >= 500000000 ? 0.05 : 0));
+            let discount = total_f * discountPercent;
+            let afterDiscount = total_f - discount;
             let packageCount = Math.floor(afterDiscount / 200000000) + 1;
             let shipping = packageCount * 1000000;
             let finalPayable = afterDiscount + shipping;
@@ -1436,10 +1473,10 @@
                 showToast("⚠️ کپی خودکار با محدودیت مواجه شد، اما در حال انتقال به پیام‌رسان هستیم...", "سیستم", "warning");
                 
                 if (platform === 'eitaa') {
-                    setTimeout(() => { window.open(`https://eitaa.com/@PosterIran`, '_blank'); }, 1500);
+                    setTimeout(() => { window.open(`https://eitaa.com/@PosterIran`, '_blank'); }, 1550);
                 } else if (platform === 'whatsapp') {
                     const url = `https://wa.me/989010195885?text=${encodeURIComponent(text)}`;
-                    setTimeout(() => { window.open(url, '_blank'); }, 1500);
+                    setTimeout(() => { window.open(url, '_blank'); }, 1550);
                 }
                 
                 cart = {};
@@ -1935,7 +1972,6 @@ ${catalogString}
                 e.preventDefault();
                 deferredPrompt = e;
                 
-                // پاک کردن حالت کش قبلی در صورت دریافت رویداد جدید نصب
                 localStorage.removeItem('pwa_installed');
 
                 const blockInstallBanner = localStorage.getItem('block_install_banner_until');
@@ -2038,6 +2074,44 @@ ${catalogString}
             }
         }
 
+        // ----------------------------------------------------
+        // سیستم مدیریت زنده وضعیت اینترنت (Online/Offline)
+        // ----------------------------------------------------
+        function handleNetworkChange() {
+            const offlineOverlay = document.getElementById('offlineOverlay');
+            if (!offlineOverlay) return;
+
+            if (navigator.onLine) {
+                // اینترنت متصل است
+                offlineOverlay.classList.add('hidden-offline');
+                console.log("🌐 اتصال به اینترنت برقرار شد.");
+            } else {
+                // اینترنت قطع است
+                offlineOverlay.classList.remove('hidden-offline');
+                console.log("🚫 ارتباط با اینترنت قطع شد.");
+            }
+        }
+
+        function checkConnectionManually() {
+            // برای بررسی واقعی‌تر، یک درخواست سبک پینگ به سرور می‌زنیم
+            if (!navigator.onLine) {
+                showToast("⚠️ هنوز اتصالی برقرار نیست. لطفاً مجدداً بررسی کنید.", "خطا در شبکه", "error");
+                return;
+            }
+
+            fetch('https://www.google.com', { mode: 'no-cors', cache: 'no-store' })
+                .then(() => {
+                    const offlineOverlay = document.getElementById('offlineOverlay');
+                    if (offlineOverlay) {
+                        offlineOverlay.classList.add('hidden-offline');
+                    }
+                    showToast("✅ اتصال با موفقیت برقرار شد!", "شبکه آنلاین", "success");
+                })
+                .catch(() => {
+                    showToast("⚠️ پورتال دسترسی متصل نیست یا سرعت شبکه بسیار ضعیف است.", "سیستم شبکه", "warning");
+                });
+        }
+
         // راه‌اندازی اولیه برنامه با جایگذاری اولین استیت تاریخچه برای فعال‌سازی کلید بک گوشی
         function initializeApplication() {
             loadCustomerData();
@@ -2046,6 +2120,12 @@ ${catalogString}
             
             updateLiveClock();
             setInterval(updateLiveClock, 1000);
+
+            // مانیتورینگ وضعیت اینترنت
+            window.addEventListener('online', handleNetworkChange);
+            window.addEventListener('offline', handleNetworkChange);
+            // فراخوانی اولیه برای بررسی وضعیت در بدو ورود به برنامه
+            handleNetworkChange();
             
             // جایگذاری استیت پایه خانه در تاریخچه مرورگر برای کارکرد صحیح دکمه بازگشت فیزیکی گوشی
             history.replaceState({ screen: 'home' }, "", "#home");
@@ -2065,21 +2145,17 @@ ${catalogString}
                 .then(function(registration) {
                     console.log('✅ Service Worker با موفقیت ثبت شد: ', registration.scope);
                     
-                    // بررسی و اعمال بروزرسانی زنده سرویس‌ورکر در هر لود صفحه
                     registration.update();
 
-                    // اگر ورکر جدیدی دانلود شده و آماده فعال شدن است
                     if (registration.waiting) {
                         applyNewServiceWorker(registration.waiting);
                     }
 
-                    // گوش دادن به ورکر در حال نصب جدید برای رصد آپدیت
                     registration.addEventListener('updatefound', () => {
                         const installingWorker = registration.installing;
                         installingWorker.addEventListener('statechange', () => {
                             if (installingWorker.state === 'installed') {
                                 if (navigator.serviceWorker.controller) {
-                                    // سرویس‌ورکر جدید آماده است
                                     applyNewServiceWorker(installingWorker);
                                 }
                             }
@@ -2089,7 +2165,6 @@ ${catalogString}
                     console.log('❌ ثبت Service Worker شکست خورد:', error);
                 });
 
-                // ریلود خودکار کلاینت وقتی سرویس‌ورکر جدید کنترل صفحه را به دست می‌گیرد
                 let isRefreshing = false;
                 navigator.serviceWorker.addEventListener('controllerchange', () => {
                     if (!isRefreshing) {
@@ -2099,7 +2174,6 @@ ${catalogString}
                 });
             });
 
-            // دستور به سرویس‌ورکر جدید برای عبور فوری از وضعیت آماده‌باش (Skip Waiting)
             function applyNewServiceWorker(waitingWorker) {
                 waitingWorker.postMessage({ action: 'skipWaiting' });
                 showToast("✨ نسخه جدید برنامه بارگذاری شد؛ سیستم به روزرسانی شد.", "سیستم PWA", "info");
