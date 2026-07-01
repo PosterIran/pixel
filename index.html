@@ -31,7 +31,7 @@
             padding-right: 1rem;
         }
         .image-box { transition: transform 0.3s ease; }
-        .image-box:hover { transform: translateY(-5px); }
+        .image-box:hover:not(.out-of-stock-card) { transform: translateY(-5px); }
         .hidden-section { display: none; }
         .qty-select { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
         
@@ -893,6 +893,12 @@
             });
         }
 
+        /* ----------------------------------------------------
+           کاتالوگ و پایگاه داده محصولات:
+           برای ناموجود کردن یک پوستر کافیست ویژگی زیر را در شیء آن محصول بنویسید:
+           outOfStock: true
+           و برای موجود کردن مجدد، آن را حذف کنید یا روی false بگذارید.
+        ---------------------------------------------------- */
         const groupInfo = {
             1: { name: "سایز ۲۹×۲۱ دوروچاپ", images: [
                 { filename: "جدول دوستی تمرینی.jpg", name: "جدول دوستی تمرینی", price: 200000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500] },
@@ -924,7 +930,8 @@
                 { filename: "الفبای فارسی شکل دار.jpg", name: "الفبای فارسی شکل دار", price: 400000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500] },
                 { filename: "جدول دوستی.jpg", name: "جدول دوستی", price: 400000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500] },
                 { filename: "جدول ضرب.jpg", name: "جدول ضرب", price: 400000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500] },
-                { filename: "اعداد 1 تا 100.jpg", name: "اعداد 1 تا 100", price: 400000, allowedQuantities: [0, 20, 50, 100] },
+                // ⚠️ ویژگی outOfStock برای این کالا فعال شده است. برای موجود کردن دوباره، outOfStock: false بگذارید یا آن را کلاً پاک کنید.
+                { filename: "اعداد 1 تا 100.jpg", name: "اعداد 1 تا 100", price: 400000, allowedQuantities: [0, 20, 50, 100], outOfStock: true },
             ]},
             5: { name: "سایز ۷۰×۵۰ یووی‌دار", images: [
                 { filename: "شهرک الفبا.jpg", name: "شهرک الفبا", price: 550000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500] },
@@ -950,7 +957,7 @@
                 { filename: "دفترچه ای کوچک دوستی.jpg", name: "دفترچه ای کوچک دوستی", price: 380000, allowedQuantities: [0, 60, 120, 240, 480] },
                 { filename: "فلش کارت اعداد.jpg", name: "فلش کارت اعداد", price: 450000, allowedQuantities: [0, 60, 120, 240, 480] },
                 { filename: "فلش کارت نگاره ها و نشانه ها.jpg", name: "فلش کارت نگاره‌ها و نشانه‌ها", price: 450000, allowedQuantities: [0, 60, 120, 240, 480] },
-                { filename: "فلش کارت الفبا.jpg", name: "فلش کارت الفبا", price: 380000, allowedQuantities: [0] },
+                { filename: "فلش کارت الفبا.jpg", name: "فلش کارت الفبا", price: 380000, allowedQuantities: [0], outOfStock: true },
                 { filename: "استیکر A4.jpg", name: "استیکر A4", price: 150000, allowedQuantities: [0, 100, 200, 300, 400, 500, 1200, 2400] },
             ]}
         };
@@ -1096,9 +1103,11 @@
                 const productId = info.name + "_" + img.filename;
                 const currentQty = cart[productId]?.quantity || 0;
                 const qtys = img.allowedQuantities || [0, 50, 100, 200];
+                const isOutOfStock = img.outOfStock === true;
                 
                 const box = document.createElement('div');
-                box.className = 'image-box bg-white p-3 rounded-2xl border shadow-sm flex flex-col items-center';
+                // اگر کالا ناموجود است ظاهر آن را نیمه‌شفاف و بدون افکت جابجایی هاور می‌کنیم
+                box.className = 'image-box bg-white p-3 rounded-2xl border shadow-sm flex flex-col items-center' + (isOutOfStock ? ' opacity-70 out-of-stock-card' : '');
                 
                 let optionsHtml = qtys.map(q =>
                     `<option value="${q}" ${q === currentQty ? 'selected' : ''}>${q === 0 ? 'انتخاب تعداد' : toPersianDigits(q) + ' عدد'}</option>`
@@ -1107,15 +1116,18 @@
                 const thumbSrc = getThumbnailUrl(info.name, img.filename);
                 const originalSrc = getOriginalUrl(info.name, img.filename);
                 
-                box.innerHTML = `
-                    <div class="w-full h-32 mb-2 rounded-lg bg-gray-50 flex items-center justify-center overflow-hidden cursor-pointer" 
-                         onclick="openModal('${originalSrc}')">
-                        <img src="${thumbSrc}" 
-                             class="w-full h-full object-contain transition-transform hover:scale-110" 
-                             onerror="this.onerror=null; this.src='${originalSrc}';">
-                    </div>
-                    <h4 class="font-bold text-[11px] text-center h-8 overflow-hidden mb-1">${img.name}</h4>
-                    <p class="text-blue-600 font-black text-[11px] mb-3">${toPersianPrice(img.price)} ریال</p>
+                let controlWidget = '';
+                
+                if (isOutOfStock) {
+                    // در صورت ناموجود بودن، ویجت انتخاب تعداد را با نشان "موقتاً ناموجود" جایگزین می‌کنیم
+                    controlWidget = `
+                    <div class="w-full flex items-center justify-center gap-1 mt-auto pt-2 border-t">
+                        <span class="text-[11px] text-red-500 font-extrabold flex items-center gap-1">
+                            <i class="fas fa-exclamation-circle text-[9px]"></i> موقتاً ناموجود
+                        </span>
+                    </div>`;
+                } else {
+                    controlWidget = `
                     <div class="w-full flex items-center gap-2 mt-auto pt-2 border-t">
                         <span class="text-[10px] text-gray-400 font-bold">تعداد:</span>
                         <div class="relative bg-blue-50 border border-blue-100 rounded-xl px-2 py-1 flex-1 text-center">
@@ -1125,6 +1137,22 @@
                             </select>
                         </div>
                     </div>`;
+                }
+                
+                box.innerHTML = `
+                    <div class="w-full h-32 mb-2 rounded-lg bg-gray-50 flex items-center justify-center overflow-hidden cursor-pointer relative" 
+                         onclick="openModal('${originalSrc}')">
+                        <img src="${thumbSrc}" 
+                             class="w-full h-full object-contain transition-transform hover:scale-110" 
+                             onerror="this.onerror=null; this.src='${originalSrc}';">
+                        ${isOutOfStock ? `
+                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
+                            <span class="bg-red-600 text-white text-[10px] font-black px-2 py-1 rounded-lg shadow-sm">عدم موجودی</span>
+                        </div>` : ''}
+                    </div>
+                    <h4 class="font-bold text-[11px] text-center h-8 overflow-hidden mb-1">${img.name}</h4>
+                    <p class="text-blue-600 font-black text-[11px] mb-3">${toPersianPrice(img.price)} ریال</p>
+                    ${controlWidget}`;
                 container.appendChild(box);
             });
         }
@@ -1507,6 +1535,11 @@
             );
         }
 
+        /* ----------------------------------------------------
+           بررسی خودکار و همگام‌سازی سلامت سبد خرید:
+           در صورتی که محصولی در سبد خرید کاربر باشد و مدیر آن را "ناموجود" یا حذف کند،
+           این تابع به‌طور خودکار آن را از سبد خرید کاربر پاکسازی می‌کند.
+        ---------------------------------------------------- */
         function validateCart() {
             if (!cart || Object.keys(cart).length === 0) return;
             if (!groupInfo || Object.keys(groupInfo).length === 0) return;
@@ -1517,24 +1550,27 @@
             Object.values(groupInfo).forEach(group => {
                 if (group && group.images) {
                     group.images.forEach(img => {
-                        allLiveProducts.push({
-                            filename: img.filename,
-                            price: Number(img.price),
-                            name: img.name,
-                            groupName: group.name,
-                            allowedQuantities: img.allowedQuantities || [0, 50, 100, 200]
-                        });
+                        // فقط کالاهایی که ناموجود (outOfStock) نیستند را به عنوان کالای زنده و مجاز ثبت کن
+                        if (img.outOfStock !== true) {
+                            allLiveProducts.push({
+                                filename: img.filename,
+                                price: Number(img.price),
+                                name: img.name,
+                                groupName: group.name,
+                                allowedQuantities: img.allowedQuantities || [0, 50, 100, 200]
+                            });
+                        }
                     });
                 }
             });
-            
-            if (allLiveProducts.length === 0) return;
             
             for (const productId in cart) {
                 const cartItem = cart[productId];
                 if (!cartItem) continue;
                 
-                const liveRef = allLiveProducts.find(p => p.filename === cartItem.filename);
+                const liveRef = allLiveProducts.find(p => p.filename === cartItem.filename && p.groupName === cartItem.groupName);
+                
+                // اگر کالا حذف یا ناموجود شده بود، آن را از سبد خرید بردار
                 if (!liveRef) {
                     delete cart[productId];
                     isCartChanged = true;
@@ -1715,12 +1751,15 @@
             const validProductsMap = {};
             Object.values(groupInfo).forEach(group => {
                 group.images.forEach(img => {
-                    const id = group.name + "_" + img.filename;
-                    validProductsMap[id] = {
-                        price: img.price,
-                        name: img.name,
-                        allowedQuantities: img.allowedQuantities || [0, 50, 100, 200]
-                    };
+                    // محصولات ناموجود در زمان بازسفارش فیلتر می‌شوند
+                    if (img.outOfStock !== true) {
+                        const id = group.name + "_" + img.filename;
+                        validProductsMap[id] = {
+                            price: img.price,
+                            name: img.name,
+                            allowedQuantities: img.allowedQuantities || [0, 50, 100, 200]
+                        };
+                    }
                 });
             });
 
@@ -1765,7 +1804,7 @@
             
             if (removedItemsCount > 0 || updatedQtyCount > 0 || updatedPriceCount > 0) {
                 let alertMsg = "⚠️ سبد خرید بازنشانی شد:";
-                if (removedItemsCount > 0) alertMsg += ` ${toPersianDigits(removedItemsCount)} کالا (اتمام موجودی) حذف؛`;
+                if (removedItemsCount > 0) alertMsg += ` ${toPersianDigits(removedItemsCount)} کالا (اتمام موجودی یا عدم همخوانی) حذف؛`;
                 if (updatedQtyCount > 0) alertMsg += ` تعداد ${toPersianDigits(updatedQtyCount)} کالا به حداکثر مقدار مجاز تغییر یافت؛`;
                 if (updatedPriceCount > 0) alertMsg += ` قیمت ${toPersianDigits(updatedPriceCount)} کالا بروز شد.`;
                 
