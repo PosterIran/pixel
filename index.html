@@ -1321,7 +1321,7 @@
             htmlContent += `</div></div>`;
             
             let total_f = total;
-            let discountPercent = (total_f >= 1000000000) ? 0.1 : (total_f >= 700000000 ? 0.07 : (total_f >= 500000000 ? 0.05 : 0));
+            let discountPercent = (total_f >= 1000000000) ? 0.0 : (total_f >= 700000000 ? 0.00 : (total_f >= 500000000 ? 0.00 : 0));
             let discount = total_f * discountPercent;
             let afterDiscount = total_f - discount;
             let packageCount = Math.floor(afterDiscount / 200000000) + 1;
@@ -1464,7 +1464,7 @@
                 }
             });
             
-            let discountPercent = (total >= 1000000000) ? 0.10 : (total >= 700000000 ? 0.07 : (total >= 500000000 ? 0.05 : 0));
+            let discountPercent = (total >= 1000000000) ? 0.00 : (total >= 700000000 ? 0.00 : (total >= 500000000 ? 0.00 : 0));
             let discountAmount = total * discountPercent;
             let afterDiscount = total - discountAmount;
             
@@ -1626,7 +1626,7 @@
             let itemsArray = Object.values(cart);
             let rawTotal = itemsArray.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             
-            let discountPercent = (rawTotal >= 1000000000) ? 0.10 : (rawTotal >= 500000000 ? 0.07 : (rawTotal >= 200000000 ? 0.05 : 0));
+            let discountPercent = (rawTotal >= 1000000000) ? 0.00 : (rawTotal >= 500000000 ? 0.00 : (rawTotal >= 200000000 ? 0.00 : 0));
             let afterDiscount = rawTotal - (rawTotal * discountPercent);
             let packageCount = Math.floor(afterDiscount / 140000000) + 1;
             let finalPayable = afterDiscount + (packageCount * 1000000);
