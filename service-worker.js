@@ -1,9 +1,8 @@
-```javascript
 // نام کانتینر کش به همراه شماره نسخه جدید جهت پاکسازی کش قدیمی در صورت تغییر نسخه
-// نسخه جدید v2.1.1 برای خنثی کردن کش‌های قبلی فایرفاکس
-const CACHE_NAME = 'poster-iran-cache-v2.1.1';
+// نسخه جدید v2.1.2 برای اعمال تغییرات آنی در تمام مرورگرهای دسکتاپ و موبایل
+const CACHE_NAME = 'poster-iran-cache-v2.1.2';
 
-// لیست فایل‌های کلیدی - آیکون‌ها و مانیفست برای فایرفاکس الزامی هستند
+// لیست فایل‌های کلیدی و حیاتی برنامه
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -21,16 +20,19 @@ const ASSETS_TO_CACHE = [
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log('📦 کش‌گذاری فایل‌های پایه نسخه v2.1.1 انجام شد.');
+      console.log('📦 کش‌گذاری فایل‌های پایه نسخه v2.1.2 آغاز شد.');
       
       // برای رفع باگ کش مرورگر در زمان نصب، درخواست‌ها را با هدر عدم ذخیره‌سازی کش ارسال می‌کنیم
       const cachePromises = ASSETS_TO_CACHE.map((url) => {
+        // ایجاد یک درخواست تمیز با نادیده گرفتن کش مرورگر جهت دریافت فایل ۱۰۰٪ جدید از سرور
         const request = new Request(url, { cache: 'reload' });
         return fetch(request).then((response) => {
           if (response.ok) {
             return cache.put(url, response);
           }
-          throw new Error(`خطا در دریافت فایل نصب: ${url}`);
+          console.warn(`⚠️ دریافت فایل جهت کش با مشکل مواجه شد (احتمال عدم وجود فایل روی هاست): ${url}`);
+        }).catch((err) => {
+          console.error(`❌ خطا در کش کردن فایل لوکال: ${url}`, err);
         });
       });
       return Promise.all(cachePromises);
@@ -54,7 +56,7 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// استراتژی کش ترکیبی: Network First برای دریافت آخرین تغییرات و Cache Fallback برای مواقع آفلاین کلاینت
+// استراتژی کش ترکیبی با دور زدن سخت‌افزاری کش مرورگر دسکتاپ (Windows Bypass)
 self.addEventListener('fetch', (event) => {
   const requestUrl = new URL(event.request.url);
   
@@ -66,31 +68,46 @@ self.addEventListener('fetch', (event) => {
     return;
   }
   
-  // استراتژی Network-First برای فایل‌های اصلی کلاینت جهت بروزرسانی آنی تغییرات هنگام اتصال اینترنت
-  event.respondWith(
-    fetch(event.request)
-    .then((networkResponse) => {
-      // اگر پاسخ دریافتی از سرور معتبر بود، کش را با داده جدید آپدیت می‌کنیم
-      if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
-        const responseToCache = networkResponse.clone();
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(event.request, responseToCache);
-        });
-      }
-      return networkResponse;
-    })
-    .catch(() => {
-      // در صورت قطع بودن اینترنت یا خطا، فایل از کش لوکال لود می‌شود
-      return caches.match(event.request);
-    })
-  );
+  // برای فایل‌های محلی سایت (HTML, JS, CSS) - مرورگر را مجبور می‌کنیم کش دیسک خود را نادیده گرفته و به سرور متصل شود
+  const isLocalAsset = event.request.destination === 'document' || 
+                       event.request.destination === 'script' || 
+                       event.request.destination === 'style' ||
+                       requestUrl.origin === self.location.origin;
+
+  if (isLocalAsset) {
+    event.respondWith(
+      // ساخت یک درخواست مستقیم بدون کش جهت اجبار مرورگر ویندوز به دریافت نسخه جدید از سرور
+      fetch(new Request(event.request, { cache: 'no-cache' }))
+      .then((networkResponse) => {
+        if (networkResponse && networkResponse.status === 200) {
+          const responseToCache = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseToCache);
+          });
+        }
+        return networkResponse;
+      })
+      .catch(() => {
+        // در صورت قطع بودن کامل اینترنت، نسخه کش شده قبلی را تحویل بده
+        return caches.match(event.request);
+      })
+    );
+  } else {
+    // برای سایر فایل‌های خارجی معمولی (مانند فونت‌ها یا CDNها)
+    event.respondWith(
+      caches.match(event.request).then((cachedResponse) => {
+        if (cachedResponse) {
+          return cachedResponse;
+        }
+        return fetch(event.request);
+      })
+    );
+  }
 });
 
-// مدیریت دستور فعال‌سازی فوری ارسالی از کدهای index.html کلاینت
+// مدیریت دستور فعال‌سازی فوری ارسالی از کدهای کلاینت
 self.addEventListener('message', (event) => {
   if (event.data && event.data.action === 'skipWaiting') {
     self.skipWaiting();
   }
 });
-
-```
