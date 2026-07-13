@@ -36,6 +36,75 @@
         .qty-select { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
         
         /* ----------------------------------------------------
+           استایل دکمه طلاییِ پرمیوم با پرتو نور شیمر چرخشی (بسیار لوکس)
+        ---------------------------------------------------- */
+        .premium-shimmer-btn {
+            position: relative;
+            background-color: #eab308 !important; /* زرد اصلی */
+            color: #1e3a8a !important; /* رنگ نوشته سرمه‌ای تیره */
+            font-weight: 800;
+            font-size: 1.25rem;
+            padding: 16px 32px;
+            border-radius: 16px;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 10px 25px -5px rgba(234, 179, 8, 0.4);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            cursor: pointer;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        /* افکت بالاروندگی در هاور */
+        .premium-shimmer-btn:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 15px 30px -5px rgba(234, 179, 8, 0.6);
+            background-color: #facc15 !important; /* روشن‌تر شدن هاور زرد */
+        }
+
+        /* بازخورد فیزیکی کلیک */
+        .premium-shimmer-btn:active {
+            transform: translateY(-1px) scale(0.98);
+            box-shadow: 0 5px 15px -3px rgba(234, 179, 8, 0.4);
+        }
+
+        /* لایه ایجادکننده پرتو نور گذرا (Shimmer Sweep) */
+        .premium-shimmer-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -150%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.5) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: skewX(-25deg);
+            animation: lightSweep 4s infinite ease-in-out;
+            z-index: 1;
+        }
+
+        /* انیمیشن رفت و برگشت پرتو نور روی دکمه */
+        @keyframes lightSweep {
+            0% {
+                left: -150%;
+            }
+            30% {
+                left: 150%;
+            }
+            100% {
+                left: 150%;
+            }
+        }
+        
+        /* ----------------------------------------------------
            استایل‌های ایمن‌ساز فوق‌العاده حیاتی برای حالت آفلاین 
         ---------------------------------------------------- */
         svg, img {
@@ -401,7 +470,9 @@
                 </p>
 
                 <div class="flex flex-col gap-4 justify-center items-center max-w-md mx-auto">
-                    <button onclick="showScreen('gallery')" class="w-full bg-yellow-500 text-blue-900 px-8 py-4 rounded-2xl text-xl font-bold hover:bg-yellow-400 transition transform hover:scale-105 shadow-2xl">
+                    <!-- دکمه مدرن شیمر طلایی (انعکاس نوری فلزی بسیار شیک با حفظ رنگ زرد اصلی و متن آبی تیره) -->
+                    <button onclick="showScreen('gallery')" class="premium-shimmer-btn">
+                        <i class="fas fa-images"></i>
                         مشاهده گالری محصولات
                     </button>
                     
@@ -576,7 +647,7 @@
                         </button>
                     </div>
 
-                    <button onclick="clearCart()" class="w-full mt-4 text-red-400 text-xs hover:text-red-500 transition">
+                    <button onclick="clearCart()" class="w-full mt-4 text-red-500 text-xs hover:text-red-400 transition">
                         🗑️ انصراف و پاک کردن سبد خرید
                     </button>
                 </div>
@@ -897,7 +968,6 @@
            کاتالوگ و پایگاه داده محصولات:
            برای ناموجود کردن یک پوستر کافیست ویژگی زیر را در شیء آن محصول بنویسید:
            outOfStock: true
-           و برای موجود کردن مجدد، آن را حذف کنید یا روی false بگذارید.
         ---------------------------------------------------- */
         const groupInfo = {
             1: { name: "سایز ۲۹×۲۱ دوروچاپ", images: [
@@ -988,7 +1058,6 @@
             }
         }
 
-        // سیستم هوشمند جابجایی صفحه به همراه درج وضعیت در History مرورگر برای دکمه بک
         function showScreen(screenId, shouldScroll = true, isBackAction = false) {
             currentScreen = screenId;
             const sections = ['home', 'gallery', 'cart', 'about', 'history', 'assistant'];
@@ -1009,7 +1078,7 @@
                 btn.classList.add('text-gray-500');
             });
             
-            // اعمال افکت فعال مدرن و انیمیشن سه‌بعدی برای دکمه فعال شده
+            // اعمال افکت فعال مدرن برای دکمه فعال شده
             const activeNav = document.getElementById('nav-' + screenId);
             if (activeNav) {
                 activeNav.classList.remove('text-gray-500');
@@ -1029,7 +1098,7 @@
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
 
-            // اگر تغییر صفحه از طریق فشردن دکمه‌های سایت انجام شده (نه زدن دکمه بک)، وضعیت در تاریخچه ذخیره می‌شود
+            // اگر تغییر صفحه از طریق فشردن دکمه‌های سایت انجام شده، وضعیت در تاریخچه ذخیره می‌شود
             if (!isBackAction) {
                 history.pushState({ screen: screenId }, "", `#${screenId}`);
             }
@@ -1064,7 +1133,7 @@
                 if (currentScreen !== 'home') {
                     showScreen('home', true, true);
                 } else {
-                    // در صفحه اصلی زدن بک کادر خروج را نمایان می‌کند (فقط در صورتی که روی لنگرگاه و هش فرعی نباشیم)
+                    // در صفحه اصلی زدن بک کادر خروج را نمایان می‌کند
                     if (!window.location.hash || window.location.hash === '#home') {
                         showExitConfirm();
                     }
@@ -1112,7 +1181,6 @@
                 const isOutOfStock = img.outOfStock === true;
                 
                 const box = document.createElement('div');
-                // اگر کالا ناموجود است ظاهر آن را نیمه‌شفاف و بدون افکت جابجایی هاور می‌کنیم
                 box.className = 'image-box bg-white p-3 rounded-2xl border shadow-sm flex flex-col items-center' + (isOutOfStock ? ' opacity-70 out-of-stock-card' : '');
                 
                 let optionsHtml = qtys.map(q =>
@@ -1125,7 +1193,6 @@
                 let controlWidget = '';
                 
                 if (isOutOfStock) {
-                    // در صورت ناموجود بودن، ویجت انتخاب تعداد را با نشان "موقتاً ناموجود" جایگزین می‌کنیم
                     controlWidget = `
                     <div class="w-full flex items-center justify-center gap-1 mt-auto pt-2 border-t">
                         <span class="text-[11px] text-red-500 font-extrabold flex items-center gap-1">
@@ -1541,11 +1608,6 @@
             );
         }
 
-        /* ----------------------------------------------------
-           بررسی خودکار و همگام‌سازی سلامت سبد خرید:
-           در صورتی که محصولی در سبد خرید کاربر باشد و مدیر آن را "ناموجود" یا حذف کند،
-           این تابع به‌طور خودکار آن را از سبد خرید کاربر پاکسازی می‌کند.
-        ---------------------------------------------------- */
         function validateCart() {
             if (!cart || Object.keys(cart).length === 0) return;
             if (!groupInfo || Object.keys(groupInfo).length === 0) return;
@@ -1556,7 +1618,6 @@
             Object.values(groupInfo).forEach(group => {
                 if (group && group.images) {
                     group.images.forEach(img => {
-                        // فقط کالاهایی که ناموجود (outOfStock) نیستند را به عنوان کالای زنده و مجاز ثبت کن
                         if (img.outOfStock !== true) {
                             allLiveProducts.push({
                                 filename: img.filename,
@@ -1576,7 +1637,6 @@
                 
                 const liveRef = allLiveProducts.find(p => p.filename === cartItem.filename && p.groupName === cartItem.groupName);
                 
-                // اگر کالا حذف یا ناموجود شده بود، آن را از سبد خرید بردار
                 if (!liveRef) {
                     delete cart[productId];
                     isCartChanged = true;
@@ -1757,7 +1817,6 @@
             const validProductsMap = {};
             Object.values(groupInfo).forEach(group => {
                 group.images.forEach(img => {
-                    // محصولات ناموجود در زمان بازسفارش فیلتر می‌شوند
                     if (img.outOfStock !== true) {
                         const id = group.name + "_" + img.filename;
                         validProductsMap[id] = {
@@ -2128,18 +2187,15 @@ ${catalogString}
             if (!offlineOverlay) return;
 
             if (navigator.onLine) {
-                // اینترنت متصل است
                 offlineOverlay.classList.add('hidden-offline');
                 console.log("🌐 اتصال به اینترنت برقرار شد.");
             } else {
-                // اینترنت قطع است
                 offlineOverlay.classList.remove('hidden-offline');
                 console.log("🚫 ارتباط با اینترنت قطع شد.");
             }
         }
 
         function checkConnectionManually() {
-            // برای بررسی واقعی‌تر، یک درخواست سبک پینگ به سرور می‌زنیم
             if (!navigator.onLine) {
                 showToast("⚠️ هنوز اتصالی برقرار نیست. لطفاً مجدداً بررسی کنید.", "خطا در شبکه", "error");
                 return;
@@ -2158,7 +2214,7 @@ ${catalogString}
                 });
         }
 
-        // راه‌اندازی اولیه برنامه با جایگذاری اولین استیت تاریخچه برای فعال‌سازی کلید بک گوشی
+        // راه‌اندازی اولیه برنامه
         function initializeApplication() {
             loadCustomerData();
             loadCartFromStorage();
@@ -2170,7 +2226,6 @@ ${catalogString}
             // مانیتورینگ وضعیت اینترنت
             window.addEventListener('online', handleNetworkChange);
             window.addEventListener('offline', handleNetworkChange);
-            // فراخوانی اولیه برای بررسی وضعیت در بدو ورود به برنامه
             handleNetworkChange();
             
             // جایگذاری استیت پایه خانه در تاریخچه مرورگر برای کارکرد صحیح دکمه بازگشت فیزیکی گوشی
