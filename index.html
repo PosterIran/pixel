@@ -993,10 +993,10 @@
                 { filename: "جدول تناوبی عناصر.jpg", name: "جدول تناوبی عناصر", price: 200000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: true },
             ]},
             3: { name: "سایز ۵۰×۳۵ دوروچاپ", images: [
-                { filename: "آموزش زمان و ساعت.jpg", name: "آموزش زمان و ساعت", price: 400000, allowedQuantities: [0, 50, 100, 200], outOfStock: false },
-                { filename: "ضرب و تقسیم تمرینی.jpg", name: "ضرب و تقسیم تمرینی", price: 400000, allowedQuantities: [0, 50, 100, 200], outOfStock: false },
-                { filename: "جدول دوستی کامل.jpg", name: "جدول دوستی کامل", price: 400000, allowedQuantities: [0, 50, 100, 200], outOfStock: true },
-                
+                { filename: "آموزش زمان و ساعت.jpg", name: "آموزش زمان و ساعت", price: 400000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false },
+                { filename: "ضرب و تقسیم تمرینی.jpg", name: "ضرب و تقسیم تمرینی", price: 400000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false },
+                { filename: "جدول دوستی کامل.jpg", name: "جدول دوستی کامل", price: 400000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: true },
+                { filename: "جدول دوستی تمرینی.jpg", name: "جدول دوستی تمرینی", price: 400000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: true },
             ]},
             4: { name: "سایز ۷۰×۵۰ یکروچاپ", images: [
                 { filename: "الفبای فارسی شکل دار.jpg", name: "الفبای فارسی شکل دار", price: 400000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500], outOfStock: false },
@@ -1389,7 +1389,7 @@
             htmlContent += `</div></div>`;
             
             let total_f = total;
-            let discountPercent = (total_f >= 1000000000) ? 0.0 : (total_f >= 700000000 ? 0.00 : (total_f >= 500000000 ? 0.00 : 0));
+            let discountPercent = (total_f >= 1000000000) ? 0.1 : (total_f >= 700000000 ? 0.00 : (total_f >= 500000000 ? 0.00 : 0));
             let discount = total_f * discountPercent;
             let afterDiscount = total_f - discount;
             let packageCount = Math.floor(afterDiscount / 200000000) + 1;
@@ -1532,7 +1532,7 @@
                 }
             });
             
-            let discountPercent = (total >= 1000000000) ? 0.00 : (total >= 700000000 ? 0.00 : (total >= 500000000 ? 0.00 : 0));
+            let discountPercent = (total >= 1000000000) ? 0.1 : (total >= 700000000 ? 0.00 : (total >= 500000000 ? 0.00 : 0));
             let discountAmount = total * discountPercent;
             let afterDiscount = total - discountAmount;
             
