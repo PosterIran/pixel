@@ -13,30 +13,12 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
     <!-- ۲. اتصال به استایل‌ها (CSS) همراه با Cache-Busting جهت هماهنگی با آپدیت‌ها -->
-    <link rel="stylesheet" href="./css/style.css?v=2.1.1">
+    <link rel="stylesheet" href="./css/style.css?v=2.1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-    /* بزرگتر کردن کلی تمام فونت‌های بخش سبد خرید */
-#cartScreen {
-    font-size: 1.05rem !important; /* یا 18px */
-}
-
-/* بزرگتر کردن عنوان و متن آیتم‌های داخل سبد خرید */
-#cartList h4, 
-#cartList span, 
-#cartList select {
-    font-size: 0.95rem !important;
-}
-
-/* بزرگتر کردن فونت کادرهای ورودی اطلاعات مشتری */
-#customerName, 
-#customerPhone, 
-#customerAddress {
-    font-size: 1.1rem !important;
-}
         body { font-family: 'Vazirmatn', sans-serif; scroll-behavior: smooth; }
         .hero-gradient  {
             position: relative;
@@ -53,72 +35,70 @@
         .hidden-section { display: none; }
         .qty-select { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
         
-        /* ----------------------------------------------------
-           استایل دکمه طلاییِ پرمیوم با پرتو نور شیمر چرخشی (بسیار لوکس)
-        ---------------------------------------------------- */
-        .premium-shimmer-btn {
+        /* کادر اصلی و ایجاد بستر انیمیشن با ضخامت نورانی ۱ پیکسل */
+        .ib-glow-box {
             position: relative;
-            background-color: #eab308 !important; /* زرد اصلی */
-            color: #1e3a8a !important; /* رنگ نوشته سرمه‌ای تیره */
-            font-weight: 800;
-            font-size: 1.25rem;
-            padding: 16px 32px;
-            border-radius: 16px;
-            overflow: hidden;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            box-shadow: 0 10px 25px -5px rgba(234, 179, 8, 0.4);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            cursor: pointer;
             width: 100%;
             max-width: 400px;
+            height: auto;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1px; /* ضخامت خط نورانی دور دکمه */
         }
 
-        /* افکت بالاروندگی در هاور */
-        .premium-shimmer-btn:hover {
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 15px 30px -5px rgba(234, 179, 8, 0.6);
-            background-color: #facc15 !important; /* روشن‌تر شدن هاور زرد */
-        }
-
-        /* بازخورد فیزیکی کلیک */
-        .premium-shimmer-btn:active {
-            transform: translateY(-1px) scale(0.98);
-            box-shadow: 0 5px 15px -3px rgba(234, 179, 8, 0.4);
-        }
-
-        /* لایه ایجادکننده پرتو نور گذرا (Shimmer Sweep) */
-        .premium-shimmer-btn::after {
+        /* ایجاد لایه نوری در پس‌زمینه با زاویه چرخشی چندرنگ */
+        .ib-glow-box::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: -150%;
-            width: 50%;
-            height: 100%;
-            background: linear-gradient(
-                90deg,
-                rgba(255, 255, 255, 0) 0%,
-                rgba(255, 255, 255, 0.5) 50%,
-                rgba(255, 255, 255, 0) 100%
+            width: 150%;
+            height: 150%;
+            background: conic-gradient(
+                from 0deg,
+                transparent 0%,
+                #4285f4 25%, /* آبی گوگل */
+                #ea4335 50%, /* قرمز گوگل */
+                #fbbc05 75%, /* زرد گوگل */
+                transparent 100%
             );
-            transform: skewX(-25deg);
-            animation: lightSweep 4s infinite ease-in-out;
+            animation: rotateGlowLine 3s linear infinite;
             z-index: 1;
         }
 
-        /* انیمیشن رفت و برگشت پرتو نور روی دکمه */
-        @keyframes lightSweep {
+        /* محتوای داخل کادر: حفظ کامل پس‌زمینه زرد دکمه و رنگ آبی تیره نوشته */
+        .ib-box-content {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: #eab308 !important; /* رنگ زرد کلید اصلی (bg-yellow-500) */
+            border-radius: 11px; /* فیت شدن دقیق در کادر نورانی */
+            padding: 16px 20px;
+            color: #1e3a8a !important; /* رنگ نوشته آبی تیره (text-blue-900) */
+            z-index: 2;
+            direction: rtl;
+            font-weight: 800;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background 0.3s ease;
+        }
+        
+        .ib-box-content:hover {
+            background: #facc15 !important; /* افکت هاور روشن‌تر شدن دکمه زرد */
+        }
+
+        /* انیمیشن ۳۶۰ درجه برای چرخیدن نور دور کادر دکمه */
+        @keyframes rotateGlowLine {
             0% {
-                left: -150%;
-            }
-            30% {
-                left: 150%;
+                transform: rotate(0deg);
             }
             100% {
-                left: 150%;
+                transform: rotate(360deg);
             }
         }
         
@@ -416,6 +396,62 @@
             pointer-events: none;
             transform: scale(1.05);
         }
+
+        /* کادر اصلی و ایجاد بستر انیمیشن */
+        .ib-glow-box {
+            position: relative;
+            width: 100%;
+            max-width: 400px; /* می‌توانید اندازه را تغییر دهید */
+            height: auto;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2px; /* این مقدار ضخامت خط نورانی را مشخص می‌کند */
+        }
+
+        /* ایجاد لایه نوری در پس‌زمینه با زاویه چرخشی */
+        .ib-glow-box::before {
+            content: '';
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            background: conic-gradient(
+                from 0deg,
+                transparent 0%,
+                #4285f4 25%, /* آبی گوگل */
+                #ea4335 50%, /* قرمز گوگل */
+                #fbbc05 75%, /* زرد گوگل */
+                transparent 100%
+            );
+            animation: rotateGlowLine 3s linear infinite;
+            z-index: 1;
+        }
+
+        /* محتوای داخل کادر که روی نور قرار می‌گیرد */
+        .ib-box-content {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: #1a1a1a; /* رنگ پس‌زمینه تیره داخل کادر */
+            border-radius: 11px; /* کمی کوچک‌تر از کادر اصلی برای فیت شدن */
+            padding: 16px 20px;
+            color: #ffffff;
+            z-index: 2;
+            direction: rtl;
+        }
+
+        /* انیمیشن ۳۶۰ درجه برای چرخیدن نور دور کادر */
+        @keyframes rotateGlowLine {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-900 pb-28">
@@ -484,15 +520,18 @@
                     یادگیری را به یک <span class="text-yellow-400">ماجراجویی بصری</span> تبدیل کنید!
                 </h1>
                 <p class="text-lg md:text-xl mb-10 text-blue-100 leading-relaxed max-w-3xl mx-auto">
-                    مجموعه‌ای از پوسترهای آموزشی ، همگام با کتب درسی؛ طراحی شده برای معلمان خلاق و دانش‌آموزانی که به دنبال یادگیری عمیق‌تر هستند.
+                    مجموعه‌ای از پوسترهای آموزشی حرفه‌ای، همگام با کتب درسی؛ طراحی شده برای معلمان خلاق و دانش‌آموزانی که به دنبال یادگیری عمیق‌تر هستند.
                 </p>
 
                 <div class="flex flex-col gap-4 justify-center items-center max-w-md mx-auto">
-                    <!-- دکمه مدرن شیمر طلایی (انعکاس نوری فلزی بسیار شیک با حفظ رنگ زرد اصلی و متن آبی تیره) -->
-                    <button onclick="showScreen('gallery')" class="premium-shimmer-btn">
-                        <i class="fas fa-images"></i>
-                        مشاهده گالری محصولات
-                    </button>
+                    
+                    <!-- کادر نورانی دور دکمه با حفظ استایل اصلی زرد و نوشته آبی تیره -->
+                    <div class="ib-glow-box w-full shadow-2xl transition transform hover:scale-105">
+                        <button onclick="showScreen('gallery')" class="ib-box-content">
+                            <i class="fas fa-images"></i>
+                            مشاهده گالری محصولات
+                        </button>
+                    </div>
                     
                     <div id="pendingOrderNotice" class="hidden w-full mt-4 p-4 bg-yellow-50 border-2 border-yellow-400 rounded-2xl flex items-center justify-between animate-pulse">
                         <div class="flex items-center gap-3">
@@ -691,7 +730,7 @@
                         <p class="font-bold text-blue-900 mb-1">🎓 درود بر شما </p>
                         <p>من دستیار هوشمند و مشاور خرید پوستر ایران هستم.</p>
                         <p>می‌توانم به شما کمک کنم تا بهترین پوسترهای آموزشی متناسب با موضوع یا مقطع تحصیلی کلاس درس خود را انتخاب کنید و همچنین چندین بازی آموزشی کلاسی با آنها طراحی کنید.</p>
-                        <p>برای شروع چه سوالی دارید؟</p>
+                        <p>برای شروع چه سوالی دارید?</p>
                     </div>
                 </div>
                 <!-- دکمه‌های سوالات فوری -->
@@ -714,10 +753,11 @@
         <section id="aboutScreen" class="hidden-section container mx-auto px-4 py-10 max-w-4xl">
             <div class="bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
                 <h2 class="text-3xl font-bold text-blue-900 mb-6">پوستر ایران</h2>
-                <p class="text-gray-700 leading-8 mb-1 text-justify">انتشارات پوستر ایران با افتخار یکی از پیشگامان در زمینه تولید و چاپ پوستر در کشور است. ما با تکیه بر سال‌ها تجربه در زمینه چاپ و شناخت دقیق از نیازهای نظام آموزشی, مجموعه‌ای از پوسترهای جذاب، کاربردی و هماهنگ با محتوای کتب درسی تهیه کرده‌ایم تا فرآیند یادگیری را برای دانش‌آموزان ساده‌تر، عمیق‌تر و لذت‌بخش‌تر کنیم. پوسترهای آموزشی با کیفیت عالی و محتوای استاندارد، ابزاری کارآمد برای معلمان، دانش‌آموزان و مدارس در سراسر کشور به شمار می‌آیند.</p>
-<p class="text-gray-700 leading-8 mb-6 text-justify">"پوستر ایران" همواره در تلاش است تا با نوآوری و پایبندی به اصول آموزشی، نقش مؤثری در ارتقاء سطح آموزش ایفا کند.</p>
+                <p class="text-gray-700 leading-8 mb-6 text-justify">انتشارات پوستر ایران با افتخار یکی از پیشگامان در زمینه تولید و چاپ پوستر در کشور است. ما با تکیه بر سال‌ها تجربه در زمینه چاپ و شناخت دقیق از نیازهای نظام آموزشی, مجموعه‌ای از پوسترهای جذاب، کاربردی و هماهنگ با محتوای کتب درسی تهیه کرده‌یم تا فرآیند یادگیری را برای دانش‌آموزان ساده‌تر، عمیق‌تر و لذت‌بخش‌تر کنیم.
+
+پوسترهای آموزشی با طراحی حرفه‌ای، چاپ تمام‌رنگی، با کیفیت عالی و محتوای استاندارد، ابزاری کارآمد برای معلمان، دانش‌آموزان و مدارس در سراسر کشور به شمار می‌آیند. "پوستر ایران" همواره در تلاش است تا با نوآوری و پایبندی به اصول آموزشی، نقش مؤثری در ارتقاء سطح آموزش ایفا کند.</p>
                 <div class="space-y-4 text-gray-600">
-                    <p>آدرس ما : تهران ، خیابان پانزده خرداد ، بازار آهنگران ، کوچه مسجدجامع ، پاساژ کاغذوتحریر، زیرزمن اول ، پلاک ۷۴</p>
+                    <p> تهران: خیابان پانزده خرداد ، بازار آهنگران ، کوچه مسجدجامع ، پاساژ کاغذوتحریر، زیرزمن اول ، پلاک ۷۴</p>
                     <p> <a href="https://maps.google.com/?cid=1396884775989221050&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNl" target="_blank" class="text-blue-500 font-bold hover:underline">  (مشاهده در نقشه)</a></p>
                 
                     <!-- افزودن قابلیت شماره‌گیری مستقیم با لمس شماره‌ها -->
@@ -760,7 +800,14 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <span class="text-[9px] font-bold">سفارشات</span>
-        
+        </button>
+        <!-- دکمه دستیار آموزشی هوشمند -->
+        <button onclick="showScreen('assistant')" id="nav-assistant" class="flex flex-col items-center gap-1 text-gray-500 transition flex-1">
+            <svg width="24" height="24" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+            </svg>
+            <span class="text-[9px] font-bold">دستیار‌هوشمند</span>
+        </button>
         <button onclick="showScreen('about')" id="nav-about" class="flex flex-col items-center gap-1 text-gray-500 transition flex-1">
             <svg width="24" height="24" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
             <span class="text-[9px] font-bold">درباره ما</span>
@@ -803,7 +850,7 @@
             </div>
             <div>
                 <h4 class="font-bold text-sm text-gray-900 leading-tight">پوستر ایران را نصب کنید!</h4>
-                <p class="text-xs text-gray-600 mt-1 leading-relaxed">با نصب نسخه وب‌اپلیکیشن، خریدی سریع‌تر را تجربه کنید.</p>
+                <p class="text-xs text-gray-600 mt-1 leading-relaxed">با نصب نسخه وب‌اپلیکیشن، خریدی سریع‌تر و دسترسی آفلاین به گالری و خدمات را تجربه کنید.</p>
             </div>
         </div>
         <div class="flex gap-3">
@@ -978,61 +1025,62 @@
            کاتالوگ و پایگاه داده محصولات:
            برای ناموجود کردن یک پوستر کافیست ویژگی زیر را در شیء آن محصول بنویسید:
            outOfStock: true
+           و برای موجود کردن مجدد، آن را حذف کنید یا روی false بگذارید.
         ---------------------------------------------------- */
         const groupInfo = {
             1: { name: "سایز ۲۹×۲۱ دوروچاپ", images: [
-                { filename: "جدول دوستی تمرینی.jpg", name: "جدول دوستی تمرینی", price: 200000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "جدول دوستی کامل.jpg", name: "جدول دوستی کامل", price: 200000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "ضرب و تقسیم حیوانات.jpg", name: "ضرب و تقسیم حیوانات", price: 200000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "ضرب و تقسیم تمرینی.jpg", name: "ضرب و تقسیم تمرینی", price: 200000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "ضرب و تمرین ضرب.jpg", name: "ضرب و تمرین ضرب", price: 200000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "حساب آموز ششم.jpg", name: "حساب آموز ششم", price: 200000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "حساب آموز پنجم.jpg", name: "حساب آموز پنجم", price: 200000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "حساب آموز چهارم.jpg", name: "حساب آموز چهارم", price: 200000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "حساب آموز سوم.jpg", name: "حساب آموز سوم", price: 200000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "حساب آموز دوم (عمودی).jpg", name: "حساب آموز دوم (عمودی)", price: 200000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "حساب آموز اول (افقی).jpg", name: "حساب آموز اول (افقی)", price: 200000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "حساب آموز اول (عمودی).jpg", name: "حساب آموز اول (عمودی)", price: 200000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "اعداد.jpg", name: "اعداد ساده", price: 200000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false }, 
-                { filename: "اعداد با ساعت و محور.jpg", name: " اعداد با ساعت و محور", price: 200000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "جمع و تفریق.jpg", name: "جمع و تفریق", price: 200000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "آموزش زمان و ساعت.jpg", name: "آموزش زمان و ساعت", price: 200000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "محیط و مساحت اشکال هندسی.jpg", name: "محیط و مساحت اشکال هندسی", price: 200000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "جدول تناوبی عناصر.jpg", name: "جدول تناوبی عناصر", price: 200000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: true },
-                { filename: "الفبای فارسی و انگلیسی.jpg", name: "الفبای فارسی و انگلیسی", price: 200000, allowedQuantities: [0, 50, 100], outOfStock: true },
+                { filename: "جدول دوستی تمرینی.jpg", name: "جدول دوستی تمرینی", price: 300000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false },
+                { filename: "جدول دوستی کامل.jpg", name: "جدول دوستی کامل", price: 300000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false },
+                { filename: "حساب آموز اول (افقی).jpg", name: "حساب آموز اول (افقی)", price: 300000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false },
+                { filename: "حساب آموز اول (عمودی).jpg", name: "حساب آموز اول (عمودی)", price: 300000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false },
+                { filename: "حساب آموز دوم (عمودی).jpg", name: "حساب آموز دوم (عمودی)", price: 300000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false },
+                { filename: "حساب آموز سوم.jpg", name: "حساب آموز سوم", price: 300000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false },
+                { filename: "حساب آموز چهارم.jpg", name: "حساب آموز چهارم", price: 300000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false },
+                { filename: "حساب آموز پنجم.jpg", name: "حساب آموز پنجم", price: 300000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false },
+                { filename: "حساب آموز ششم.jpg", name: "حساب آموز ششم", price: 300000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false },
+                { filename: "ضرب و تقسیم حیوانات.jpg", name: "ضرب و تقسیم حیوانات", price: 300000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false },
+                { filename: "ضرب و تقسیم تمرینی.jpg", name: "ضرب و تقسیم تمرینی", price: 300000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false },
+                { filename: "ضرب و تمرین ضرب.jpg", name: "ضرب و تمرین ضرب", price: 300000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false },
+                { filename: "اعداد.jpg", name: "اعداد ساده", price: 300000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false }, 
+                { filename: "اعداد با ساعت و محور.jpg", name: " اعداد با ساعت و محور", price: 300000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false },
+                { filename: "جمع و تفریق.jpg", name: "جمع و تفریق", price: 300000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false },
+                { filename: "آموزش زمان و ساعت.jpg", name: "آموزش زمان و ساعت", price: 300000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false },
+                { filename: "محیط و مساحت اشکال هندسی.jpg", name: "محیط و مساحت اشکال هندسی", price: 300000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false },
+                { filename: "جدول تناوبی عناصر.jpg", name: "جدول تناوبی عناصر", price: 300000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: true },
+                { filename: "الفبای فارسی و انگلیسی.jpg", name: "الفبای فارسی و انگلیسی", price: 300000, allowedQuantities: [0, 50, 100], outOfStock: true },
             ]},
             3: { name: "سایز ۵۰×۳۵ دوروچاپ", images: [
-                { filename: "آموزش زمان و ساعت.jpg", name: "آموزش زمان و ساعت", price: 400000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "ضرب و تقسیم تمرینی.jpg", name: "ضرب و تقسیم تمرینی", price: 400000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "جدول دوستی کامل.jpg", name: "جدول دوستی کامل", price: 400000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: true },
-                { filename: "جدول دوستی تمرینی.jpg", name: "جدول دوستی تمرینی", price: 400000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: true },
+                { filename: "آموزش زمان و ساعت.jpg", name: "آموزش زمان و ساعت", price: 600000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false },
+                { filename: "ضرب و تقسیم تمرینی.jpg", name: "ضرب و تقسیم تمرینی", price: 600000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false },
+                { filename: "جدول دوستی کامل.jpg", name: "جدول دوستی کامل", price: 600000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: true },
+                { filename: "جدول دوستی تمرینی.jpg", name: "جدول دوستی تمرینی", price: 600000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: true },
             ]},
             4: { name: "سایز ۷۰×۵۰ یکروچاپ", images: [
-                { filename: "الفبای فارسی شکل دار.jpg", name: "الفبای فارسی شکل دار", price: 400000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500], outOfStock: false },
-                { filename: "جدول دوستی.jpg", name: "جدول دوستی", price: 400000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500], outOfStock: false },
-                { filename: "جدول ضرب.jpg", name: "جدول ضرب", price: 400000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500], outOfStock: false },
-                { filename: "اعداد 1 تا 100.jpg", name: "اعداد 1 تا 100", price: 400000, allowedQuantities: [0, 20, 50, 100], outOfStock: true },
-                { filename: "جدول جمع.jpg", name: "جدول جمع", price: 400000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500], outOfStock: true },
-                { filename: "جدول تفریق.jpg", name: "جدول تفریق", price: 400000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500], outOfStock: true },
-                { filename: "جدول تقسیم.jpg", name: "جدول تقسیم", price: 400000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500], outOfStock: true },
+                { filename: "الفبای فارسی شکل دار.jpg", name: "الفبای فارسی شکل دار", price: 600000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500], outOfStock: false },
+                { filename: "جدول دوستی.jpg", name: "جدول دوستی", price: 600000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500], outOfStock: false },
+                { filename: "جدول ضرب.jpg", name: "جدول ضرب", price: 600000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500], outOfStock: false },
+                { filename: "اعداد 1 تا 100.jpg", name: "اعداد 1 تا 100", price: 600000, allowedQuantities: [0, 20, 50, 100], outOfStock: true },
+                { filename: "جدول جمع.jpg", name: "جدول جمع", price: 600000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500], outOfStock: true },
+                { filename: "جدول تفریق.jpg", name: "جدول تفریق", price: 600000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500], outOfStock: true },
+                { filename: "جدول تقسیم.jpg", name: "جدول تقسیم", price: 600000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500], outOfStock: true },
             ]},
             5: { name: "سایز ۷۰×۵۰ یووی‌دار", images: [
-                { filename: "آناتـومی بـدن انسـان.jpg", name: "آناتـومی بـدن انسـان", price: 550000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500], outOfStock: false },
-                { filename: "بـدن من.jpg", name: "بـدن من", price: 550000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500], outOfStock: false },
-                { filename: "ضرب تمرینی ستونی.jpg", name: "ضرب تمرینی ستونی", price: 550000, allowedQuantities: [0, 20, 50, 100, 200], outOfStock: false },
-                { filename: "ضرب تمرینی مربعی.jpg", name: "ضرب تمرینی مربعی", price: 550000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500], outOfStock: false },
-                { filename: "اعداد یک تا صد.jpg", name: "اعداد یک تا صد", price: 550000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500], outOfStock: false },
-                { filename: "اعداد ده تا هزار.jpg", name: "اعداد ده تا هزار", price: 550000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500], outOfStock: false },
-                { filename: "جدول تناوبی عناصر.jpg", name: "جدول تناوبی عناصر", price: 550000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500], outOfStock: false },
-                { filename: "برنامه هفتگی.jpg", name: "برنامه هفتگی", price: 550000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500], outOfStock: false },
-                { filename: "نقشـه ایـران.webp", name: "نقشـه ایـران", price: 550000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500], outOfStock: false },
-                { filename: "نقشـه جهـان.webp", name: "نقشـه جهـان" , price: 550000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500], outOfStock: false },
-                { filename: "شهرک الفبا.jpg", name: "شهرک الفبا", price: 550000, allowedQuantities: [0, 20, 50, 100, 200], outOfStock: false },
-                { filename: "آموزش زمان وساعت.jpg", name: "آموزش زمان وساعت", price: 550000, allowedQuantities: [0, 20, 50, 100], outOfStock: true },
-                { filename: "برنامه روزانه.jpg", name: "برنامه روزانه", price: 550000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500], outOfStock: true },
-                { filename: "منظومه خورشیدی.jpg", name: "منظومه خورشیدی", price: 550000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500], outOfStock: true },
-                { filename: "محیط و مساحت اشکال هندسی.jpg", name: "محیط و مساحت اشکال هندسی", price: 550000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500], outOfStock: true },
-                { filename: "شکل صداها و الفبای فارسی.jpg", name: "شکل صداها و الفبای فارسی", price: 550000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500], outOfStock: true },
+                { filename: "آناتـومی بـدن انسـان.jpg", name: "آناتـومی بـدن انسـان", price: 800000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500], outOfStock: false },
+                { filename: "بـدن من.jpg", name: "بـدن من", price: 800000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500], outOfStock: false },
+                { filename: "ضرب تمرینی ستونی.jpg", name: "ضرب تمرینی ستونی", price: 800000, allowedQuantities: [0, 20, 50, 100, 200], outOfStock: false },
+                { filename: "ضرب تمرینی مربعی.jpg", name: "ضرب تمرینی مربعی", price: 800000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500], outOfStock: false },
+                { filename: "اعداد یک تا صد.jpg", name: "اعداد یک تا صد", price: 800000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500], outOfStock: false },
+                { filename: "اعداد ده تا هزار.jpg", name: "اعداد ده تا هزار", price: 800000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500], outOfStock: false },
+                { filename: "جدول تناوبی عناصر.jpg", name: "جدول تناوبی عناصر", price: 800000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500], outOfStock: false },
+                { filename: "برنامه هفتگی.jpg", name: "برنامه هفتگی", price: 800000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500], outOfStock: false },
+                { filename: "نقشـه ایـران.webp", name: "نقشـه ایـران", price: 800000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500], outOfStock: false },
+                { filename: "نقشـه جهـان.webp", name: "نقشـه جهـان" , price: 800000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500], outOfStock: false },
+                { filename: "شهرک الفبا.jpg", name: "شهرک الفبا", price: 800000, allowedQuantities: [0, 20, 50, 100, 200], outOfStock: false },
+                { filename: "آموزش زمان وساعت.jpg", name: "آموزش زمان وساعت", price: 800000, allowedQuantities: [0, 20, 50, 100], outOfStock: true },
+                { filename: "برنامه روزانه.jpg", name: "برنامه روزانه", price: 800000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500], outOfStock: true },
+                { filename: "منظومه خورشیدی.jpg", name: "منظومه خورشیدی", price: 800000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500], outOfStock: true },
+                { filename: "محیط و مساحت اشکال هندسی.jpg", name: "محیط و مساحت اشکال هندسی", price: 800000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500], outOfStock: true },
+                { filename: "شکل صداها و الفبای فارسی.jpg", name: "شکل صداها و الفبای فارسی", price: 800000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500], outOfStock: true },
             ]},
             6: { name: "سایر محصولات", images: [
                 { filename: "دفترچه ای بزرگ ضرب.jpg", name: "دفترچه ای بزرگ ضرب", price: 500000, allowedQuantities: [0, 60, 120, 240, 480], outOfStock: false },
@@ -1088,7 +1136,7 @@
                 btn.classList.add('text-gray-500');
             });
             
-            // اعمال افکت فعال مدرن برای دکمه فعال شده
+            // اعمال افکت فعال مدرن و انیمیشن سه‌بعدی برای دکمه فعال شده
             const activeNav = document.getElementById('nav-' + screenId);
             if (activeNav) {
                 activeNav.classList.remove('text-gray-500');
@@ -1108,7 +1156,7 @@
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
 
-            // اگر تغییر صفحه از طریق فشردن دکمه‌های سایت انجام شده، وضعیت در تاریخچه ذخیره می‌شود
+            // ذخیره استیت در تاریخچه مرورگر جهت هماهنگی دکمه بک گوشی
             if (!isBackAction) {
                 history.pushState({ screen: screenId }, "", `#${screenId}`);
             }
@@ -1191,6 +1239,7 @@
                 const isOutOfStock = img.outOfStock === true;
                 
                 const box = document.createElement('div');
+                // اگر کالا ناموجود است ظاهر آن را نیمه‌شفاف و بدون افکت جابجایی هاور می‌کنیم
                 box.className = 'image-box bg-white p-3 rounded-2xl border shadow-sm flex flex-col items-center' + (isOutOfStock ? ' opacity-70 out-of-stock-card' : '');
                 
                 let optionsHtml = qtys.map(q =>
@@ -1203,6 +1252,7 @@
                 let controlWidget = '';
                 
                 if (isOutOfStock) {
+                    // در صورت ناموجود بودن، ویجت انتخاب تعداد را با نشان "موقتاً ناموجود" جایگزین می‌کنیم
                     controlWidget = `
                     <div class="w-full flex items-center justify-center gap-1 mt-auto pt-2 border-t">
                         <span class="text-[11px] text-red-500 font-extrabold flex items-center gap-1">
@@ -1398,7 +1448,7 @@
             htmlContent += `</div></div>`;
             
             let total_f = total;
-            let discountPercent = (total_f >= 1000000000) ? 0.1 : (total_f >= 700000000 ? 0.00 : (total_f >= 500000000 ? 0.00 : 0));
+            let discountPercent = (total_f >= 1000000000) ? 0.0 : (total_f >= 700000000 ? 0.00 : (total_f >= 500000000 ? 0.00 : 0));
             let discount = total_f * discountPercent;
             let afterDiscount = total_f - discount;
             let packageCount = Math.floor(afterDiscount / 200000000) + 1;
@@ -1541,7 +1591,7 @@
                 }
             });
             
-            let discountPercent = (total >= 1000000000) ? 0.1 : (total >= 700000000 ? 0.00 : (total >= 500000000 ? 0.00 : 0));
+            let discountPercent = (total >= 1000000000) ? 0.00 : (total >= 700000000 ? 0.00 : (total >= 500000000 ? 0.00 : 0));
             let discountAmount = total * discountPercent;
             let afterDiscount = total - discountAmount;
             
@@ -1618,6 +1668,11 @@
             );
         }
 
+        /* ----------------------------------------------------
+           بررسی خودکار و همگام‌سازی سلامت سبد خرید:
+           در صورتی که محصولی در سبد خرید کاربر باشد و مدیر آن را "ناموجود" یا حذف کند،
+           این تابع به‌طور خودکار آن را از سبد خرید کاربر پاکسازی می‌کند.
+        ---------------------------------------------------- */
         function validateCart() {
             if (!cart || Object.keys(cart).length === 0) return;
             if (!groupInfo || Object.keys(groupInfo).length === 0) return;
@@ -1628,6 +1683,7 @@
             Object.values(groupInfo).forEach(group => {
                 if (group && group.images) {
                     group.images.forEach(img => {
+                        // فقط کالاهایی که ناموجود (outOfStock) نیستند را به عنوان کالای زنده و مجاز ثبت کن
                         if (img.outOfStock !== true) {
                             allLiveProducts.push({
                                 filename: img.filename,
@@ -1647,6 +1703,7 @@
                 
                 const liveRef = allLiveProducts.find(p => p.filename === cartItem.filename && p.groupName === cartItem.groupName);
                 
+                // اگر کالا حذف یا ناموجود شده بود، آن را از سبد خرید بردار
                 if (!liveRef) {
                     delete cart[productId];
                     isCartChanged = true;
@@ -1696,26 +1753,23 @@
             let itemsArray = Object.values(cart);
             let rawTotal = itemsArray.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             
-            let discountPercent = (rawTotal >= 1000000000) ? 0.1 : (rawTotal >= 700000000 ? 0.00 : (rawTotal >= 500000000 ? 0.00 : 0));
-let discountAmount = rawTotal * discountPercent;
-let afterDiscount = rawTotal - discountAmount;
-let packageCount = Math.floor(afterDiscount / 200000000) + 1;
-let shippingCost = packageCount * 1000000;
-let finalPayable = afterDiscount + shippingCost;
-
-const now = new Date();
-const orderRecord = {
-    id: getOrderNumber(),
-    date: now.toLocaleDateString('fa-IR'),
-    time: now.toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' }),
-    items: itemsArray,
-    totalPrice: finalPayable
-};
-
-history.unshift(orderRecord);
-localStorage.setItem('order_history', JSON.stringify(history));
-localStorage.setItem('cart_submitted', 'true');
-}
+            let discountPercent = (rawTotal >= 1000000000) ? 0.00 : (rawTotal >= 500000000 ? 0.00 : (rawTotal >= 200000000 ? 0.00 : 0));
+            let afterDiscount = rawTotal - (rawTotal * discountPercent);
+            let packageCount = Math.floor(afterDiscount / 140000000) + 1;
+            let finalPayable = afterDiscount + (packageCount * 1000000);
+            
+            const newOrder = {
+                id: Date.now(),
+                orderNumber: getOrderNumber(),
+                date: new Date().toLocaleDateString('fa-IR'),
+                time: new Date().toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' }),
+                items: JSON.parse(JSON.stringify(cart)),
+                total: finalPayable
+            };
+            
+            history.unshift(newOrder);
+            localStorage.setItem('order_history', JSON.stringify(history.slice(0, 15)));
+        }
 
         function updateHistoryDisplay() {
             const list = document.getElementById('historyList');
@@ -1830,6 +1884,7 @@ localStorage.setItem('cart_submitted', 'true');
             const validProductsMap = {};
             Object.values(groupInfo).forEach(group => {
                 group.images.forEach(img => {
+                    // محصولات ناموجود در زمان بازسفارش فیلتر می‌شوند
                     if (img.outOfStock !== true) {
                         const id = group.name + "_" + img.filename;
                         validProductsMap[id] = {
@@ -2200,15 +2255,18 @@ ${catalogString}
             if (!offlineOverlay) return;
 
             if (navigator.onLine) {
+                // اینترنت متصل است
                 offlineOverlay.classList.add('hidden-offline');
                 console.log("🌐 اتصال به اینترنت برقرار شد.");
             } else {
+                // اینترنت قطع است
                 offlineOverlay.classList.remove('hidden-offline');
                 console.log("🚫 ارتباط با اینترنت قطع شد.");
             }
         }
 
         function checkConnectionManually() {
+            // برای بررسی واقعی‌تر، یک درخواست سبک پینگ به سرور می‌زنیم
             if (!navigator.onLine) {
                 showToast("⚠️ هنوز اتصالی برقرار نیست. لطفاً مجدداً بررسی کنید.", "خطا در شبکه", "error");
                 return;
@@ -2227,7 +2285,7 @@ ${catalogString}
                 });
         }
 
-        // راه‌اندازی اولیه برنامه
+        // راه‌اندازی اولیه برنامه با جایگذاری اولین استیت تاریخچه برای فعال‌سازی کلید بک گوشی
         function initializeApplication() {
             loadCustomerData();
             loadCartFromStorage();
@@ -2239,6 +2297,7 @@ ${catalogString}
             // مانیتورینگ وضعیت اینترنت
             window.addEventListener('online', handleNetworkChange);
             window.addEventListener('offline', handleNetworkChange);
+            // فراخوانی اولیه برای بررسی وضعیت در بدو ورود به برنامه
             handleNetworkChange();
             
             // جایگذاری استیت پایه خانه در تاریخچه مرورگر برای کارکرد صحیح دکمه بازگشت فیزیکی گوشی
@@ -2250,8 +2309,9 @@ ${catalogString}
     </script>
     
     <script>
-        /* 
-           سیستم پیشرفته کنترل و مانیتورینگ زنده سرویس‌ورکر (ثبت تغییرات آنی کدهای کلاینت) */
+        /* -------------------------------------------------------------------------
+           سیستم پیشرفته کنترل و مانیتورینگ زنده سرویس‌ورکر (ثبت تغییرات آنی کدهای کلاینت)
+        ------------------------------------------------------------------------- */
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
                 navigator.serviceWorker.register('./service-worker.js', { scope: './' })
@@ -2293,8 +2353,8 @@ ${catalogString}
             }
         }
     </script>
-    
+
     <!-- ۵. اتصال به منطق برنامه همراه با برچسب کش شکن جدید -->
-    <script src="./js/script.js?v=2.1.1" defer></script>
+    <script src="./js/script.js?v=2.1.0" defer></script>
 </body>
 </html>
