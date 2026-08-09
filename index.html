@@ -13,12 +13,30 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
     <!-- ۲. اتصال به استایل‌ها (CSS) همراه با Cache-Busting جهت هماهنگی با آپدیت‌ها -->
-    <link rel="stylesheet" href="./css/style.css?v=2.1.0">
+    <link rel="stylesheet" href="./css/style.css?v=2.1.1">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
+    /* بزرگتر کردن کلی تمام فونت‌های بخش سبد خرید */
+#cartScreen {
+    font-size: 1.05rem !important; /* یا 18px */
+}
+
+/* بزرگتر کردن عنوان و متن آیتم‌های داخل سبد خرید */
+#cartList h4, 
+#cartList span, 
+#cartList select {
+    font-size: 0.95rem !important;
+}
+
+/* بزرگتر کردن فونت کادرهای ورودی اطلاعات مشتری */
+#customerName, 
+#customerPhone, 
+#customerAddress {
+    font-size: 1.1rem !important;
+}
         body { font-family: 'Vazirmatn', sans-serif; scroll-behavior: smooth; }
         .hero-gradient  {
             position: relative;
@@ -35,70 +53,72 @@
         .hidden-section { display: none; }
         .qty-select { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
         
-        /* کادر اصلی و ایجاد بستر انیمیشن با ضخامت نورانی ۱ پیکسل */
-        .ib-glow-box {
+        /* ----------------------------------------------------
+           استایل دکمه طلاییِ پرمیوم با پرتو نور شیمر چرخشی (بسیار لوکس)
+        ---------------------------------------------------- */
+        .premium-shimmer-btn {
             position: relative;
+            background-color: #eab308 !important; /* زرد اصلی */
+            color: #1e3a8a !important; /* رنگ نوشته سرمه‌ای تیره */
+            font-weight: 800;
+            font-size: 1.25rem;
+            padding: 16px 32px;
+            border-radius: 16px;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 10px 25px -5px rgba(234, 179, 8, 0.4);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            cursor: pointer;
             width: 100%;
             max-width: 400px;
-            height: auto;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 1px; /* ضخامت خط نورانی دور دکمه */
         }
 
-        /* ایجاد لایه نوری در پس‌زمینه با زاویه چرخشی چندرنگ */
-        .ib-glow-box::before {
+        /* افکت بالاروندگی در هاور */
+        .premium-shimmer-btn:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 15px 30px -5px rgba(234, 179, 8, 0.6);
+            background-color: #facc15 !important; /* روشن‌تر شدن هاور زرد */
+        }
+
+        /* بازخورد فیزیکی کلیک */
+        .premium-shimmer-btn:active {
+            transform: translateY(-1px) scale(0.98);
+            box-shadow: 0 5px 15px -3px rgba(234, 179, 8, 0.4);
+        }
+
+        /* لایه ایجادکننده پرتو نور گذرا (Shimmer Sweep) */
+        .premium-shimmer-btn::after {
             content: '';
             position: absolute;
-            width: 150%;
-            height: 150%;
-            background: conic-gradient(
-                from 0deg,
-                transparent 0%,
-                #4285f4 25%, /* آبی گوگل */
-                #ea4335 50%, /* قرمز گوگل */
-                #fbbc05 75%, /* زرد گوگل */
-                transparent 100%
+            top: 0;
+            left: -150%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.5) 50%,
+                rgba(255, 255, 255, 0) 100%
             );
-            animation: rotateGlowLine 3s linear infinite;
+            transform: skewX(-25deg);
+            animation: lightSweep 4s infinite ease-in-out;
             z-index: 1;
         }
 
-        /* محتوای داخل کادر: حفظ کامل پس‌زمینه زرد دکمه و رنگ آبی تیره نوشته */
-        .ib-box-content {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            background: #eab308 !important; /* رنگ زرد کلید اصلی (bg-yellow-500) */
-            border-radius: 11px; /* فیت شدن دقیق در کادر نورانی */
-            padding: 16px 20px;
-            color: #1e3a8a !important; /* رنگ نوشته آبی تیره (text-blue-900) */
-            z-index: 2;
-            direction: rtl;
-            font-weight: 800;
-            font-size: 1.25rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: background 0.3s ease;
-        }
-        
-        .ib-box-content:hover {
-            background: #facc15 !important; /* افکت هاور روشن‌تر شدن دکمه زرد */
-        }
-
-        /* انیمیشن ۳۶۰ درجه برای چرخیدن نور دور کادر دکمه */
-        @keyframes rotateGlowLine {
+        /* انیمیشن رفت و برگشت پرتو نور روی دکمه */
+        @keyframes lightSweep {
             0% {
-                transform: rotate(0deg);
+                left: -150%;
+            }
+            30% {
+                left: 150%;
             }
             100% {
-                transform: rotate(360deg);
+                left: 150%;
             }
         }
         
@@ -396,62 +416,6 @@
             pointer-events: none;
             transform: scale(1.05);
         }
-
-        /* کادر اصلی و ایجاد بستر انیمیشن */
-        .ib-glow-box {
-            position: relative;
-            width: 100%;
-            max-width: 400px; /* می‌توانید اندازه را تغییر دهید */
-            height: auto;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 2px; /* این مقدار ضخامت خط نورانی را مشخص می‌کند */
-        }
-
-        /* ایجاد لایه نوری در پس‌زمینه با زاویه چرخشی */
-        .ib-glow-box::before {
-            content: '';
-            position: absolute;
-            width: 150%;
-            height: 150%;
-            background: conic-gradient(
-                from 0deg,
-                transparent 0%,
-                #4285f4 25%, /* آبی گوگل */
-                #ea4335 50%, /* قرمز گوگل */
-                #fbbc05 75%, /* زرد گوگل */
-                transparent 100%
-            );
-            animation: rotateGlowLine 3s linear infinite;
-            z-index: 1;
-        }
-
-        /* محتوای داخل کادر که روی نور قرار می‌گیرد */
-        .ib-box-content {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            background: #1a1a1a; /* رنگ پس‌زمینه تیره داخل کادر */
-            border-radius: 11px; /* کمی کوچک‌تر از کادر اصلی برای فیت شدن */
-            padding: 16px 20px;
-            color: #ffffff;
-            z-index: 2;
-            direction: rtl;
-        }
-
-        /* انیمیشن ۳۶۰ درجه برای چرخیدن نور دور کادر */
-        @keyframes rotateGlowLine {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
-        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-900 pb-28">
@@ -520,18 +484,15 @@
                     یادگیری را به یک <span class="text-yellow-400">ماجراجویی بصری</span> تبدیل کنید!
                 </h1>
                 <p class="text-lg md:text-xl mb-10 text-blue-100 leading-relaxed max-w-3xl mx-auto">
-                    مجموعه‌ای از پوسترهای آموزشی حرفه‌ای، همگام با کتب درسی؛ طراحی شده برای معلمان خلاق و دانش‌آموزانی که به دنبال یادگیری عمیق‌تر هستند.
+                    مجموعه‌ای از پوسترهای آموزشی ، همگام با کتب درسی؛ طراحی شده برای معلمان خلاق و دانش‌آموزانی که به دنبال یادگیری عمیق‌تر هستند.
                 </p>
 
                 <div class="flex flex-col gap-4 justify-center items-center max-w-md mx-auto">
-                    
-                    <!-- کادر نورانی دور دکمه با حفظ استایل اصلی زرد و نوشته آبی تیره -->
-                    <div class="ib-glow-box w-full shadow-2xl transition transform hover:scale-105">
-                        <button onclick="showScreen('gallery')" class="ib-box-content">
-                            <i class="fas fa-images"></i>
-                            مشاهده گالری محصولات
-                        </button>
-                    </div>
+                    <!-- دکمه مدرن شیمر طلایی (انعکاس نوری فلزی بسیار شیک با حفظ رنگ زرد اصلی و متن آبی تیره) -->
+                    <button onclick="showScreen('gallery')" class="premium-shimmer-btn">
+                        <i class="fas fa-images"></i>
+                        مشاهده گالری محصولات
+                    </button>
                     
                     <div id="pendingOrderNotice" class="hidden w-full mt-4 p-4 bg-yellow-50 border-2 border-yellow-400 rounded-2xl flex items-center justify-between animate-pulse">
                         <div class="flex items-center gap-3">
@@ -730,7 +691,7 @@
                         <p class="font-bold text-blue-900 mb-1">🎓 درود بر شما </p>
                         <p>من دستیار هوشمند و مشاور خرید پوستر ایران هستم.</p>
                         <p>می‌توانم به شما کمک کنم تا بهترین پوسترهای آموزشی متناسب با موضوع یا مقطع تحصیلی کلاس درس خود را انتخاب کنید و همچنین چندین بازی آموزشی کلاسی با آنها طراحی کنید.</p>
-                        <p>برای شروع چه سوالی دارید?</p>
+                        <p>برای شروع چه سوالی دارید؟</p>
                     </div>
                 </div>
                 <!-- دکمه‌های سوالات فوری -->
@@ -753,11 +714,10 @@
         <section id="aboutScreen" class="hidden-section container mx-auto px-4 py-10 max-w-4xl">
             <div class="bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
                 <h2 class="text-3xl font-bold text-blue-900 mb-6">پوستر ایران</h2>
-                <p class="text-gray-700 leading-8 mb-6 text-justify">انتشارات پوستر ایران با افتخار یکی از پیشگامان در زمینه تولید و چاپ پوستر در کشور است. ما با تکیه بر سال‌ها تجربه در زمینه چاپ و شناخت دقیق از نیازهای نظام آموزشی, مجموعه‌ای از پوسترهای جذاب، کاربردی و هماهنگ با محتوای کتب درسی تهیه کرده‌یم تا فرآیند یادگیری را برای دانش‌آموزان ساده‌تر، عمیق‌تر و لذت‌بخش‌تر کنیم.
-
-پوسترهای آموزشی با طراحی حرفه‌ای، چاپ تمام‌رنگی، با کیفیت عالی و محتوای استاندارد، ابزاری کارآمد برای معلمان، دانش‌آموزان و مدارس در سراسر کشور به شمار می‌آیند. "پوستر ایران" همواره در تلاش است تا با نوآوری و پایبندی به اصول آموزشی، نقش مؤثری در ارتقاء سطح آموزش ایفا کند.</p>
+                <p class="text-gray-700 leading-8 mb-1 text-justify">انتشارات پوستر ایران با افتخار یکی از پیشگامان در زمینه تولید و چاپ پوستر در کشور است. ما با تکیه بر سال‌ها تجربه در زمینه چاپ و شناخت دقیق از نیازهای نظام آموزشی, مجموعه‌ای از پوسترهای جذاب، کاربردی و هماهنگ با محتوای کتب درسی تهیه کرده‌ایم تا فرآیند یادگیری را برای دانش‌آموزان ساده‌تر، عمیق‌تر و لذت‌بخش‌تر کنیم. پوسترهای آموزشی با کیفیت عالی و محتوای استاندارد، ابزاری کارآمد برای معلمان، دانش‌آموزان و مدارس در سراسر کشور به شمار می‌آیند.</p>
+<p class="text-gray-700 leading-8 mb-6 text-justify">"پوستر ایران" همواره در تلاش است تا با نوآوری و پایبندی به اصول آموزشی، نقش مؤثری در ارتقاء سطح آموزش ایفا کند.</p>
                 <div class="space-y-4 text-gray-600">
-                    <p> تهران: خیابان پانزده خرداد ، بازار آهنگران ، کوچه مسجدجامع ، پاساژ کاغذوتحریر، زیرزمن اول ، پلاک ۷۴</p>
+                    <p>آدرس ما : تهران ، خیابان پانزده خرداد ، بازار آهنگران ، کوچه مسجدجامع ، پاساژ کاغذوتحریر، زیرزمن اول ، پلاک ۷۴</p>
                     <p> <a href="https://maps.google.com/?cid=1396884775989221050&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNl" target="_blank" class="text-blue-500 font-bold hover:underline">  (مشاهده در نقشه)</a></p>
                 
                     <!-- افزودن قابلیت شماره‌گیری مستقیم با لمس شماره‌ها -->
@@ -800,14 +760,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <span class="text-[9px] font-bold">سفارشات</span>
-        </button>
-        <!-- دکمه دستیار آموزشی هوشمند -->
-        <button onclick="showScreen('assistant')" id="nav-assistant" class="flex flex-col items-center gap-1 text-gray-500 transition flex-1">
-            <svg width="24" height="24" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-            </svg>
-            <span class="text-[9px] font-bold">دستیار‌هوشمند</span>
-        </button>
+        
         <button onclick="showScreen('about')" id="nav-about" class="flex flex-col items-center gap-1 text-gray-500 transition flex-1">
             <svg width="24" height="24" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
             <span class="text-[9px] font-bold">درباره ما</span>
@@ -850,7 +803,7 @@
             </div>
             <div>
                 <h4 class="font-bold text-sm text-gray-900 leading-tight">پوستر ایران را نصب کنید!</h4>
-                <p class="text-xs text-gray-600 mt-1 leading-relaxed">با نصب نسخه وب‌اپلیکیشن، خریدی سریع‌تر و دسترسی آفلاین به گالری و خدمات را تجربه کنید.</p>
+                <p class="text-xs text-gray-600 mt-1 leading-relaxed">با نصب نسخه وب‌اپلیکیشن، خریدی سریع‌تر را تجربه کنید.</p>
             </div>
         </div>
         <div class="flex gap-3">
@@ -1025,7 +978,6 @@
            کاتالوگ و پایگاه داده محصولات:
            برای ناموجود کردن یک پوستر کافیست ویژگی زیر را در شیء آن محصول بنویسید:
            outOfStock: true
-           و برای موجود کردن مجدد، آن را حذف کنید یا روی false بگذارید.
         ---------------------------------------------------- */
         const groupInfo = {
             1: { name: "سایز ۲۹×۲۱ دوروچاپ", images: [
@@ -1069,6 +1021,7 @@
                 { filename: "بـدن من.jpg", name: "بـدن من", price: 800000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500], outOfStock: false },
                 { filename: "ضرب تمرینی ستونی.jpg", name: "ضرب تمرینی ستونی", price: 800000, allowedQuantities: [0, 20, 50, 100, 200], outOfStock: false },
                 { filename: "ضرب تمرینی مربعی.jpg", name: "ضرب تمرینی مربعی", price: 800000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500], outOfStock: false },
+                { filename: "جدول دوستی تمرینی.jpg", name: "جدول دوستی تمرینی", price: 800000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500], outOfStock: false },
                 { filename: "اعداد یک تا صد.jpg", name: "اعداد یک تا صد", price: 800000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500], outOfStock: false },
                 { filename: "اعداد ده تا هزار.jpg", name: "اعداد ده تا هزار", price: 800000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500], outOfStock: false },
                 { filename: "جدول تناوبی عناصر.jpg", name: "جدول تناوبی عناصر", price: 800000, allowedQuantities: [0, 20, 50, 100, 200, 300, 500], outOfStock: false },
@@ -1136,7 +1089,7 @@
                 btn.classList.add('text-gray-500');
             });
             
-            // اعمال افکت فعال مدرن و انیمیشن سه‌بعدی برای دکمه فعال شده
+            // اعمال افکت فعال مدرن برای دکمه فعال شده
             const activeNav = document.getElementById('nav-' + screenId);
             if (activeNav) {
                 activeNav.classList.remove('text-gray-500');
@@ -1149,14 +1102,14 @@
             }
 
             if (screenId === 'history') updateHistoryDisplay();
-            if (screenId === 'cart') updateCartDisplay();
-            if (screenId === 'gallery') loadImages();
+if (screenId === 'cart') updateCartDisplay();
+if (screenId === 'gallery') loadImages();
 
-            if (shouldScroll) {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
+if (shouldScroll) {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
-            // ذخیره استیت در تاریخچه مرورگر جهت هماهنگی دکمه بک گوشی
+            // اگر تغییر صفحه از طریق فشردن دکمه‌های سایت انجام شده، وضعیت در تاریخچه ذخیره می‌شود
             if (!isBackAction) {
                 history.pushState({ screen: screenId }, "", `#${screenId}`);
             }
@@ -1239,7 +1192,6 @@
                 const isOutOfStock = img.outOfStock === true;
                 
                 const box = document.createElement('div');
-                // اگر کالا ناموجود است ظاهر آن را نیمه‌شفاف و بدون افکت جابجایی هاور می‌کنیم
                 box.className = 'image-box bg-white p-3 rounded-2xl border shadow-sm flex flex-col items-center' + (isOutOfStock ? ' opacity-70 out-of-stock-card' : '');
                 
                 let optionsHtml = qtys.map(q =>
@@ -1252,7 +1204,6 @@
                 let controlWidget = '';
                 
                 if (isOutOfStock) {
-                    // در صورت ناموجود بودن، ویجت انتخاب تعداد را با نشان "موقتاً ناموجود" جایگزین می‌کنیم
                     controlWidget = `
                     <div class="w-full flex items-center justify-center gap-1 mt-auto pt-2 border-t">
                         <span class="text-[11px] text-red-500 font-extrabold flex items-center gap-1">
@@ -1448,7 +1399,7 @@
             htmlContent += `</div></div>`;
             
             let total_f = total;
-            let discountPercent = (total_f >= 1000000000) ? 0.0 : (total_f >= 700000000 ? 0.00 : (total_f >= 500000000 ? 0.00 : 0));
+            let discountPercent = (total_f >= 1000000000) ? 0.1 : (total_f >= 700000000 ? 0.00 : (total_f >= 500000000 ? 0.00 : 0));
             let discount = total_f * discountPercent;
             let afterDiscount = total_f - discount;
             let packageCount = Math.floor(afterDiscount / 200000000) + 1;
@@ -1591,7 +1542,7 @@
                 }
             });
             
-            let discountPercent = (total >= 1000000000) ? 0.00 : (total >= 700000000 ? 0.00 : (total >= 500000000 ? 0.00 : 0));
+            let discountPercent = (total >= 1000000000) ? 0.1 : (total >= 700000000 ? 0.00 : (total >= 500000000 ? 0.00 : 0));
             let discountAmount = total * discountPercent;
             let afterDiscount = total - discountAmount;
             
@@ -1668,11 +1619,6 @@
             );
         }
 
-        /* ----------------------------------------------------
-           بررسی خودکار و همگام‌سازی سلامت سبد خرید:
-           در صورتی که محصولی در سبد خرید کاربر باشد و مدیر آن را "ناموجود" یا حذف کند،
-           این تابع به‌طور خودکار آن را از سبد خرید کاربر پاکسازی می‌کند.
-        ---------------------------------------------------- */
         function validateCart() {
             if (!cart || Object.keys(cart).length === 0) return;
             if (!groupInfo || Object.keys(groupInfo).length === 0) return;
@@ -1683,7 +1629,6 @@
             Object.values(groupInfo).forEach(group => {
                 if (group && group.images) {
                     group.images.forEach(img => {
-                        // فقط کالاهایی که ناموجود (outOfStock) نیستند را به عنوان کالای زنده و مجاز ثبت کن
                         if (img.outOfStock !== true) {
                             allLiveProducts.push({
                                 filename: img.filename,
@@ -1703,7 +1648,6 @@
                 
                 const liveRef = allLiveProducts.find(p => p.filename === cartItem.filename && p.groupName === cartItem.groupName);
                 
-                // اگر کالا حذف یا ناموجود شده بود، آن را از سبد خرید بردار
                 if (!liveRef) {
                     delete cart[productId];
                     isCartChanged = true;
@@ -1753,74 +1697,77 @@
             let itemsArray = Object.values(cart);
             let rawTotal = itemsArray.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             
-            let discountPercent = (rawTotal >= 1000000000) ? 0.00 : (rawTotal >= 500000000 ? 0.00 : (rawTotal >= 200000000 ? 0.00 : 0));
-            let afterDiscount = rawTotal - (rawTotal * discountPercent);
-            let packageCount = Math.floor(afterDiscount / 140000000) + 1;
-            let finalPayable = afterDiscount + (packageCount * 1000000);
-            
-            const newOrder = {
-                id: Date.now(),
-                orderNumber: getOrderNumber(),
-                date: new Date().toLocaleDateString('fa-IR'),
-                time: new Date().toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' }),
-                items: JSON.parse(JSON.stringify(cart)),
-                total: finalPayable
-            };
-            
-            history.unshift(newOrder);
-            localStorage.setItem('order_history', JSON.stringify(history.slice(0, 15)));
-        }
+            let discountPercent = (rawTotal >= 1000000000) ? 0.1 : (rawTotal >= 700000000 ? 0.00 : (rawTotal >= 500000000 ? 0.00 : 0));
+let discountAmount = rawTotal * discountPercent;
+let afterDiscount = rawTotal - discountAmount;
+let packageCount = Math.floor(afterDiscount / 200000000) + 1;
+let shippingCost = packageCount * 1000000;
+let finalPayable = afterDiscount + shippingCost;
+
+const now = new Date();
+const orderRecord = {
+    id: getOrderNumber(),
+    date: now.toLocaleDateString('fa-IR'),
+    time: now.toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' }),
+    items: itemsArray,
+    totalPrice: finalPayable
+};
+
+history.unshift(orderRecord);
+localStorage.setItem('order_history', JSON.stringify(history));
+localStorage.setItem('cart_submitted', 'true');
+}
 
         function updateHistoryDisplay() {
-            const list = document.getElementById('historyList');
-            const history = JSON.parse(localStorage.getItem('order_history') || '[]');
-            
-            if (history.length === 0) {
-                list.innerHTML = `
+    const list = document.getElementById('historyList');
+    const history = JSON.parse(localStorage.getItem('order_history') || '[]');
+    
+    if (history.length === 0) {
+        list.innerHTML = `
                     <div class="text-center py-16">
                         <div class="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
                             <i class="fas fa-file-invoice text-3xl text-gray-300"></i>
                         </div>
                         <p class="text-gray-400 font-bold">تاریخچه سفارشات شما خالی است.</p>
                     </div>`;
-                return;
-            }
+        return;
+    }
+    
+    list.innerHTML = history.map((order) => {
+        let orderItemsHtml = '';
+        const currentOrderCart = order.items;
+        
+        Object.keys(groupInfo).forEach(groupId => {
+            const group = groupInfo[groupId];
+            const gName = group.name;
+            const itemsInThisGroup = Object.values(currentOrderCart).filter(item => item.groupName === gName);
             
-            list.innerHTML = history.map((order) => {
-                let orderItemsHtml = '';
-                const currentOrderCart = order.items;
-
-                Object.keys(groupInfo).forEach(groupId => {
-                    const group = groupInfo[groupId];
-                    const gName = group.name;
-                    const itemsInThisGroup = Object.values(currentOrderCart).filter(item => item.groupName === gName);
-                    
-                    if (itemsInThisGroup.length > 0) {
-                        orderItemsHtml += `
+            if (itemsInThisGroup.length > 0) {
+                orderItemsHtml += `
                             <div class="bg-gray-50/50 rounded-2xl p-3 border border-gray-100 mb-3">
                                 <h4 class="text-[10px] font-black text-blue-900 mb-2 pb-2 border-b border-gray-200/50 flex items-center gap-2">
                                     <span class="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
                                     ${gName}
                                 </h4>
                                 <div class="space-y-2">`;
-
-                        group.images.forEach(imgData => {
-                            const productId = gName + "_" + imgData.filename;
-                            const item = currentOrderCart[productId];
-                            if (item) {
-                                orderItemsHtml += `
+                
+                group.images.forEach(imgData => {
+                    const productId = gName + "_" + imgData.filename;
+                    const item = currentOrderCart[productId];
+                    if (item) {
+                        orderItemsHtml += `
                                     <div class="flex justify-between items-center text-[11px]">
                                         <span class="text-gray-600">${item.name}</span>
                                         <span class="font-bold text-gray-900">${toPersianDigits(item.quantity)} عدد</span>
                                     </div>`;
-                            }
-                        });
-
-                        orderItemsHtml += `</div></div>`;
                     }
                 });
-
-                return `
+                
+                orderItemsHtml += `</div></div>`;
+            }
+        });
+        
+        return `
                 <div class="bg-white border border-gray-100 rounded-[2rem] overflow-hidden shadow-sm mb-6 transition-all hover:shadow-md">
                     <div class="bg-blue-50/50 px-6 py-4 flex justify-between items-center border-b border-blue-100/50">
                         <div class="flex items-center gap-3">
@@ -1853,8 +1800,8 @@
                         </button>
                     </div>
                 </div>`;
-            }).join('');
-        }
+    }).join('');
+}
 
         function deleteFromHistory(orderId) {
             showCustomConfirm(
@@ -1884,7 +1831,6 @@
             const validProductsMap = {};
             Object.values(groupInfo).forEach(group => {
                 group.images.forEach(img => {
-                    // محصولات ناموجود در زمان بازسفارش فیلتر می‌شوند
                     if (img.outOfStock !== true) {
                         const id = group.name + "_" + img.filename;
                         validProductsMap[id] = {
@@ -2255,18 +2201,15 @@ ${catalogString}
             if (!offlineOverlay) return;
 
             if (navigator.onLine) {
-                // اینترنت متصل است
                 offlineOverlay.classList.add('hidden-offline');
                 console.log("🌐 اتصال به اینترنت برقرار شد.");
             } else {
-                // اینترنت قطع است
                 offlineOverlay.classList.remove('hidden-offline');
                 console.log("🚫 ارتباط با اینترنت قطع شد.");
             }
         }
 
         function checkConnectionManually() {
-            // برای بررسی واقعی‌تر، یک درخواست سبک پینگ به سرور می‌زنیم
             if (!navigator.onLine) {
                 showToast("⚠️ هنوز اتصالی برقرار نیست. لطفاً مجدداً بررسی کنید.", "خطا در شبکه", "error");
                 return;
@@ -2285,7 +2228,7 @@ ${catalogString}
                 });
         }
 
-        // راه‌اندازی اولیه برنامه با جایگذاری اولین استیت تاریخچه برای فعال‌سازی کلید بک گوشی
+        // راه‌اندازی اولیه برنامه
         function initializeApplication() {
             loadCustomerData();
             loadCartFromStorage();
@@ -2297,7 +2240,6 @@ ${catalogString}
             // مانیتورینگ وضعیت اینترنت
             window.addEventListener('online', handleNetworkChange);
             window.addEventListener('offline', handleNetworkChange);
-            // فراخوانی اولیه برای بررسی وضعیت در بدو ورود به برنامه
             handleNetworkChange();
             
             // جایگذاری استیت پایه خانه در تاریخچه مرورگر برای کارکرد صحیح دکمه بازگشت فیزیکی گوشی
@@ -2309,9 +2251,8 @@ ${catalogString}
     </script>
     
     <script>
-        /* -------------------------------------------------------------------------
-           سیستم پیشرفته کنترل و مانیتورینگ زنده سرویس‌ورکر (ثبت تغییرات آنی کدهای کلاینت)
-        ------------------------------------------------------------------------- */
+        /* 
+           سیستم پیشرفته کنترل و مانیتورینگ زنده سرویس‌ورکر (ثبت تغییرات آنی کدهای کلاینت) */
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
                 navigator.serviceWorker.register('./service-worker.js', { scope: './' })
@@ -2353,8 +2294,8 @@ ${catalogString}
             }
         }
     </script>
-
+    
     <!-- ۵. اتصال به منطق برنامه همراه با برچسب کش شکن جدید -->
-    <script src="./js/script.js?v=2.1.0" defer></script>
+    <script src="./js/script.js?v=2.1.1" defer></script>
 </body>
 </html>
