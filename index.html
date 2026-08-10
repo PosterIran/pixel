@@ -1563,36 +1563,8 @@ if (shouldScroll) {
             text += `💰 مبلغ نهایی: ${toPersianPrice(finalPayable)} ریال\n\n`;
             text += `✅ سفارش شما با موفقیت ثبت شد. در اسرع وقت هماهنگی لازم صورت می‌گیرد.`;
             
-            // ثبت قطعی سفارش در تاریخچه
-try {
-    let history = JSON.parse(
-        localStorage.getItem('order_history') || '[]'
-    );
-    
-    const orderRecord = {
-        id: orderNum,
-        orderNumber: orderNum,
-        date: dateStr,
-        time: timeStr,
-        items: JSON.parse(JSON.stringify(cart)),
-        total: finalPayable
-    };
-    
-    history.unshift(orderRecord);
-    
-    localStorage.setItem(
-        'order_history',
-        JSON.stringify(history)
-    );
-    
-    // افزایش شماره سفارش فقط بعد از ثبت موفق در تاریخچه
-    incrementOrderNumber();
-    
-    console.log('✅ سفارش در تاریخچه ذخیره شد:', orderRecord);
-    
-} catch (error) {
-    console.error('❌ خطا در ذخیره تاریخچه سفارش:', error);
-}
+            addToHistory();
+            incrementOrderNumber();
             
             copyToClipboard(text).then(() => {
                 if (platform === 'eitaa') {
@@ -1719,60 +1691,31 @@ try {
         }
 
         function addToHistory() {
-    if (!cart || Object.keys(cart).length === 0) return;
-    
-    let history = JSON.parse(
-        localStorage.getItem('order_history') || '[]'
-    );
-    
-    const itemsArray = Object.values(cart);
-    
-    let total = 0;
-    
-    itemsArray.forEach(item => {
-        total += Number(item.price) * Number(item.quantity);
-    });
-    
-    let discountPercent = 0;
-    
-    if (total >= 1000000000) {
-        discountPercent = 0.10;
-    }
-    
-    const discountAmount = total * discountPercent;
-    const afterDiscount = total - discountAmount;
-    
-    const packageCount =
-        Math.floor(afterDiscount / 200000000) + 1;
-    
-    const shippingCost = packageCount * 1000000;
-    const finalPayable = afterDiscount + shippingCost;
-    
-    const now = new Date();
-    const orderNumber = getOrderNumber();
-    
-    const orderRecord = {
-        id: orderNumber,
-        orderNumber: orderNumber,
-        
-        date: now.toLocaleDateString('fa-IR'),
-        
-        time: now.toLocaleTimeString('fa-IR', {
-            hour: '2-digit',
-            minute: '2-digit'
-        }),
-        
-        items: itemsArray,
-        
-        total: finalPayable
-    };
-    
-    history.unshift(orderRecord);
-    
-    localStorage.setItem(
-        'order_history',
-        JSON.stringify(history)
-    );
+            if (Object.keys(cart).length === 0) return;
+            
+            let history = JSON.parse(localStorage.getItem('order_history') || '[]');
+            let itemsArray = Object.values(cart);
+            let rawTotal = itemsArray.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            let discountPercent = (rawTotal >= 1000000000) ? 0.1 : (rawTotal >= 700000000 ? 0.00 : (rawTotal >= 500000000 ? 0.00 : 0));
+let discountAmount = rawTotal * discountPercent;
+let afterDiscount = rawTotal - discountAmount;
+let packageCount = Math.floor(afterDiscount / 200000000) + 1;
+let shippingCost = packageCount * 1000000;
+let finalPayable = afterDiscount + shippingCost;
+
+const now = new Date();
+const orderRecord = {
+    id: getOrderNumber(),
+    date: now.toLocaleDateString('fa-IR'),
+    time: now.toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' }),
+    items: itemsArray,
+    totalPrice: finalPayable
+};
+
+history.unshift(orderRecord);
+localStorage.setItem('order_history', JSON.stringify(history));
+localStorage.setItem('cart_submitted', 'true');
 }
 
         function updateHistoryDisplay() {
