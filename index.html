@@ -988,8 +988,8 @@
         ---------------------------------------------------- */
         const groupInfo = {
             1: { name: "سایز ۲۹×۲۱ دوروچاپ", images: [
-                { filename: "جدول دوستی تمرینی.jpg", name: "جدول دوستی تمرینی", price: 300000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "جدول دوستی کامل.jpg", name: "جدول دوستی کامل", price: 300000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false },
+                { filename: "جدول دوستی تمرینی.jpg", name: "جدول دوستی تمرینی", price: 300000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: true },
+                
                 { filename: "حساب آموز اول (افقی).jpg", name: "حساب آموز اول (افقی)", price: 300000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false },
                 { filename: "حساب آموز اول (عمودی).jpg", name: "حساب آموز اول (عمودی)", price: 300000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false },
                 { filename: "حساب آموز دوم (عمودی).jpg", name: "حساب آموز دوم (عمودی)", price: 300000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false },
@@ -1309,8 +1309,67 @@
         }
 
         function validateCart() {
-            if (!cart) cart = {};
+    if (!cart || typeof cart !== 'object') {
+        cart = {};
+        return;
+    }
+    
+    const validCart = {};
+    let removedCount = 0;
+    
+    Object.keys(cart).forEach(productId => {
+        
+        const item = cart[productId];
+        
+        if (!item || !item.groupName || !item.filename) {
+            removedCount++;
+            return;
         }
+        
+        // پیدا کردن گروه محصول
+        const group = Object.values(groupInfo).find(
+            g => g.name === item.groupName
+        );
+        
+        if (!group || !Array.isArray(group.images)) {
+            removedCount++;
+            return;
+        }
+        
+        // پیدا کردن خود محصول
+        const product = group.images.find(
+            img => img.filename === item.filename
+        );
+        
+        // محصول حذف شده یا ناموجود
+        if (!product || product.outOfStock === true) {
+            removedCount++;
+            return;
+        }
+        
+        // محصول معتبر است
+        validCart[productId] = {
+            ...item,
+            name: product.name,
+            price: product.price,
+            filename: product.filename,
+            groupName: group.name
+        };
+    });
+    
+    cart = validCart;
+    
+    // اگر کالایی حذف شده بود، سبد جدید ذخیره شود
+    if (removedCount > 0) {
+        saveCartToStorage();
+        
+        showToast(
+            `⚠️ ${toPersianDigits(removedCount)} کالا به دلیل حذف شدن یا ناموجود بودن از سبد خرید حذف شد.`,
+            "سبد خرید",
+            "warning"
+        );
+    }
+}
 
         function updateCartDisplay() {
             validateCart();
@@ -1463,16 +1522,25 @@
         }
 
         function loadCartFromStorage() {
-            const savedCart = localStorage.getItem('poster_cart');
-            if (savedCart) {
-                try {
-                    cart = JSON.parse(savedCart);
-                    updateBadge();
-                } catch (e) {
-                    cart = {};
-                }
-            }
+    const savedCart = localStorage.getItem('poster_cart');
+    
+    if (savedCart) {
+        try {
+            cart = JSON.parse(savedCart);
+            
+            // بررسی محصولات حذف شده یا ناموجود
+            validateCart();
+            
+            updateBadge();
+            
+        } catch (e) {
+            cart = {};
+            localStorage.removeItem('poster_cart');
         }
+    } else {
+        cart = {};
+    }
+}
 
         function getOrderNumber() {
             let lastNum = parseInt(localStorage.getItem('last_order_num') || '1000');
@@ -1794,10 +1862,18 @@
             history.forEach(order => {
                 // دسته‌بندی محصولات داخل سفارش بر اساس گروه
                 const grouped = {};
-                order.items.forEach(item => {
-                    if (!grouped[item.groupName]) grouped[item.groupName] = [];
-                    grouped[item.groupName].push(item);
-                });
+
+Object.keys(groupInfo).forEach(groupId => {
+    const groupName = groupInfo[groupId].name;
+
+    const groupItems = order.items.filter(
+        item => item.groupName === groupName
+    );
+
+    if (groupItems.length > 0) {
+        grouped[groupName] = groupItems;
+    }
+});
 
                 let itemsHtml = '';
                 for (const gName in grouped) {
@@ -2086,6 +2162,10 @@ function setupInstallBanner() {
                 'translate-y-0',
                 'opacity-100'
             );
+            // محو شدن خودکار بنر بعد از ۸ ثانیه
+    setTimeout(() => {
+        hideInstallBanner();
+    }, 8000);
 
         }, 2000);
     });
@@ -2235,5 +2315,118 @@ function hideInstallBanner() {
             }
         });
     </script>
+    <script>
+    // ====================================================
+    // ثبت و مدیریت Service Worker
+    // ====================================================
+
+    if ('serviceWorker' in navigator) {
+
+        window.addEventListener('load', function () {
+
+            navigator.serviceWorker.register('./service-worker.js', {
+                scope: './'
+            })
+
+            .then(function (registration) {
+
+                console.log(
+                    '✅ Service Worker با موفقیت ثبت شد:',
+                    registration.scope
+                );
+
+                // بررسی فوری برای نسخه جدید
+                registration.update();
+
+                // اگر نسخه جدید قبلاً منتظر فعال شدن است
+                if (registration.waiting) {
+                    applyNewServiceWorker(
+                        registration.waiting
+                    );
+                }
+
+                // بررسی نسخه جدید
+                registration.addEventListener(
+                    'updatefound',
+                    () => {
+
+                        const installingWorker =
+                            registration.installing;
+
+                        if (!installingWorker) return;
+
+                        installingWorker.addEventListener(
+                            'statechange',
+                            () => {
+
+                                if (
+                                    installingWorker.state ===
+                                    'installed'
+                                ) {
+
+                                    // اگر قبلاً Service Worker فعال داشته‌ایم،
+                                    // یعنی این یک نسخه جدید است.
+                                    if (
+                                        navigator.serviceWorker.controller
+                                    ) {
+
+                                        applyNewServiceWorker(
+                                            installingWorker
+                                        );
+                                    }
+                                }
+                            }
+                        );
+                    }
+                );
+
+            })
+
+            .catch(function (error) {
+
+                console.error(
+                    '❌ ثبت Service Worker شکست خورد:',
+                    error
+                );
+
+            });
+
+
+            // بعد از فعال شدن نسخه جدید،
+            // صفحه فقط یک بار Reload شود.
+            let isRefreshing = false;
+
+            navigator.serviceWorker.addEventListener(
+                'controllerchange',
+                () => {
+
+                    if (isRefreshing) return;
+
+                    isRefreshing = true;
+
+                    window.location.reload();
+                }
+            );
+
+        });
+
+
+        // فعال کردن نسخه جدید Service Worker
+        function applyNewServiceWorker(waitingWorker) {
+
+            if (!waitingWorker) return;
+
+            waitingWorker.postMessage({
+                action: 'skipWaiting'
+            });
+
+            showToast(
+                "✨ نسخه جدید برنامه بارگذاری شد؛ سیستم به‌روزرسانی شد.",
+                "سیستم PWA",
+                "info"
+            );
+        }
+    }
+</script>
 </body>
 </html>
