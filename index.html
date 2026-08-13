@@ -1307,7 +1307,79 @@
                 resumeBtn?.classList.add('hidden');
             }
         }
+        function normalizeQuantity(quantity, allowedQuantities) {
+    const qty = Number(quantity);
+    const allowed = (allowedQuantities || [])
+        .map(Number)
+        .filter(Number.isFinite)
+        .sort((a, b) => a - b);
 
+    if (allowed.length === 0) {
+        return qty;
+    }
+
+    // اگر مقدار فعلی همچنان مجاز است، تغییری نده
+    if (allowed.includes(qty)) {
+        return qty;
+    }
+
+    // نزدیک‌ترین مقدار پایین‌تر
+    const lowerValues = allowed.filter(value => value < qty);
+
+    if (lowerValues.length > 0) {
+        return Math.max(...lowerValues);
+    }
+
+    // اگر مقدار فعلی از همه کمتر است
+    return Math.min(...allowed);
+}
+        function normalizeQuantity(quantity, allowedQuantities) {
+    const qty = Number(quantity);
+
+    const allowed = (allowedQuantities || [])
+        .map(Number)
+        .filter(Number.isFinite)
+        .sort((a, b) => a - b);
+
+    if (allowed.length === 0) {
+        return qty;
+    }
+
+    // اگر مقدار فعلی هنوز مجاز است، هیچ تغییری نده
+    if (allowed.includes(qty)) {
+        return qty;
+    }
+
+    // مقدار پایین‌تر
+    const lower = allowed.filter(value => value < qty);
+
+    // مقدار بالاتر
+    const higher = allowed.filter(value => value > qty);
+
+    // فقط بالاتر وجود دارد
+    if (lower.length === 0 && higher.length > 0) {
+        return Math.min(...higher);
+    }
+
+    // فقط پایین‌تر وجود دارد
+    if (higher.length === 0 && lower.length > 0) {
+        return Math.max(...lower);
+    }
+
+    // هر دو وجود دارند؛ نزدیک‌ترین مقدار انتخاب شود
+    const lowerValue = Math.max(...lower);
+    const higherValue = Math.min(...higher);
+
+    const lowerDistance = qty - lowerValue;
+    const higherDistance = higherValue - qty;
+
+    // اگر فاصله مساوی باشد، مقدار بالاتر انتخاب می‌شود
+    if (higherDistance <= lowerDistance) {
+        return higherValue;
+    }
+
+    return lowerValue;
+}
         function validateCart() {
     if (!cart || typeof cart !== 'object') {
         cart = {};
@@ -1316,6 +1388,7 @@
     
     const validCart = {};
     let removedCount = 0;
+    let adjustedCount = 0;
     
     Object.keys(cart).forEach(productId => {
         
@@ -1347,26 +1420,52 @@
             return;
         }
         
+        // هماهنگ کردن تعداد با محدوده فعلی محصول
+        const normalizedQuantity = normalizeQuantity(
+            item.quantity,
+            product.allowedQuantities
+        );
+        
+        // بررسی اینکه تعداد تغییر کرده یا نه
+        if (Number(item.quantity) !== normalizedQuantity) {
+            adjustedCount++;
+        }
+        
         // محصول معتبر است
         validCart[productId] = {
             ...item,
             name: product.name,
             price: product.price,
             filename: product.filename,
-            groupName: group.name
+            groupName: group.name,
+            quantity: normalizedQuantity,
+            allowedQtys: product.allowedQuantities
         };
     });
     
     cart = validCart;
     
-    // اگر کالایی حذف شده بود، سبد جدید ذخیره شود
-    if (removedCount > 0) {
+    // اگر کالایی حذف شده یا تعداد کالایی اصلاح شده باشد،
+    // سبد جدید در حافظه ذخیره شود
+    if (removedCount > 0 || adjustedCount > 0) {
         saveCartToStorage();
-        
+    }
+    
+    // اطلاع‌رسانی درباره کالاهای حذف‌شده
+    if (removedCount > 0) {
         showToast(
             `⚠️ ${toPersianDigits(removedCount)} کالا به دلیل حذف شدن یا ناموجود بودن از سبد خرید حذف شد.`,
             "سبد خرید",
             "warning"
+        );
+    }
+    
+    // اطلاع‌رسانی درباره اصلاح تعداد
+    if (adjustedCount > 0) {
+        showToast(
+            `🔄 تعداد ${toPersianDigits(adjustedCount)} کالا با محدوده انتخاب فعلی اصلاح شد.`,
+            "سبد خرید",
+            "info"
         );
     }
 }
@@ -1914,25 +2013,110 @@ Object.keys(groupInfo).forEach(groupId => {
         }
 
         function reorderPreviousOrder(orderId) {
-            const history = JSON.parse(localStorage.getItem('previousOrders') || '[]');
-            const order = history.find(o => String(o.id) === String(orderId));
+    const history = JSON.parse(
+        localStorage.getItem('previousOrders') || '[]'
+    );
 
-            if (!order) {
-                showToast('سفارش مورد نظر یافت نشد.', 'خطا', 'error');
-                return;
-            }
+    const order = history.find(
+        o => String(o.id) === String(orderId)
+    );
 
-            cart = {};
-            order.items.forEach(item => {
-                const productId = item.groupName + "_" + item.filename;
-                cart[productId] = { ...item };
-            });
+    if (!order) {
+        showToast(
+            'سفارش مورد نظر یافت نشد.',
+            'خطا',
+            'error'
+        );
+        return;
+    }
 
-            saveCartToStorage();
-            updateBadge();
-            showScreen('cart');
-            showToast(`✅ سفارش #${toPersianDigits(orderId)} به سبد خرید منتقل شد.`, 'سفارش مجدد', 'success');
+    cart = {};
+
+    let removedCount = 0;
+    let adjustedCount = 0;
+
+    order.items.forEach(item => {
+
+        // پیدا کردن گروه محصول
+        const group = Object.values(groupInfo).find(
+            g => g.name === item.groupName
+        );
+
+        if (!group || !Array.isArray(group.images)) {
+            removedCount++;
+            return;
         }
+
+        // پیدا کردن خود محصول
+        const product = group.images.find(
+            img => img.filename === item.filename
+        );
+
+        // محصول حذف شده یا ناموجود
+        if (!product || product.outOfStock === true) {
+            removedCount++;
+            return;
+        }
+
+        // هماهنگ کردن تعداد با محدوده فعلی محصول
+        const normalizedQuantity = normalizeQuantity(
+            item.quantity,
+            product.allowedQuantities
+        );
+
+        // بررسی اینکه تعداد تغییر کرده یا نه
+        if (Number(item.quantity) !== normalizedQuantity) {
+            adjustedCount++;
+        }
+
+        const productId =
+            item.groupName + "_" + item.filename;
+
+        cart[productId] = {
+            ...item,
+            name: product.name,
+            price: product.price,
+            filename: product.filename,
+            groupName: group.name,
+            quantity: normalizedQuantity,
+            allowedQtys: product.allowedQuantities
+        };
+    });
+
+    saveCartToStorage();
+    updateBadge();
+    showScreen('cart');
+
+    // پیام مربوط به کالاهای حذف شده یا ناموجود
+    if (removedCount > 0) {
+
+        showToast(
+            `⚠️ ${toPersianDigits(removedCount)} کالا به دلیل حذف شدن یا ناموجود بودن به سبد اضافه نشد.`,
+            'سفارش مجدد',
+            'warning'
+        );
+    }
+
+    // پیام مربوط به اصلاح تعداد
+    if (adjustedCount > 0) {
+
+        showToast(
+            `🔄 تعداد ${toPersianDigits(adjustedCount)} کالا با محدوده انتخاب فعلی اصلاح شد.`,
+            'سفارش مجدد',
+            'info'
+        );
+    }
+
+    // اگر هیچ مشکلی وجود نداشت
+    if (removedCount === 0 && adjustedCount === 0) {
+
+        showToast(
+            `✅ سفارش #${toPersianDigits(orderId)} به سبد خرید منتقل شد.`,
+            'سفارش مجدد',
+            'success'
+        );
+    }
+}
 
         function deletePreviousOrder(orderId) {
             showCustomConfirm(
