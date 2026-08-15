@@ -1307,32 +1307,7 @@
                 resumeBtn?.classList.add('hidden');
             }
         }
-        function normalizeQuantity(quantity, allowedQuantities) {
-    const qty = Number(quantity);
-    const allowed = (allowedQuantities || [])
-        .map(Number)
-        .filter(Number.isFinite)
-        .sort((a, b) => a - b);
-
-    if (allowed.length === 0) {
-        return qty;
-    }
-
-    // اگر مقدار فعلی همچنان مجاز است، تغییری نده
-    if (allowed.includes(qty)) {
-        return qty;
-    }
-
-    // نزدیک‌ترین مقدار پایین‌تر
-    const lowerValues = allowed.filter(value => value < qty);
-
-    if (lowerValues.length > 0) {
-        return Math.max(...lowerValues);
-    }
-
-    // اگر مقدار فعلی از همه کمتر است
-    return Math.min(...allowed);
-}
+        
         function normalizeQuantity(quantity, allowedQuantities) {
     const qty = Number(quantity);
 
