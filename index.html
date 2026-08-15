@@ -1750,21 +1750,61 @@
             localStorage.setItem('cart_submitted', 'true');
 
             if (platform === 'whatsapp') {
-                const whatsappNumber = "989010195885";
-                const url = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodeURIComponent(text)}`;
-                window.open(url, '_blank');
-                clearCartAfterOrder();
-            } else if (platform === 'eitaa') {
-                copyToClipboard(text).then(() => {
-                    showToast('متن فاکتور در حافظه کپی شد. اکنون در ایتا پیست کنید.', 'ایتا', 'success');
-                    clearCartAfterOrder();
-                    setTimeout(() => {
-                        window.open(`https://eitaa.com/@PosterIran`, '_blank');
-                    }, 1200);
-                }).catch(err => {
-                    showToast('کپی متن ناموفق بود. لطفاً دستی اقدام نمایید.', 'خطا', 'error');
-                });
-            }
+    
+    const whatsappNumber = "989010195885";
+    const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`;
+    
+    showToast(
+        '🚀 در حال انتقال سفارش به واتس‌آپ...',
+        'واتس‌آپ',
+        'success'
+    );
+    
+    setTimeout(() => {
+        window.open(url, '_blank');
+    }, 1000);
+    
+    clearCartAfterOrder();
+    
+} else if (platform === 'eitaa') {
+    
+    copyToClipboard(text).then(() => {
+        
+        showToast(
+            '📋 متن فاکتور کپی شد؛ در حال انتقال به ایتا...',
+            'ایتا',
+            'success'
+        );
+        
+        clearCartAfterOrder();
+        
+        setTimeout(() => {
+            window.open(
+                `https://eitaa.com/@PosterIran`,
+                '_blank'
+            );
+        }, 1000);
+        
+    }).catch(err => {
+        
+        console.error('خطا در کپی متن سفارش:', err);
+        
+        showToast(
+            '⚠️ کپی خودکار ناموفق بود، اما در حال انتقال به ایتا هستیم...',
+            'ایتا',
+            'warning'
+        );
+        
+        setTimeout(() => {
+            window.open(
+                `https://eitaa.com/@PosterIran`,
+                '_blank'
+            );
+        }, 1500);
+        
+        clearCartAfterOrder();
+    });
+}
         }
 
         /* ----------------------------------------------------
