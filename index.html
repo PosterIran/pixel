@@ -1744,6 +1744,7 @@
             }
             text += `🚚 هزینه ارسال (${toPersianDigits(packageCount)} بسته): ${toPersianPrice(shipping)} ریال\n`;
             text += `💳 مبلغ نهایی قابل پرداخت: ${toPersianPrice(finalPayable)} ریال\n`;
+            text += `\n✅ سفارش شما با موفقیت ثبت شد. در اسرع وقت هماهنگی لازم صورت می‌گیرد.`;
 
             // ذخیره‌سازی سفارش در تاریخچه سفارشات
             saveOrderToHistory(orderNum, finalPayable, total, discount, shipping);
