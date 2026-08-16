@@ -1617,11 +1617,52 @@
 }
 
         function getOrderNumber() {
-            let lastNum = parseInt(localStorage.getItem('last_order_num') || '1000');
-            lastNum++;
-            localStorage.setItem('last_order_num', lastNum.toString());
-            return lastNum;
+    const history = JSON.parse(
+        localStorage.getItem('previousOrders') || '[]'
+    );
+    
+    // اگر تاریخچه کاملاً خالی است، شماره سفارش از 1 شروع شود
+    if (!Array.isArray(history) || history.length === 0) {
+        localStorage.setItem('last_order_num', '1');
+        return 1;
+    }
+    
+    // پیدا کردن بزرگ‌ترین شماره سفارش موجود
+    let maxNumber = history.reduce((max, order) => {
+        const orderNumber = Number(order.id);
+        
+        if (
+            Number.isFinite(orderNumber) &&
+            orderNumber > max
+        ) {
+            return orderNumber;
         }
+        
+        return max;
+    }, 0);
+    
+    // بررسی شماره ذخیره‌شده قبلی
+    const storedNumber = Number(
+        localStorage.getItem('last_order_num')
+    );
+    
+    if (
+        Number.isFinite(storedNumber) &&
+        storedNumber > maxNumber
+    ) {
+        maxNumber = storedNumber;
+    }
+    
+    // شماره سفارش جدید
+    const nextNumber = maxNumber + 1;
+    
+    localStorage.setItem(
+        'last_order_num',
+        String(nextNumber)
+    );
+    
+    return nextNumber;
+}
 
         function submitOrder(platform, isConfirmed = false) {
             const name = document.getElementById('customerName').value;
@@ -1713,13 +1754,16 @@
             text += `\n---------------------------------------\n`;
             text += groupSummariesText;
             text += `---------------------------------------\n`;
-            text += `💰 مبلغ اجناس: ${toPersianPrice(total)} ریال\n`;
-            if (discount > 0) {
-                text += `🎁 تخفیف: ${toPersianPrice(discount)} ریال\n`;
-            }
-            text += `🚚 هزینه ارسال (${toPersianDigits(packageCount)} بسته): ${toPersianPrice(shipping)} ریال\n`;
-            text += `💳 مبلغ نهایی قابل پرداخت: ${toPersianPrice(finalPayable)} ریال\n`;
-            text += `\n✅ سفارش شما با موفقیت ثبت شد. در اسرع وقت هماهنگی لازم صورت می‌گیرد.`;
+text += `💰 مبلغ اجناس: ${toPersianPrice(total)} ریال\n`;
+
+if (discount > 0) {
+    text += `🎁 تخفیف: ${toPersianPrice(discount)} ریال\n`;
+}
+
+text += `🚚 هزینه ارسال (${toPersianDigits(packageCount)} بسته): ${toPersianPrice(shipping)} ریال\n`;
+text += `💳 مبلغ نهایی قابل پرداخت: ${toPersianPrice(finalPayable)} ریال\n`;
+
+text += `\n✅ سفارش شما با موفقیت ثبت شد. در اسرع وقت هماهنگی لازم صورت می‌گیرد.`;
 
             // ذخیره‌سازی سفارش در تاریخچه سفارشات
             saveOrderToHistory(orderNum, finalPayable, total, discount, shipping);
@@ -2179,7 +2223,10 @@ Object.keys(groupInfo).forEach(groupId => {
             const now = new Date();
             const dayNames = ['یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه', 'شنبه'];
             const dayName = dayNames[now.getDay()];
-            const timeStr = now.toLocaleTimeString('fa-IR');
+            const timeStr = now.toLocaleTimeString('fa-IR', {
+    hour: '2-digit',
+    minute: '2-digit'
+});
             const dateStr = now.toLocaleDateString('fa-IR');
             
             const dayTimeEl = document.getElementById('headerDayTime');
