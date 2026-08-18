@@ -540,8 +540,7 @@
                 <h1 class="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
                     یادگیری را به یک <span class="text-yellow-400">ماجراجویی بصری</span> تبدیل کنید!
                 </h1>
-                <p class="text-lg md:text-xl mb-10 text-blue-100 leading-relaxed max-w-3xl mx-auto">
-                    مجموعه‌ای از پوسترهای آموزشی ، همگام با کتب درسی؛ طراحی شده برای معلمان خلاق و دانش‌آموزانی که به دنبال یادگیری عمیق‌تر هستند.
+                <p class="text-lg md:text-xl mb-10 text-blue-100 leading-relaxed max-w-3xl mx-auto">مجموعه‌ای از پوسترهای آموزشی، همگام با کتب درسی؛ ابزاری کاربردی برای معلمان خلاق و یادگیری عمیق‌تر دانش‌آموزان.
                 </p>
 
                 <div class="flex flex-col gap-4 justify-center items-center max-w-md mx-auto">
@@ -2802,6 +2801,54 @@ window.addEventListener('resize', function() {
 setTimeout(function() {
     updateCartScrollArrow();
 }, 500);
+/* === مدیریت هوشمند اینترنت بدون رفرش صفحه === */
+window.addEventListener('online', function () {
+    // ۱. مخفی کردن لایه قطعی اینترنت
+    const offlineOverlay = document.getElementById('offlineOverlay');
+    if (offlineOverlay) {
+        offlineOverlay.classList.add('hidden-offline');
+    }
+
+    // ۲. بارگذاری مجدد فایل‌های CSS که لود نشده بودند
+    document.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
+        const href = link.href.split('?')[0];
+        link.href = href + '?reload=' + new Date().getTime();
+    });
+
+    // ۳. بارگذاری مجدد تصاویری که لود نشده بودند
+    document.querySelectorAll('img').forEach(img => {
+        if (!img.complete || img.naturalWidth === 0) {
+            const src = img.src.split('?')[0];
+            img.src = src + '?reload=' + new Date().getTime();
+        }
+    });
+
+    if (typeof showToast === 'function') {
+        showToast("اتصال اینترنت برقرار شد.", "", "success");
+    }
+});
+
+window.addEventListener('offline', function () {
+    const offlineOverlay = document.getElementById('offlineOverlay');
+    if (offlineOverlay) {
+        offlineOverlay.classList.remove('hidden-offline');
+    }
+});
+
+function checkConnectionManually() {
+    if (navigator.onLine) {
+        const offlineOverlay = document.getElementById('offlineOverlay');
+        if (offlineOverlay) {
+            offlineOverlay.classList.add('hidden-offline');
+        }
+    } else {
+        if (typeof showToast === 'function') {
+            showToast("اتصال اینترنت هنوز برقرار نیست!", "", "error");
+        } else {
+            alert("اتصال اینترنت هنوز برقرار نیست!");
+        }
+    }
+}
 </script>
 <!-- فلش شناور راهنمای دکمه‌های ارسال سفارش -->
 <button
