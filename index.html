@@ -19,6 +19,25 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
+        /* ===== حالت مقاوم در برابر قطعی/ضعف اینترنت ===== */
+        /* این قوانین عمداً inline هستند تا حتی اگر Tailwind/Font Awesome/فونت خارجی لود نشوند،
+           اندازه و چیدمان عناصر حیاتی از بین نرود. */
+        html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
+        *, *::before, *::after { box-sizing: border-box; }
+        img { max-width: 100%; height: auto; }
+        header img.logo-img { width: 40px !important; height: 40px !important; object-fit: contain !important; flex: 0 0 40px; }
+        #install-banner img { width: 48px !important; height: 48px !important; max-width: 48px !important; object-fit: contain !important; display: block !important; }
+        .hidden-section { display: none !important; }
+        #offlineOverlay.hidden-offline { display: none !important; }
+        #offlineOverlay { box-sizing: border-box; }
+        .hero-gradient { min-width: 0; }
+        #imagesContainer { min-width: 0; }
+        #imagesContainer img { max-width: 100% !important; }
+        nav { max-width: 100vw; }
+        button, input, select, textarea { font-family: inherit; }
+        /* جلوگیری از کشیده‌شدن تصاویر خراب در صورت نبود CSS خارجی */
+        img[width][height] { height: auto; }
+
     /* بزرگتر کردن کلی تمام فونت‌های بخش سبد خرید */
     #cartScreen {
         font-size: 1.05rem !important; /* یا 18px */
@@ -509,7 +528,7 @@
     <header class="absolute w-full right-0 left-0 top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center gap-2 cursor-pointer" onclick="showScreen('home')">
-                <img src="https://PosterIran.github.io/pixel/icons/logo.png" alt="Logo" class="h-10 w-10 logo-img" width="40" height="40">
+                <img src="./icons/logo.png" alt="Logo" class="h-10 w-10 logo-img" width="40" height="40" style="width:40px;height:40px;object-fit:contain;flex:0 0 40px;">
                 <span class="text-xl font-black text-blue-900">پوستر ایران</span>
             </div>
             
@@ -860,7 +879,7 @@
     <div id="install-banner" class="fixed bottom-24 left-4 right-4 md:left-auto md:right-4 md:max-w-sm z-[9999] p-5 rounded-3xl border border-white/30 bg-white/80 backdrop-blur-xl shadow-2xl flex flex-col gap-4 transform translate-y-20 opacity-0 pointer-events-none transition-all duration-700">
         <div class="flex items-start gap-3">
             <div class="w-12 h-12 rounded-2xl bg-white border border-blue-100 flex items-center justify-center p-1 shadow-md shrink-0">
-                <img src="https://PosterIran.github.io/pixel/icons/logo.png" alt="پوستر ایران" class="w-full h-full object-contain">
+                <img src="./icons/logo.png" alt="پوستر ایران" class="w-full h-full object-contain" width="48" height="48" style="width:48px;height:48px;object-fit:contain;display:block;">
             </div>
             <div>
                 <h4 class="font-bold text-sm text-gray-900 leading-tight">پوستر ایران را نصب کنید!</h4>
@@ -2809,17 +2828,15 @@ window.addEventListener('online', function () {
         offlineOverlay.classList.add('hidden-offline');
     }
 
-    // ۲. بارگذاری مجدد فایل‌های CSS که لود نشده بودند
-    document.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
-        const href = link.href.split('?')[0];
-        link.href = href + '?reload=' + new Date().getTime();
-    });
-
-    // ۳. بارگذاری مجدد تصاویری که لود نشده بودند
+    // ۲. فقط منابع واقعاً خراب را دوباره امتحان کن.
+    //    Cache-busting برای همه CSS/تصاویر روی اینترنت ضعیف اشتباه است؛
+    //    چون cache مرورگر و Service Worker را دور می‌زند و درخواست تازه می‌سازد.
     document.querySelectorAll('img').forEach(img => {
         if (!img.complete || img.naturalWidth === 0) {
-            const src = img.src.split('?')[0];
-            img.src = src + '?reload=' + new Date().getTime();
+            const src = img.getAttribute('src');
+            if (src && !src.startsWith('data:')) {
+                img.src = src;
+            }
         }
     });
 
