@@ -2410,6 +2410,8 @@ function setupInstallBanner() {
 
         deferredPrompt = e;
 
+        localStorage.removeItem('pwa_installed');
+
         // اگر کاربر قبلاً بنر را بسته باشد،
         // تا 24 ساعت دوباره نمایش داده نشود
         const blockInstallBanner =
