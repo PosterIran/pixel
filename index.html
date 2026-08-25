@@ -2413,10 +2413,15 @@ function setupInstallBanner() {
     // تشخیص اینکه برنامه قبلاً به صورت PWA نصب شده است
     const isRunningStandalone =
         window.matchMedia('(display-mode: standalone)').matches ||
+        window.matchMedia('(display-mode: fullscreen)').matches ||
+        window.matchMedia('(display-mode: minimal-ui)').matches ||
         window.navigator.standalone === true;
 
-    // اگر برنامه نصب شده است، بنر نصب نشان داده نشود
-    if (isRunningStandalone) {
+    // اگر برنامه نصب شده است، یا قبلاً نصب آن ثبت شده است،
+    // بنر نصب دیگر نمایش داده نشود.
+    const wasInstalled = localStorage.getItem('pwa_installed') === 'true';
+
+    if (isRunningStandalone || wasInstalled) {
         localStorage.setItem('pwa_installed', 'true');
         hideInstallBanner();
         return;
@@ -2424,6 +2429,15 @@ function setupInstallBanner() {
 
     // دریافت درخواست نصب از مرورگر
     window.addEventListener('beforeinstallprompt', (e) => {
+
+        // اگر برنامه نصب شده باشد، درخواست نصب را نمایش نده.
+        if (
+            localStorage.getItem('pwa_installed') === 'true' ||
+            window.matchMedia('(display-mode: standalone)').matches ||
+            window.navigator.standalone === true
+        ) {
+            return;
+        }
 
         e.preventDefault();
 
@@ -2494,12 +2508,8 @@ function setupInstallBanner() {
                     await deferredPrompt.userChoice;
 
                 if (outcome === 'accepted') {
-
-                    localStorage.setItem(
-                        'pwa_installed',
-                        'true'
-                    );
-
+                    // نصب تأیید شد؛ از این به بعد بنر نصب نمایش داده نشود.
+                    localStorage.setItem('pwa_installed', 'true');
                     deferredPrompt = null;
                 }
 
