@@ -2493,6 +2493,7 @@ function setupInstallBanner() {
 
     // دکمه نصب
     btnInstall.addEventListener('click', async () => {
+        console.log('PWA deferredPrompt:', deferredPrompt);
 
         if (deferredPrompt) {
 
