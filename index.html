@@ -2425,7 +2425,13 @@ function setupInstallBanner() {
     // دریافت درخواست نصب از مرورگر
     window.addEventListener('beforeinstallprompt', (e) => {
             
-            if (localStorage.getItem('pwa_installed') === 'true') {
+            console.log('✅ beforeinstallprompt دریافت شد');
+            
+            if (
+                localStorage.getItem('pwa_installed') === 'true' ||
+                window.matchMedia('(display-mode: standalone)').matches ||
+                window.navigator.standalone === true
+            ) {
                 return;
             }
             
