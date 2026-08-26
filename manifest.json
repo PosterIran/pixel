@@ -3,11 +3,13 @@
   "short_name": "پوستر ایران",
   "description": "فروشگاه تخصصی پوسترهای آموزشی مدارس و معلمان خلاق",
   "id": "/pixel/",
-  "start_url": "./index.html",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#1e40af",
   "theme_color": "#1e40af",
   "orientation": "portrait",
+  "lang": "fa",
+  "dir": "rtl",
   "icons": [
     {
       "src": "./icons/icon-192x192.png",
