@@ -496,6 +496,13 @@
         transform: translateX(-50%) translateY(5px);
     }
 }
+        /* =========================================================
+           تنظیمات حیاتی برای کشیدن بنر نصب (Swipe to Dismiss)
+           ========================================================= */
+        #install-banner {
+            touch-action: none; /* جلوگیری از اسکرول صفحه هنگام لمس بنر */
+            will-change: transform, opacity; /* بهینه‌سازی عملکرد انیمیشن در موبایل */
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-900 pb-28">
@@ -2395,7 +2402,7 @@ Object.keys(groupInfo).forEach(groupId => {
                 chatBody.scrollTop = chatBody.scrollHeight;
             }, 1000);
         }
-        // === مدیریت نصب PWA (نسخه نهایی: تایمر ۸ ثانیه + قابلیت کشیدن به بیرون) ===
+                // === مدیریت نصب PWA (نسخه نهایی و بدون باگ: تایمر ۸ ثانیه + Swipe) ===
         let deferredPrompt = null;
         let autoHideTimer = null;
         let startY = 0;
@@ -2427,13 +2434,13 @@ Object.keys(groupInfo).forEach(groupId => {
                     return;
                 }
                 
-                // نمایش بنر
+                // نمایش بنر با تاخیر ۲ ثانیه
                 setTimeout(() => {
                     showInstallBannerUI(banner);
                 }, 2000);
             });
             
-            window.addEventListener('appinstalled', (evt) => {
+            window.addEventListener('appinstalled', () => {
                 localStorage.setItem('pwa_installed', 'true');
                 deferredPrompt = null;
                 hideInstallBanner(banner);
@@ -2473,15 +2480,13 @@ Object.keys(groupInfo).forEach(groupId => {
             });
             
             // ==========================================================
-            // منطق کشیدن به بیرون صفحه (Swipe to Dismiss)
+            // منطق کشیدن به بیرون صفحه (Swipe to Dismiss) - بهینه‌شده
             // ==========================================================
             banner.addEventListener('touchstart', (e) => {
                 startY = e.touches[0].clientY;
                 isDragging = true;
-                // حذف انیمیشن برای دنبال کردن روان انگشت
-                banner.style.transition = 'none';
-                // متوقف کردن تایمر ۸ ثانیه اگر کاربر شروع به لمس کرد
-                if (autoHideTimer) clearTimeout(autoHideTimer);
+                banner.style.transition = 'none'; // حذف انیمیشن برای حرکت روان و لحظه‌ای با انگشت
+                if (autoHideTimer) clearTimeout(autoHideTimer); // توقف تایمر ۸ ثانیه هنگام لمس
             }, { passive: true });
             
             banner.addEventListener('touchmove', (e) => {
@@ -2489,11 +2494,10 @@ Object.keys(groupInfo).forEach(groupId => {
                 currentY = e.touches[0].clientY;
                 const diff = currentY - startY;
                 
-                // فقط اجازه کشیدن به سمت پایین (مثبت) را می‌دهیم
+                // فقط اجازه کشیدن به سمت پایین (مقادیر مثبت) را می‌دهیم
                 if (diff > 0) {
                     banner.style.transform = `translateY(${diff}px)`;
-                    // کاهش شفافیت همزمان با کشیدن به پایین
-                    banner.style.opacity = Math.max(0, 1 - (diff / 150));
+                    banner.style.opacity = Math.max(0, 1 - (diff / 150)); // کمرنگ شدن همزمان با کشیدن
                 }
             }, { passive: true });
             
@@ -2502,16 +2506,15 @@ Object.keys(groupInfo).forEach(groupId => {
                 isDragging = false;
                 const diff = currentY - startY;
                 
-                // اگر بیشتر از ۸۰ پیکسل به پایین کشیده شد، بنر را ببند
-                if (diff > 80) {
+                // اگر بیشتر از ۱۰۰ پیکسل به پایین کشیده شد، بنر را ببند
+                if (diff > 100) {
                     hideInstallBanner(banner);
                 } else {
-                    // در غیر این صورت، بنر به جای خود برگردد (Snap Back)
-                    banner.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease';
+                    // در غیر این صورت، بنر با انیمیشن فنری به جای خود برگردد (Snap Back)
+                    banner.style.transition = 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease';
                     banner.style.transform = 'translateY(0)';
                     banner.style.opacity = '1';
-                    // شروع مجدد تایمر ۸ ثانیه
-                    startAutoHideTimer(banner);
+                    startAutoHideTimer(banner); // شروع مجدد تایمر ۸ ثانیه
                 }
             });
         }
@@ -2520,7 +2523,9 @@ Object.keys(groupInfo).forEach(groupId => {
         function showInstallBannerUI(banner) {
             banner.classList.remove('pointer-events-none', 'translate-y-20', 'opacity-0');
             banner.classList.add('translate-y-0', 'opacity-100');
-            banner.style.transform = ''; // پاک کردن استایل‌های اینلاین قبلی
+            
+            // ریست کردن استایل‌های اینلاین برای اطمینان از عملکرد صحیح کلاس‌های CSS
+            banner.style.transform = '';
             banner.style.opacity = '';
             banner.style.transition = 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease';
             
@@ -2532,7 +2537,7 @@ Object.keys(groupInfo).forEach(groupId => {
             if (autoHideTimer) clearTimeout(autoHideTimer);
             autoHideTimer = setTimeout(() => {
                 hideInstallBanner(banner);
-            }, 8000);
+            }, 8000); // دقیقاً ۸۰۰۰ میلی‌ثانیه (۸ ثانیه)
         }
         
         // تابع نهایی مخفی کردن بنر
@@ -2542,7 +2547,7 @@ Object.keys(groupInfo).forEach(groupId => {
             banner.classList.remove('translate-y-0', 'opacity-100');
             banner.classList.add('pointer-events-none', 'translate-y-20', 'opacity-0');
             
-            // پاک کردن استایل‌های اینلاین بعد از اتمام انیمیشن
+            // پاک کردن استایل‌های اینلاین بعد از اتمام انیمیشن برای جلوگیری از تداخل بعدی
             setTimeout(() => {
                 banner.style.transform = '';
                 banner.style.opacity = '';
