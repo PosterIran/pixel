@@ -2402,66 +2402,65 @@ Object.keys(groupInfo).forEach(groupId => {
                 chatBody.scrollTop = chatBody.scrollHeight;
             }, 1000);
         }
-                // === مدیریت نصب        // === مدیریت هوشمند نصب PWA (تشخیص خودکار نصب/حذف + تایمر ۸ ثانیه + Swipe) ===
+                        // === مدیریت هوشمند نصب PWA (نسخه ضدگلوله با رفع باگ تداخل کلیک) ===
         let deferredPrompt = null;
         let autoHideTimer = null;
         let startY = 0;
         let currentY = 0;
         let isDragging = false;
-
+        
         function setupInstallBanner() {
             const banner = document.getElementById('install-banner');
             const btnInstall = document.getElementById('btnInstall');
             const btnClose = document.getElementById('btnClose');
-
-            if (!banner || !btnInstall || !btnClose) return;
-
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
             
-            // ۱. تشخیص هوشمند: آیا برنامه همین الان به صورت اپلیکیشن (Standalone) در حال اجراست؟
+            if (!banner || !btnInstall || !btnClose) return;
+            
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
             const isRunningStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-
+            
             if (isRunningStandalone) {
-                // اگر بله، یعنی نصب است. پرچم را ثبت کن و خارج شو.
                 localStorage.setItem('pwa_installed', 'true');
-                return; 
+                return;
             } else {
-                // ۲. اگر خیر (یعنی داخل مرورگر هستیم)، هرگونه حافظه قدیمی از نصب قبلی را پاک کن
-                // این خط تضمین می‌کند که اگر کاربر برنامه را پاک کرده، سیستم اجازه نصب مجدد را بدهد.
+                // اگر در مرورگر هستیم، پرچم نصب قبلی را پاک کن تا اجازه نصب مجدد داده شود
                 localStorage.removeItem('pwa_installed');
             }
-
-            // ۳. گوش دادن به رویداد نصب مرورگر
+            
             window.addEventListener('beforeinstallprompt', (e) => {
                 e.preventDefault();
                 deferredPrompt = e;
-
-                // بررسی قانون ۲۴ ساعت: اگر کاربر قبلاً "بعداً" را زده، هنوز نشان نده
+                console.log("✅ رویداد beforeinstallprompt دریافت شد.");
+                
                 const blockInstallBanner = localStorage.getItem('block_install_banner_until');
                 if (blockInstallBanner && Date.now() < Number(blockInstallBanner)) {
-                    return; 
+                    console.log("⏳ بنر به دلیل قانون ۲۴ ساعت مسدود است.");
+                    return;
                 }
-
-                // نمایش بنر با تاخیر ۲ ثانیه
+                
                 setTimeout(() => {
                     showInstallBannerUI(banner);
                 }, 2000);
             });
-
-            // ۴. وقتی نصب با موفقیت توسط سیستم عامل انجام شد
+            
             window.addEventListener('appinstalled', () => {
+                console.log("🎉 رویداد appinstalled توسط مرورگر تأیید شد.");
                 localStorage.setItem('pwa_installed', 'true');
                 deferredPrompt = null;
                 hideInstallBanner(banner);
                 showToast("🎉 اپلیکیشن پوستر ایران با موفقیت نصب شد!", "نصب موفق", "success");
             });
-
-            // ۵. دکمه نصب سریع
-            btnInstall.addEventListener('click', async () => {
+            
+            // دکمه نصب سریع
+            btnInstall.addEventListener('click', async (e) => {
+                e.stopPropagation(); // جلوگیری از تداخل کلیک
+                console.log("🔵 دکمه نصب سریع کلیک شد.");
+                
                 if (deferredPrompt) {
                     deferredPrompt.prompt();
                     try {
                         const { outcome } = await deferredPrompt.userChoice;
+                        console.log("نتیجه انتخاب کاربر:", outcome);
                         if (outcome === 'accepted') {
                             localStorage.setItem('pwa_installed', 'true');
                             deferredPrompt = null;
@@ -2481,25 +2480,26 @@ Object.keys(groupInfo).forEach(groupId => {
                     showCustomConfirm("راهنمای نصب وب‌اپلیکیشن", "لطفاً بر روی ۳ نقطه بالا سمت راست مرورگر خود ضربه بزنید و گزینه «Install app» یا «Add to Home screen» را لمس کنید.", () => {}, "متوجه شدم", "بستن", "bg-blue-600 hover:bg-blue-700", '<i class="fas fa-ellipsis-v text-2xl"></i>', "bg-blue-100 text-blue-600");
                 }
             });
-
-            // ۶. دکمه بعداً (انصراف)
-            btnClose.addEventListener('click', () => {
+            
+            // دکمه بعداً (انصراف)
+            btnClose.addEventListener('click', (e) => {
+                e.stopPropagation(); // جلوگیری از تداخل کلیک (رفع باگ نمایش پیام اشتباه)
+                console.log("🔴 دکمه انصراف (بعداً) کلیک شد.");
+                
                 const oneDayInMs = 24 * 60 * 60 * 1000;
                 localStorage.setItem('block_install_banner_until', (Date.now() + oneDayInMs).toString());
                 hideInstallBanner(banner);
                 showToast("⏳ پیشنهاد نصب برای ۲۴ ساعت آینده غیرفعال شد.", "تنظیمات", "info");
             });
-
-            // ==========================================================
+            
             // منطق کشیدن به بیرون صفحه (Swipe to Dismiss)
-            // ==========================================================
             banner.addEventListener('touchstart', (e) => {
                 startY = e.touches[0].clientY;
                 isDragging = true;
                 banner.style.transition = 'none';
                 if (autoHideTimer) clearTimeout(autoHideTimer);
             }, { passive: true });
-
+            
             banner.addEventListener('touchmove', (e) => {
                 if (!isDragging) return;
                 currentY = e.touches[0].clientY;
@@ -2509,13 +2509,14 @@ Object.keys(groupInfo).forEach(groupId => {
                     banner.style.opacity = Math.max(0, 1 - (diff / 150));
                 }
             }, { passive: true });
-
+            
             banner.addEventListener('touchend', () => {
                 if (!isDragging) return;
                 isDragging = false;
                 const diff = currentY - startY;
-
+                
                 if (diff > 100) {
+                    console.log("👆 بنر با کشیدن بسته شد.");
                     hideInstallBanner(banner);
                 } else {
                     banner.style.transition = 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease';
@@ -2525,7 +2526,7 @@ Object.keys(groupInfo).forEach(groupId => {
                 }
             });
         }
-
+        
         function showInstallBannerUI(banner) {
             banner.classList.remove('pointer-events-none', 'translate-y-20', 'opacity-0');
             banner.classList.add('translate-y-0', 'opacity-100');
@@ -2534,14 +2535,14 @@ Object.keys(groupInfo).forEach(groupId => {
             banner.style.transition = 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease';
             startAutoHideTimer(banner);
         }
-
+        
         function startAutoHideTimer(banner) {
             if (autoHideTimer) clearTimeout(autoHideTimer);
             autoHideTimer = setTimeout(() => {
                 hideInstallBanner(banner);
             }, 8000);
         }
-
+        
         function hideInstallBanner(banner) {
             if (autoHideTimer) clearTimeout(autoHideTimer);
             banner.style.transition = 'transform 0.4s ease, opacity 0.4s ease';
