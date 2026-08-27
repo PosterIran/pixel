@@ -2395,207 +2395,104 @@ Object.keys(groupInfo).forEach(groupId => {
                 chatBody.scrollTop = chatBody.scrollHeight;
             }, 1000);
         }
-// ====================================================
-// مدیریت کامل نصب PWA
-// ====================================================
 
-let deferredPrompt = null;
+        // === PWA مدیریت نصب ===
+        let deferredPrompt = null;
 
-function setupInstallBanner() {
+        function setupInstallBanner() {
+            const banner = document.getElementById('install-banner');
+            const btnInstall = document.getElementById('btnInstall');
+            const btnClose = document.getElementById('btnClose');
 
-    const banner = document.getElementById('install-banner');
-    const btnInstall = document.getElementById('btnInstall');
-    const btnClose = document.getElementById('btnClose');
+            if (!banner || !btnInstall || !btnClose) return;
 
-    if (!banner || !btnInstall || !btnClose) return;
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
-    // تشخیص آیفون / آیپد
-    const isIOS =
-        /iPad|iPhone|iPod/.test(navigator.userAgent) &&
-        !window.MSStream;
-
-    // تشخیص اینکه برنامه قبلاً به صورت PWA نصب شده است
-    const isRunningStandalone =
-        window.matchMedia('(display-mode: standalone)').matches ||
-        window.navigator.standalone === true;
-
-    // اگر برنامه نصب شده است، بنر نصب نشان داده نشود
-    if (isRunningStandalone) {
-        localStorage.setItem('pwa_installed', 'true');
-        hideInstallBanner();
-        return;
-    }
-
-    // دریافت درخواست نصب از مرورگر
-    window.addEventListener('beforeinstallprompt', (e) => {
-
-        e.preventDefault();
-
-        deferredPrompt = e;
-
-        localStorage.removeItem('pwa_installed');
-
-        // اگر کاربر قبلاً بنر را بسته باشد،
-        // تا 24 ساعت دوباره نمایش داده نشود
-        const blockInstallBanner =
-            localStorage.getItem('block_install_banner_until');
-
-        if (
-            blockInstallBanner &&
-            Date.now() < Number(blockInstallBanner)
-        ) {
-            return;
-        }
-
-        // کمی تأخیر برای نمایش بهتر بنر
-        setTimeout(() => {
-
-            banner.classList.remove(
-                'pointer-events-none',
-                'translate-y-20',
-                'opacity-0'
-            );
-
-            banner.classList.add(
-                'translate-y-0',
-                'opacity-100'
-            );
-            // محو شدن خودکار بنر بعد از ۸ ثانیه
-    setTimeout(() => {
-        hideInstallBanner();
-    }, 8000);
-
-        }, 2000);
-    });
-
-    // تشخیص نصب موفق
-    window.addEventListener('appinstalled', () => {
-
-        localStorage.setItem(
-            'pwa_installed',
-            'true'
-        );
-
-        deferredPrompt = null;
-
-        hideInstallBanner();
-
-        showToast(
-            "🎉 اپلیکیشن پوستر ایران با موفقیت روی دستگاه شما نصب شد!",
-            "نصب موفق",
-            "success"
-        );
-    });
-
-    // دکمه نصب
-    btnInstall.addEventListener('click', async () => {
-
-        if (deferredPrompt) {
-
-            deferredPrompt.prompt();
-
-            try {
-
-                const { outcome } =
-                    await deferredPrompt.userChoice;
-
-                if (outcome === 'accepted') {
-
-                    localStorage.setItem(
-                        'pwa_installed',
-                        'true'
-                    );
-
-                    deferredPrompt = null;
-                }
-
-            } catch (err) {
-
-                console.error(
-                    "خطا در پذیرش نصب PWA:",
-                    err
-                );
+            const isRunningStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+            if (isRunningStandalone) {
+                localStorage.setItem('pwa_installed', 'true');
+                return; 
             }
 
-            hideInstallBanner();
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                
+                localStorage.removeItem('pwa_installed');
 
-        } else if (isIOS) {
+                const blockInstallBanner = localStorage.getItem('block_install_banner_until');
+                if (blockInstallBanner && Date.now() < Number(blockInstallBanner)) {
+                    return; 
+                }
 
-            // راهنمای نصب آیفون
-            hideInstallBanner();
+                setTimeout(() => {
+                    banner.classList.remove('pointer-events-none', 'translate-y-20', 'opacity-0');
+                    banner.classList.add('translate-y-0', 'opacity-100');
+                }, 2000);
+            });
 
-            showCustomConfirm(
-                "راهنمای نصب در آیفون (iOS)",
-                "برای نصب اپلیکیشن پوستر ایران در گوشی آیفون خود، روی دکمه Share (ارسال/اشتراک) در مرورگر سافاری ضربه بزنید و سپس گزینه Add to Home Screen (افزودن به صفحه اصلی) را انتخاب کنید.",
-                () => {},
-                "متوجه شدم",
-                "بستن",
-                "bg-blue-600 hover:bg-blue-700",
-                '<i class="fas fa-mobile-alt text-2xl"></i>',
-                "bg-blue-100 text-blue-600"
-            );
+            window.addEventListener('appinstalled', (evt) => {
+                localStorage.setItem('pwa_installed', 'true');
+                deferredPrompt = null;
+                hideInstallBanner();
+                showToast("🎉 اپلیکیشن پوستر ایران با موفقیت روی دستگاه شما نصب شد!", "نصب موفق", "success");
+            });
 
-        } else {
+            btnInstall.addEventListener('click', async () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    try {
+                        const { outcome } = await deferredPrompt.userChoice;
+                        if (outcome === 'accepted') {
+                            localStorage.setItem('pwa_installed', 'true');
+                            deferredPrompt = null;
+                        }
+                    } catch (err) {
+                        console.error("خطا در پذیرش نصب PWA:", err);
+                    }
+                    hideInstallBanner();
+                } else if (isIOS) {
+                    hideInstallBanner();
+                    showCustomConfirm(
+                        "راهنمای نصب در آیفون (iOS)",
+                        "برای نصب اپلیکیشن پوستر ایران در گوشی آیفون خود، روی دکمه Share (ارسال/اشتراک) در انتهای مرورگر سافاری ضربه بزنید و سپس گزینه Add to Home Screen (افزودن به صفحه اصلی) را انتخاب کنید.",
+                        () => {},
+                        "متوجه شدم",
+                        "بستن",
+                        "bg-blue-600 hover:bg-blue-700",
+                        '<i class="fas fa-mobile-alt text-2xl"></i>',
+                        "bg-blue-100 text-blue-600"
+                    );
+                } else {
+                    hideInstallBanner();
+                    showCustomConfirm(
+                        "راهنمای نصب وب‌اپلیکیشن",
+                        "در صورتی که برنامه قبلاً حذف شده باشد، سیستم‌عامل اندروید جهت مدیریت امنیت نیاز به تأیید مجدد دارد. لطفاً بر روی ۳ نقطه بالا سمت راست مرورگر خود ضربه بزنید و گزینه «Install app» یا «Add to Home screen» را لمس کنید تا نصب کامل انجام شود.",
+                        () => {},
+                        "متوجه شدم",
+                        "بستن",
+                        "bg-blue-600 hover:bg-blue-700",
+                        '<i class="fas fa-ellipsis-v text-2xl"></i>',
+                        "bg-blue-100 text-blue-600"
+                    );
+                }
+            });
 
-            // راهنمای نصب دستی اندروید
-            hideInstallBanner();
-
-            showCustomConfirm(
-                "راهنمای نصب وب‌اپلیکیشن",
-                "در صورتی که برنامه قبلاً حذف شده باشد، سیستم‌عامل اندروید جهت مدیریت امنیت نیاز به تأیید مجدد دارد. لطفاً بر روی ۳ نقطه بالا سمت راست مرورگر خود ضربه بزنید و گزینه «Install app» یا «Add to Home screen» را لمس کنید تا نصب کامل انجام شود.",
-                () => {},
-                "متوجه شدم",
-                "بستن",
-                "bg-blue-600 hover:bg-blue-700",
-                '<i class="fas fa-ellipsis-v text-2xl"></i>',
-                "bg-blue-100 text-blue-600"
-            );
+            btnClose.addEventListener('click', () => {
+                const oneDayInMs = 24 * 60 * 60 * 1000;
+                localStorage.setItem('block_install_banner_until', (Date.now() + oneDayInMs).toString());
+                hideInstallBanner();
+                showToast("⏳ پیشنهاد نصب برای ۲۴ ساعت آینده غیرفعال شد.", "نصب برنامه", "info");
+            });
         }
-    });
 
-    // بستن بنر نصب
-    btnClose.addEventListener('click', () => {
-
-        const oneDayInMs =
-            24 * 60 * 60 * 1000;
-
-        localStorage.setItem(
-            'block_install_banner_until',
-            (Date.now() + oneDayInMs).toString()
-        );
-
-        hideInstallBanner();
-
-        showToast(
-            "⏳ پیشنهاد نصب برای ۲۴ ساعت آینده غیرفعال شد.",
-            "نصب برنامه",
-            "info"
-        );
-    });
-}
-
-
-// مخفی کردن بنر نصب
-function hideInstallBanner() {
-
-    const banner =
-        document.getElementById('install-banner');
-
-    if (banner) {
-
-        banner.classList.remove(
-            'translate-y-0',
-            'opacity-100'
-        );
-
-        banner.classList.add(
-            'pointer-events-none',
-            'translate-y-20',
-            'opacity-0'
-        );
-    }
-}
-
+        function hideInstallBanner() {
+            const banner = document.getElementById('install-banner');
+            if (banner) {
+                banner.classList.remove('translate-y-0', 'opacity-100');
+                banner.classList.add('pointer-events-none', 'translate-y-20', 'opacity-0');
+            }
+        }
         // بارگذاری اولیه
         window.addEventListener('DOMContentLoaded', () => {
             loadCartFromStorage();
