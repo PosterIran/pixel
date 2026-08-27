@@ -2395,8 +2395,12 @@ Object.keys(groupInfo).forEach(groupId => {
                 chatBody.scrollTop = chatBody.scrollHeight;
             }, 1000);
         }
-        // === مدیریت نصب PWA (نسخه نهایی با تایمر ۸ ثانیه و حفظ تاریخچه) ===
+        // === مدیریت نصب PWA (نسخه نهایی: تایمر ۸ ثانیه + قابلیت کشیدن به بیرون) ===
         let deferredPrompt = null;
+        let autoHideTimer = null;
+        let startY = 0;
+        let currentY = 0;
+        let isDragging = false;
         
         function setupInstallBanner() {
             const banner = document.getElementById('install-banner');
@@ -2416,32 +2420,24 @@ Object.keys(groupInfo).forEach(groupId => {
             window.addEventListener('beforeinstallprompt', (e) => {
                 e.preventDefault();
                 deferredPrompt = e;
-                
-                // اطمینان از پاک شدن فلگ نصب قبلی برای نمایش مجدد در صورت نیاز
                 localStorage.removeItem('pwa_installed');
                 
                 const blockInstallBanner = localStorage.getItem('block_install_banner_until');
                 if (blockInstallBanner && Date.now() < Number(blockInstallBanner)) {
-                    return; // اگر در بازه ۲۴ ساعته هستیم، نمایش نده
+                    return;
                 }
                 
+                // نمایش بنر
                 setTimeout(() => {
-                    banner.classList.remove('pointer-events-none', 'translate-y-20', 'opacity-0');
-                    banner.classList.add('translate-y-0', 'opacity-100');
-                    
-                    // ⏱️ اضافه شده: محو شدن خودکار و نرم بنر بعد از ۸ ثانیه
-                    setTimeout(() => {
-                        hideInstallBanner();
-                    }, 8000);
-                    
+                    showInstallBannerUI(banner);
                 }, 2000);
             });
             
             window.addEventListener('appinstalled', (evt) => {
                 localStorage.setItem('pwa_installed', 'true');
                 deferredPrompt = null;
-                hideInstallBanner();
-                showToast("🎉 اپلیکیشن پوستر ایران با موفقیت روی دستگاه شما نصب شد!", "نصب موفق", "success");
+                hideInstallBanner(banner);
+                showToast("🎉 اپلیکیشن پوستر ایران با موفقیت نصب شد!", "نصب موفق", "success");
             });
             
             btnInstall.addEventListener('click', async () => {
@@ -2459,39 +2455,100 @@ Object.keys(groupInfo).forEach(groupId => {
                     } catch (err) {
                         console.error("خطا در پذیرش نصب PWA:", err);
                     }
-                    hideInstallBanner();
+                    hideInstallBanner(banner);
                 } else if (isIOS) {
-                    hideInstallBanner();
-                    showCustomConfirm(
-                        "راهنمای نصب در آیفون (iOS)",
-                        "برای نصب اپلیکیشن پوستر ایران، روی دکمه Share (مربع با فلش رو به بالا) در انتهای مرورگر سافاری ضربه بزنید و گزینه Add to Home Screen را انتخاب کنید.",
-                        () => {}, "متوجه شدم", "بستن", "bg-blue-600 hover:bg-blue-700", '<i class="fas fa-mobile-alt text-2xl"></i>', "bg-blue-100 text-blue-600"
-                    );
+                    hideInstallBanner(banner);
+                    showCustomConfirm("راهنمای نصب در آیفون (iOS)", "برای نصب، روی دکمه Share (مربع با فلش رو به بالا) در انتهای مرورگر سافاری ضربه بزنید و Add to Home Screen را انتخاب کنید.", () => {}, "متوجه شدم", "بستن", "bg-blue-600 hover:bg-blue-700", '<i class="fas fa-mobile-alt text-2xl"></i>', "bg-blue-100 text-blue-600");
                 } else {
-                    hideInstallBanner();
-                    showCustomConfirm(
-                        "راهنمای نصب وب‌اپلیکیشن",
-                        "لطفاً بر روی ۳ نقطه بالا سمت راست مرورگر خود ضربه بزنید و گزینه «Install app» یا «Add to Home screen» را لمس کنید.",
-                        () => {}, "متوجه شدم", "بستن", "bg-blue-600 hover:bg-blue-700", '<i class="fas fa-ellipsis-v text-2xl"></i>', "bg-blue-100 text-blue-600"
-                    );
+                    hideInstallBanner(banner);
+                    showCustomConfirm("راهنمای نصب وب‌اپلیکیشن", "لطفاً بر روی ۳ نقطه بالا سمت راست مرورگر خود ضربه بزنید و گزینه «Install app» یا «Add to Home screen» را لمس کنید.", () => {}, "متوجه شدم", "بستن", "bg-blue-600 hover:bg-blue-700", '<i class="fas fa-ellipsis-v text-2xl"></i>', "bg-blue-100 text-blue-600");
                 }
             });
             
             btnClose.addEventListener('click', () => {
-                const oneDayInMs = 24 * 60 * 60 * 1000; // ۲۴ ساعت
+                const oneDayInMs = 24 * 60 * 60 * 1000;
                 localStorage.setItem('block_install_banner_until', (Date.now() + oneDayInMs).toString());
-                hideInstallBanner();
+                hideInstallBanner(banner);
                 showToast("⏳ پیشنهاد نصب برای ۲۴ ساعت آینده غیرفعال شد.", "تنظیمات", "info");
+            });
+            
+            // ==========================================================
+            // منطق کشیدن به بیرون صفحه (Swipe to Dismiss)
+            // ==========================================================
+            banner.addEventListener('touchstart', (e) => {
+                startY = e.touches[0].clientY;
+                isDragging = true;
+                // حذف انیمیشن برای دنبال کردن روان انگشت
+                banner.style.transition = 'none';
+                // متوقف کردن تایمر ۸ ثانیه اگر کاربر شروع به لمس کرد
+                if (autoHideTimer) clearTimeout(autoHideTimer);
+            }, { passive: true });
+            
+            banner.addEventListener('touchmove', (e) => {
+                if (!isDragging) return;
+                currentY = e.touches[0].clientY;
+                const diff = currentY - startY;
+                
+                // فقط اجازه کشیدن به سمت پایین (مثبت) را می‌دهیم
+                if (diff > 0) {
+                    banner.style.transform = `translateY(${diff}px)`;
+                    // کاهش شفافیت همزمان با کشیدن به پایین
+                    banner.style.opacity = Math.max(0, 1 - (diff / 150));
+                }
+            }, { passive: true });
+            
+            banner.addEventListener('touchend', () => {
+                if (!isDragging) return;
+                isDragging = false;
+                const diff = currentY - startY;
+                
+                // اگر بیشتر از ۸۰ پیکسل به پایین کشیده شد، بنر را ببند
+                if (diff > 80) {
+                    hideInstallBanner(banner);
+                } else {
+                    // در غیر این صورت، بنر به جای خود برگردد (Snap Back)
+                    banner.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease';
+                    banner.style.transform = 'translateY(0)';
+                    banner.style.opacity = '1';
+                    // شروع مجدد تایمر ۸ ثانیه
+                    startAutoHideTimer(banner);
+                }
             });
         }
         
-        function hideInstallBanner() {
-            const banner = document.getElementById('install-banner');
-            if (banner) {
-                banner.classList.remove('translate-y-0', 'opacity-100');
-                banner.classList.add('pointer-events-none', 'translate-y-20', 'opacity-0');
-            }
-        }ارگذاری اولیه
+        // تابع کمکی برای نمایش بنر و شروع تایمر
+        function showInstallBannerUI(banner) {
+            banner.classList.remove('pointer-events-none', 'translate-y-20', 'opacity-0');
+            banner.classList.add('translate-y-0', 'opacity-100');
+            banner.style.transform = ''; // پاک کردن استایل‌های اینلاین قبلی
+            banner.style.opacity = '';
+            banner.style.transition = 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease';
+            
+            startAutoHideTimer(banner);
+        }
+        
+        // تابع کمکی برای تایمر ۸ ثانیه
+        function startAutoHideTimer(banner) {
+            if (autoHideTimer) clearTimeout(autoHideTimer);
+            autoHideTimer = setTimeout(() => {
+                hideInstallBanner(banner);
+            }, 8000);
+        }
+        
+        // تابع نهایی مخفی کردن بنر
+        function hideInstallBanner(banner) {
+            if (autoHideTimer) clearTimeout(autoHideTimer);
+            banner.style.transition = 'transform 0.4s ease, opacity 0.4s ease';
+            banner.classList.remove('translate-y-0', 'opacity-100');
+            banner.classList.add('pointer-events-none', 'translate-y-20', 'opacity-0');
+            
+            // پاک کردن استایل‌های اینلاین بعد از اتمام انیمیشن
+            setTimeout(() => {
+                banner.style.transform = '';
+                banner.style.opacity = '';
+            }, 400);
+        }
+        // بارگذاری اولیه
         window.addEventListener('DOMContentLoaded', () => {
             loadCartFromStorage();
             loadCustomerData();
