@@ -2402,51 +2402,61 @@ Object.keys(groupInfo).forEach(groupId => {
                 chatBody.scrollTop = chatBody.scrollHeight;
             }, 1000);
         }
-                // === مدیریت نصب PWA (نسخه نهایی و بدون باگ: تایمر ۸ ثانیه + Swipe) ===
+                // === مدیریت نصب        // === مدیریت هوشمند نصب PWA (تشخیص خودکار نصب/حذف + تایمر ۸ ثانیه + Swipe) ===
         let deferredPrompt = null;
         let autoHideTimer = null;
         let startY = 0;
         let currentY = 0;
         let isDragging = false;
-        
+
         function setupInstallBanner() {
             const banner = document.getElementById('install-banner');
             const btnInstall = document.getElementById('btnInstall');
             const btnClose = document.getElementById('btnClose');
-            
+
             if (!banner || !btnInstall || !btnClose) return;
-            
+
             const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            
+            // ۱. تشخیص هوشمند: آیا برنامه همین الان به صورت اپلیکیشن (Standalone) در حال اجراست؟
             const isRunningStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-            
+
             if (isRunningStandalone) {
+                // اگر بله، یعنی نصب است. پرچم را ثبت کن و خارج شو.
                 localStorage.setItem('pwa_installed', 'true');
-                return;
+                return; 
+            } else {
+                // ۲. اگر خیر (یعنی داخل مرورگر هستیم)، هرگونه حافظه قدیمی از نصب قبلی را پاک کن
+                // این خط تضمین می‌کند که اگر کاربر برنامه را پاک کرده، سیستم اجازه نصب مجدد را بدهد.
+                localStorage.removeItem('pwa_installed');
             }
-            
+
+            // ۳. گوش دادن به رویداد نصب مرورگر
             window.addEventListener('beforeinstallprompt', (e) => {
                 e.preventDefault();
                 deferredPrompt = e;
-                localStorage.removeItem('pwa_installed');
-                
+
+                // بررسی قانون ۲۴ ساعت: اگر کاربر قبلاً "بعداً" را زده، هنوز نشان نده
                 const blockInstallBanner = localStorage.getItem('block_install_banner_until');
                 if (blockInstallBanner && Date.now() < Number(blockInstallBanner)) {
-                    return;
+                    return; 
                 }
-                
+
                 // نمایش بنر با تاخیر ۲ ثانیه
                 setTimeout(() => {
                     showInstallBannerUI(banner);
                 }, 2000);
             });
-            
+
+            // ۴. وقتی نصب با موفقیت توسط سیستم عامل انجام شد
             window.addEventListener('appinstalled', () => {
                 localStorage.setItem('pwa_installed', 'true');
                 deferredPrompt = null;
                 hideInstallBanner(banner);
                 showToast("🎉 اپلیکیشن پوستر ایران با موفقیت نصب شد!", "نصب موفق", "success");
             });
-            
+
+            // ۵. دکمه نصب سریع
             btnInstall.addEventListener('click', async () => {
                 if (deferredPrompt) {
                     deferredPrompt.prompt();
@@ -2471,83 +2481,72 @@ Object.keys(groupInfo).forEach(groupId => {
                     showCustomConfirm("راهنمای نصب وب‌اپلیکیشن", "لطفاً بر روی ۳ نقطه بالا سمت راست مرورگر خود ضربه بزنید و گزینه «Install app» یا «Add to Home screen» را لمس کنید.", () => {}, "متوجه شدم", "بستن", "bg-blue-600 hover:bg-blue-700", '<i class="fas fa-ellipsis-v text-2xl"></i>', "bg-blue-100 text-blue-600");
                 }
             });
-            
+
+            // ۶. دکمه بعداً (انصراف)
             btnClose.addEventListener('click', () => {
                 const oneDayInMs = 24 * 60 * 60 * 1000;
                 localStorage.setItem('block_install_banner_until', (Date.now() + oneDayInMs).toString());
                 hideInstallBanner(banner);
                 showToast("⏳ پیشنهاد نصب برای ۲۴ ساعت آینده غیرفعال شد.", "تنظیمات", "info");
             });
-            
+
             // ==========================================================
-            // منطق کشیدن به بیرون صفحه (Swipe to Dismiss) - بهینه‌شده
+            // منطق کشیدن به بیرون صفحه (Swipe to Dismiss)
             // ==========================================================
             banner.addEventListener('touchstart', (e) => {
                 startY = e.touches[0].clientY;
                 isDragging = true;
-                banner.style.transition = 'none'; // حذف انیمیشن برای حرکت روان و لحظه‌ای با انگشت
-                if (autoHideTimer) clearTimeout(autoHideTimer); // توقف تایمر ۸ ثانیه هنگام لمس
+                banner.style.transition = 'none';
+                if (autoHideTimer) clearTimeout(autoHideTimer);
             }, { passive: true });
-            
+
             banner.addEventListener('touchmove', (e) => {
                 if (!isDragging) return;
                 currentY = e.touches[0].clientY;
                 const diff = currentY - startY;
-                
-                // فقط اجازه کشیدن به سمت پایین (مقادیر مثبت) را می‌دهیم
                 if (diff > 0) {
                     banner.style.transform = `translateY(${diff}px)`;
-                    banner.style.opacity = Math.max(0, 1 - (diff / 150)); // کمرنگ شدن همزمان با کشیدن
+                    banner.style.opacity = Math.max(0, 1 - (diff / 150));
                 }
             }, { passive: true });
-            
+
             banner.addEventListener('touchend', () => {
                 if (!isDragging) return;
                 isDragging = false;
                 const diff = currentY - startY;
-                
-                // اگر بیشتر از ۱۰۰ پیکسل به پایین کشیده شد، بنر را ببند
+
                 if (diff > 100) {
                     hideInstallBanner(banner);
                 } else {
-                    // در غیر این صورت، بنر با انیمیشن فنری به جای خود برگردد (Snap Back)
                     banner.style.transition = 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease';
                     banner.style.transform = 'translateY(0)';
                     banner.style.opacity = '1';
-                    startAutoHideTimer(banner); // شروع مجدد تایمر ۸ ثانیه
+                    startAutoHideTimer(banner);
                 }
             });
         }
-        
-        // تابع کمکی برای نمایش بنر و شروع تایمر
+
         function showInstallBannerUI(banner) {
             banner.classList.remove('pointer-events-none', 'translate-y-20', 'opacity-0');
             banner.classList.add('translate-y-0', 'opacity-100');
-            
-            // ریست کردن استایل‌های اینلاین برای اطمینان از عملکرد صحیح کلاس‌های CSS
             banner.style.transform = '';
             banner.style.opacity = '';
             banner.style.transition = 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease';
-            
             startAutoHideTimer(banner);
         }
-        
-        // تابع کمکی برای تایمر ۸ ثانیه
+
         function startAutoHideTimer(banner) {
             if (autoHideTimer) clearTimeout(autoHideTimer);
             autoHideTimer = setTimeout(() => {
                 hideInstallBanner(banner);
-            }, 8000); // دقیقاً ۸۰۰۰ میلی‌ثانیه (۸ ثانیه)
+            }, 8000);
         }
-        
-        // تابع نهایی مخفی کردن بنر
+
         function hideInstallBanner(banner) {
             if (autoHideTimer) clearTimeout(autoHideTimer);
             banner.style.transition = 'transform 0.4s ease, opacity 0.4s ease';
             banner.classList.remove('translate-y-0', 'opacity-100');
             banner.classList.add('pointer-events-none', 'translate-y-20', 'opacity-0');
-            
-            // پاک کردن استایل‌های اینلاین بعد از اتمام انیمیشن برای جلوگیری از تداخل بعدی
             setTimeout(() => {
                 banner.style.transform = '';
                 banner.style.opacity = '';
