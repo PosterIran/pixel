@@ -2443,13 +2443,7 @@ Object.keys(groupInfo).forEach(groupId => {
                 }, 2000);
             });
             
-            window.addEventListener('appinstalled', () => {
-                console.log("🎉 رویداد appinstalled توسط مرورگر تأیید شد.");
-                localStorage.setItem('pwa_installed', 'true');
-                deferredPrompt = null;
-                hideInstallBanner(banner);
-                showToast("🎉 اپلیکیشن پوستر ایران با موفقیت نصب شد!", "نصب موفق", "success");
-            });
+           
             
             // دکمه نصب سریع
             btnInstall.addEventListener('click', async (e) => {
@@ -2464,7 +2458,7 @@ Object.keys(groupInfo).forEach(groupId => {
                         if (outcome === 'accepted') {
                             localStorage.setItem('pwa_installed', 'true');
                             deferredPrompt = null;
-                            showToast("✨ عالی است! تجربه‌ای سریع‌تر در انتظار شماست.", "نصب", "success");
+                            showToast("✨ عالی است! تجربه‌ای سریع‌تر و آفلاین در انتظار شماست.", "نصب", "success");
                         } else {
                             showToast("عملیات نصب لغو شد.", "نصب", "info");
                         }
