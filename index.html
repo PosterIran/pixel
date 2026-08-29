@@ -3,45 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>پوستر ایران | فروشگاه پوسترهای آموزشی</title>
-    <!-- توضیحات متا برای سئو و اشتراک‌گذاری بهتر -->
-    <meta name="description" content="فروشگاه تخصصی پوسترهای آموزشی، فلش کارت و لوازم کمک آموزشی مدارس با ارسال به سراسر کشور">
+    <title>پوستر ایران | فروشگاه پوسترهای آموزشی</title>
     <!-- ۱. اتصال به شناسنامه اپلیکیشن (Manifest) -->
     <link rel="manifest" href="manifest.json">
     <!-- رنگ نوار بالای گوشی اندروید -->
     <meta name="theme-color" content="#1e40af">
     <!-- تنظیمات برای نمایش بهتر در موبایل -->
     <meta name="apple-mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <!-- آیکون مخصوص صفحه اصلی آیفون -->
-    <link rel="apple-touch-icon" href="./icons/icon-192x192.png">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
     <!-- ۲. اتصال به استایل‌ها (CSS) همراه با Cache-Busting جهت هماهنگی با آپدیت‌ها -->
-    <link rel="stylesheet" href="./css/style.css?v=2.1.1">
+    <link rel="stylesheet" href="./css/style.css?v=2.1.4">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /* ===== حالت مقاوم در برابر قطعی/ضعف اینترنت ===== */
-        /* این قوانین عمداً inline هستند تا حتی اگر Tailwind/Font Awesome/فونت خارجی لود نشوند،
-           اندازه و چیدمان عناصر حیاتی از بین نرود. */
-        html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
-        *, *::before, *::after { box-sizing: border-box; }
-        img { max-width: 100%; height: auto; }
-        header img.logo-img { width: 40px !important; height: 40px !important; object-fit: contain !important; flex: 0 0 40px; }
-        #install-banner img { width: 48px !important; height: 48px !important; max-width: 48px !important; object-fit: contain !important; display: block !important; }
-        .hidden-section { display: none !important; }
-        #offlineOverlay.hidden-offline { display: none !important; }
-        #offlineOverlay { box-sizing: border-box; }
-        .hero-gradient { min-width: 0; }
-        #imagesContainer { min-width: 0; }
-        #imagesContainer img { max-width: 100% !important; }
-        nav { max-width: 100vw; }
-        button, input, select, textarea { font-family: inherit; }
-        /* جلوگیری از کشیده‌شدن تصاویر خراب در صورت نبود CSS خارجی */
-        img[width][height] { height: auto; }
-
     /* بزرگتر کردن کلی تمام فونت‌های بخش سبد خرید */
     #cartScreen {
         font-size: 1.05rem !important; /* یا 18px */
@@ -496,13 +473,6 @@
         transform: translateX(-50%) translateY(5px);
     }
 }
-        /* =========================================================
-           تنظیمات حیاتی برای کشیدن بنر نصب (Swipe to Dismiss)
-           ========================================================= */
-        #install-banner {
-            touch-action: none; /* جلوگیری از اسکرول صفحه هنگام لمس بنر */
-            will-change: transform, opacity; /* بهینه‌سازی عملکرد انیمیشن در موبایل */
-        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-900 pb-28">
@@ -539,7 +509,7 @@
     <header class="absolute w-full right-0 left-0 top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center gap-2 cursor-pointer" onclick="showScreen('home')">
-                <img src="./icons/logo.png" alt="Logo" class="h-10 w-10 logo-img" width="40" height="40" style="width:40px;height:40px;object-fit:contain;flex:0 0 40px;">
+                <img src="https://PosterIran.github.io/pixel/icons/logo.png" alt="Logo" class="h-10 w-10 logo-img" width="40" height="40">
                 <span class="text-xl font-black text-blue-900">پوستر ایران</span>
             </div>
             
@@ -699,6 +669,7 @@
                             <i class="fas fa-th-large text-indigo-600 text-base ml-3"></i>
                             <select id="groupSelect" onchange="loadImages(true)" class="w-full py-4 pr-1 pl-10 bg-transparent font-black text-blue-900 outline-none cursor-pointer appearance-none text-sm transition-all">
                                 <option value="1"> سایز ۲۹×۲۱ (دوروچاپ)</option>
+                                <option value="2"> سایز ۴۲×۳۰ (یکروچاپ)</option>
                                 <option value="3"> سایز ۵۰×۳۵ (دوروچاپ)</option>
                                 <option value="4">️ سایز ۷۰×۵۰ (یکروچاپ)</option>
                                 <option value="5"> سایز ۷۰×۵۰ (یووی‌دار)</option>
@@ -804,7 +775,7 @@
                 <p class="text-gray-700 leading-8 mb-6 text-justify">"پوستر ایران" همواره در تلاش است تا با نوآوری و پایبندی به اصول آموزشی، نقش مؤثری در ارتقاء سطح آموزش ایفا کند.</p>
                 <div class="space-y-4 text-gray-600">
                     <p>آدرس ما : تهران ، خیابان پانزده خرداد ، بازار آهنگران ، کوچه مسجدجامع ، پاساژ کاغذوتحریر، زیرزمن اول ، پلاک ۷۴</p>
-                    <p> <a href="https://maps.google.com/?cid=1396884775989221050&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNl" target="_blank" rel="noopener noreferrer" class="text-blue-500 font-bold hover:underline"> (مشاهده در نقشه)</a></p>
+                    <p> <a href="https://maps.google.com/?cid=1396884775989221050&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNl" target="_blank" class="text-blue-500 font-bold hover:underline">  (مشاهده در نقشه)</a></p>
                 
                     <!-- افزودن قابلیت شماره‌گیری مستقیم با لمس شماره‌ها -->
                     <p>📞 تلفن: <a href="tel:02155611875" class="text-blue-600 font-bold hover:text-blue-800 hover:underline transition-colors">۰۲۱۵۵۶۱۱۸۷۵</a></p>
@@ -890,7 +861,7 @@
     <div id="install-banner" class="fixed bottom-24 left-4 right-4 md:left-auto md:right-4 md:max-w-sm z-[9999] p-5 rounded-3xl border border-white/30 bg-white/80 backdrop-blur-xl shadow-2xl flex flex-col gap-4 transform translate-y-20 opacity-0 pointer-events-none transition-all duration-700">
         <div class="flex items-start gap-3">
             <div class="w-12 h-12 rounded-2xl bg-white border border-blue-100 flex items-center justify-center p-1 shadow-md shrink-0">
-                <img src="./icons/logo.png" alt="پوستر ایران" class="w-full h-full object-contain" width="48" height="48" style="width:48px;height:48px;object-fit:contain;display:block;">
+                <img src="https://PosterIran.github.io/pixel/icons/logo.png" alt="پوستر ایران" class="w-full h-full object-contain">
             </div>
             <div>
                 <h4 class="font-bold text-sm text-gray-900 leading-tight">پوستر ایران را نصب کنید!</h4>
@@ -1094,6 +1065,12 @@
                 { filename: "جدول تناوبی عناصر.jpg", name: "جدول تناوبی عناصر", price: 300000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: true },
                 { filename: "الفبای فارسی و انگلیسی.jpg", name: "الفبای فارسی و انگلیسی", price: 300000, allowedQuantities: [0, 50, 100], outOfStock: true },
             ]},
+            2: { name: "سایز ۴۲×۳۰ یکروچاپ", images: [
+                { filename: "جدول ضرب.jpg", name: "جدول ضرب", price: 300000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: true },
+                { filename: "جدول ضرب حیوانات.jpg", name: "جدول ضرب حیوانات", price: 300000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: true },
+                { filename: "جدول دوستی کامل.jpg", name: "جدول دوستی کامل", price: 300000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: true },
+                { filename: "الفبای فارسی.jpg", name: "الفبای فارسی", price: 300000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: true },
+            ]},
             3: { name: "سایز ۵۰×۳۵ دوروچاپ", images: [
                 { filename: "آموزش زمان و ساعت.jpg", name: "آموزش زمان و ساعت", price: 600000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false },
                 { filename: "ضرب و تقسیم تمرینی.jpg", name: "ضرب و تقسیم تمرینی", price: 600000, allowedQuantities: [0, 50, 100, 200, 300, 400, 500], outOfStock: false },
@@ -1138,7 +1115,7 @@
                 { filename: "فلش کارت اعداد.jpg", name: "فلش کارت اعداد", price: 700000, allowedQuantities: [0, 60, 120, 240, 480], outOfStock: false },
                 { filename: "فلش کارت نگاره ها و نشانه ها.jpg", name: "فلش کارت نگاره‌ها و نشانه‌ها", price: 700000, allowedQuantities: [0, 60, 120, 240, 480], outOfStock: false },
                 { filename: "فلش کارت الفبا.jpg", name: "فلش کارت الفبا", price: 600000, allowedQuantities: [0], outOfStock: true },
-                { filename: "استیکر A4.jpg", name: "استیکر A4", price: 200000, allowedQuantities: [0, 100, 200, 300, 400, 500, 1200, 2400], outOfStock: false },
+                { filename: "استیکر A4.jpg", name: "استیکر A4", price: 250000, allowedQuantities: [0, 100, 200, 300, 400, 500, 1200, 2400], outOfStock: false },
             ]}
         };
 
@@ -1640,7 +1617,7 @@
             htmlContent += `</div></div>`;
             
             let total_f = total;
-            let discountPercent = (total_f >= 1000000000) ? 0.0 : (total_f >= 700000000 ? 0.00 : (total_f >= 500000000 ? 0.00 : 0));
+            let discountPercent = (total_f >= 1000000000) ? 0.1 : (total_f >= 700000000 ? 0.00 : (total_f >= 500000000 ? 0.00 : 0));
             let discount = total_f * discountPercent;
             let afterDiscount = total_f - discount;
             let packageCount = Math.floor(afterDiscount / 200000000) + 1;
@@ -1842,7 +1819,7 @@
             });
 
             let total_f = total;
-            let discountPercent = (total_f >= 1000000000) ? 0.0 : 0;
+            let discountPercent = (total_f >= 1000000000) ? 0.1 : 0;
             let discount = total_f * discountPercent;
             let afterDiscount = total_f - discount;
             let packageCount = Math.floor(afterDiscount / 200000000) + 1;
@@ -2402,148 +2379,207 @@ Object.keys(groupInfo).forEach(groupId => {
                 chatBody.scrollTop = chatBody.scrollHeight;
             }, 1000);
         }
-                    // === مدیریت هوشمند نصب PWA (نسخه ضدگلوله با رفع باگ تداخل کلیک) ===
-        let deferredPrompt = null;
-        let autoHideTimer = null;
-        let startY = 0;
-        let currentY = 0;
-        let isDragging = false;
-        
-        function setupInstallBanner() {
-            const banner = document.getElementById('install-banner');
-            const btnInstall = document.getElementById('btnInstall');
-            const btnClose = document.getElementById('btnClose');
-            
-            if (!banner || !btnInstall || !btnClose) return;
-            
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-            const isRunningStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-            
-            if (isRunningStandalone) {
-                localStorage.setItem('pwa_installed', 'true');
-                return;
-            } else {
-                // اگر در مرورگر هستیم، پرچم نصب قبلی را پاک کن تا اجازه نصب مجدد داده شود
-                localStorage.removeItem('pwa_installed');
+// ====================================================
+// مدیریت کامل نصب PWA
+// ====================================================
+
+let deferredPrompt = null;
+
+function setupInstallBanner() {
+
+    const banner = document.getElementById('install-banner');
+    const btnInstall = document.getElementById('btnInstall');
+    const btnClose = document.getElementById('btnClose');
+
+    if (!banner || !btnInstall || !btnClose) return;
+
+    // تشخیص آیفون / آیپد
+    const isIOS =
+        /iPad|iPhone|iPod/.test(navigator.userAgent) &&
+        !window.MSStream;
+
+    // تشخیص اینکه برنامه قبلاً به صورت PWA نصب شده است
+    const isRunningStandalone =
+        window.matchMedia('(display-mode: standalone)').matches ||
+        window.navigator.standalone === true;
+
+    // اگر برنامه نصب شده است، بنر نصب نشان داده نشود
+    if (isRunningStandalone) {
+        localStorage.setItem('pwa_installed', 'true');
+        hideInstallBanner();
+        return;
+    }
+
+    // دریافت درخواست نصب از مرورگر
+    window.addEventListener('beforeinstallprompt', (e) => {
+
+        e.preventDefault();
+
+        deferredPrompt = e;
+
+        localStorage.removeItem('pwa_installed');
+
+        // اگر کاربر قبلاً بنر را بسته باشد،
+        // تا 24 ساعت دوباره نمایش داده نشود
+        const blockInstallBanner =
+            localStorage.getItem('block_install_banner_until');
+
+        if (
+            blockInstallBanner &&
+            Date.now() < Number(blockInstallBanner)
+        ) {
+            return;
+        }
+
+        // کمی تأخیر برای نمایش بهتر بنر
+        setTimeout(() => {
+
+            banner.classList.remove(
+                'pointer-events-none',
+                'translate-y-20',
+                'opacity-0'
+            );
+
+            banner.classList.add(
+                'translate-y-0',
+                'opacity-100'
+            );
+            // محو شدن خودکار بنر بعد از ۸ ثانیه
+    setTimeout(() => {
+        hideInstallBanner();
+    }, 8000);
+
+        }, 2000);
+    });
+
+    // تشخیص نصب موفق
+    window.addEventListener('appinstalled', () => {
+
+        localStorage.setItem(
+            'pwa_installed',
+            'true'
+        );
+
+        deferredPrompt = null;
+
+        hideInstallBanner();
+
+        showToast(
+            "🎉 اپلیکیشن پوستر ایران با موفقیت روی دستگاه شما نصب شد!",
+            "نصب موفق",
+            "success"
+        );
+    });
+
+    // دکمه نصب
+    btnInstall.addEventListener('click', async () => {
+
+        if (deferredPrompt) {
+
+            deferredPrompt.prompt();
+
+            try {
+
+                const { outcome } =
+                    await deferredPrompt.userChoice;
+
+                if (outcome === 'accepted') {
+
+                    localStorage.setItem(
+                        'pwa_installed',
+                        'true'
+                    );
+
+                    deferredPrompt = null;
+                }
+
+            } catch (err) {
+
+                console.error(
+                    "خطا در پذیرش نصب PWA:",
+                    err
+                );
             }
-            
-            window.addEventListener('beforeinstallprompt', (e) => {
-                e.preventDefault();
-                deferredPrompt = e;
-                console.log("✅ رویداد beforeinstallprompt دریافت شد.");
-                
-                const blockInstallBanner = localStorage.getItem('block_install_banner_until');
-                if (blockInstallBanner && Date.now() < Number(blockInstallBanner)) {
-                    console.log("⏳ بنر به دلیل قانون ۲۴ ساعت مسدود است.");
-                    return;
-                }
-                
-                setTimeout(() => {
-                    showInstallBannerUI(banner);
-                }, 2000);
-            });
-            // دکمه نصب سریع
-            btnInstall.addEventListener('click', async (e) => {
-                e.stopPropagation(); // جلوگیری از تداخل کلیک
-                console.log("🔵 دکمه نصب سریع کلیک شد.");
-                
-                if (deferredPrompt) {
-                    deferredPrompt.prompt();
-                    try {
-                        const { outcome } = await deferredPrompt.userChoice;
-                        console.log("نتیجه انتخاب کاربر:", outcome);
-                        if (outcome === 'accepted') {
-                            localStorage.setItem('pwa_installed', 'true');
-                            deferredPrompt = null;
-                            showToast("✨ عالی است! تجربه‌ای سریع‌تر در انتظار شماست.", "نصب", "success");
-                        } else {
-                            showToast("عملیات نصب لغو شد.", "نصب", "info");
-                        }
-                    } catch (err) {
-                        console.error("خطا در پذیرش نصب PWA:", err);
-                    }
-                    hideInstallBanner(banner);
-                } else if (isIOS) {
-                    hideInstallBanner(banner);
-                    showCustomConfirm("راهنمای نصب در آیفون (iOS)", "برای نصب، روی دکمه Share (مربع با فلش رو به بالا) در انتهای مرورگر سافاری ضربه بزنید و Add to Home Screen را انتخاب کنید.", () => {}, "متوجه شدم", "بستن", "bg-blue-600 hover:bg-blue-700", '<i class="fas fa-mobile-alt text-2xl"></i>', "bg-blue-100 text-blue-600");
-                } else {
-                    hideInstallBanner(banner);
-                    showCustomConfirm("راهنمای نصب وب‌اپلیکیشن", "لطفاً بر روی ۳ نقطه بالا سمت راست مرورگر خود ضربه بزنید و گزینه «Install app» یا «Add to Home screen» را لمس کنید.", () => {}, "متوجه شدم", "بستن", "bg-blue-600 hover:bg-blue-700", '<i class="fas fa-ellipsis-v text-2xl"></i>', "bg-blue-100 text-blue-600");
-                }
-            });
-            
-            // دکمه بعداً (انصراف)
-            btnClose.addEventListener('click', (e) => {
-                e.stopPropagation(); // جلوگیری از تداخل کلیک (رفع باگ نمایش پیام اشتباه)
-                console.log("🔴 دکمه انصراف (بعداً) کلیک شد.");
-                
-                const oneDayInMs = 24 * 60 * 60 * 1000;
-                localStorage.setItem('block_install_banner_until', (Date.now() + oneDayInMs).toString());
-                hideInstallBanner(banner);
-                showToast("⏳ پیشنهاد نصب برای ۲۴ ساعت آینده غیرفعال شد.", "تنظیمات", "info");
-            });
-            
-            // منطق کشیدن به بیرون صفحه (Swipe to Dismiss)
-            banner.addEventListener('touchstart', (e) => {
-                startY = e.touches[0].clientY;
-                isDragging = true;
-                banner.style.transition = 'none';
-                if (autoHideTimer) clearTimeout(autoHideTimer);
-            }, { passive: true });
-            
-            banner.addEventListener('touchmove', (e) => {
-                if (!isDragging) return;
-                currentY = e.touches[0].clientY;
-                const diff = currentY - startY;
-                if (diff > 0) {
-                    banner.style.transform = `translateY(${diff}px)`;
-                    banner.style.opacity = Math.max(0, 1 - (diff / 150));
-                }
-            }, { passive: true });
-            
-            banner.addEventListener('touchend', () => {
-                if (!isDragging) return;
-                isDragging = false;
-                const diff = currentY - startY;
-                
-                if (diff > 100) {
-                    console.log("👆 بنر با کشیدن بسته شد.");
-                    hideInstallBanner(banner);
-                } else {
-                    banner.style.transition = 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease';
-                    banner.style.transform = 'translateY(0)';
-                    banner.style.opacity = '1';
-                    startAutoHideTimer(banner);
-                }
-            });
+
+            hideInstallBanner();
+
+        } else if (isIOS) {
+
+            // راهنمای نصب آیفون
+            hideInstallBanner();
+
+            showCustomConfirm(
+                "راهنمای نصب در آیفون (iOS)",
+                "برای نصب اپلیکیشن پوستر ایران در گوشی آیفون خود، روی دکمه Share (ارسال/اشتراک) در مرورگر سافاری ضربه بزنید و سپس گزینه Add to Home Screen (افزودن به صفحه اصلی) را انتخاب کنید.",
+                () => {},
+                "متوجه شدم",
+                "بستن",
+                "bg-blue-600 hover:bg-blue-700",
+                '<i class="fas fa-mobile-alt text-2xl"></i>',
+                "bg-blue-100 text-blue-600"
+            );
+
+        } else {
+
+            // راهنمای نصب دستی اندروید
+            hideInstallBanner();
+
+            showCustomConfirm(
+                "راهنمای نصب وب‌اپلیکیشن",
+                "در صورتی که برنامه قبلاً حذف شده باشد، سیستم‌عامل اندروید جهت مدیریت امنیت نیاز به تأیید مجدد دارد. لطفاً بر روی ۳ نقطه بالا سمت راست مرورگر خود ضربه بزنید و گزینه «Install app» یا «Add to Home screen» را لمس کنید تا نصب کامل انجام شود.",
+                () => {},
+                "متوجه شدم",
+                "بستن",
+                "bg-blue-600 hover:bg-blue-700",
+                '<i class="fas fa-ellipsis-v text-2xl"></i>',
+                "bg-blue-100 text-blue-600"
+            );
         }
-        
-        function showInstallBannerUI(banner) {
-            banner.classList.remove('pointer-events-none', 'translate-y-20', 'opacity-0');
-            banner.classList.add('translate-y-0', 'opacity-100');
-            banner.style.transform = '';
-            banner.style.opacity = '';
-            banner.style.transition = 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease';
-            startAutoHideTimer(banner);
-        }
-        
-        function startAutoHideTimer(banner) {
-            if (autoHideTimer) clearTimeout(autoHideTimer);
-            autoHideTimer = setTimeout(() => {
-                hideInstallBanner(banner);
-            }, 8000);
-        }
-        
-        function hideInstallBanner(banner) {
-            if (autoHideTimer) clearTimeout(autoHideTimer);
-            banner.style.transition = 'transform 0.4s ease, opacity 0.4s ease';
-            banner.classList.remove('translate-y-0', 'opacity-100');
-            banner.classList.add('pointer-events-none', 'translate-y-20', 'opacity-0');
-            setTimeout(() => {
-                banner.style.transform = '';
-                banner.style.opacity = '';
-            }, 400);
-        }
+    });
+
+    // بستن بنر نصب
+    btnClose.addEventListener('click', () => {
+
+        const oneDayInMs =
+            24 * 60 * 60 * 1000;
+
+        localStorage.setItem(
+            'block_install_banner_until',
+            (Date.now() + oneDayInMs).toString()
+        );
+
+        hideInstallBanner();
+
+        showToast(
+            "⏳ پیشنهاد نصب برای ۲۴ ساعت آینده غیرفعال شد.",
+            "نصب برنامه",
+            "info"
+        );
+    });
+}
+
+
+// مخفی کردن بنر نصب
+function hideInstallBanner() {
+
+    const banner =
+        document.getElementById('install-banner');
+
+    if (banner) {
+
+        banner.classList.remove(
+            'translate-y-0',
+            'opacity-100'
+        );
+
+        banner.classList.add(
+            'pointer-events-none',
+            'translate-y-20',
+            'opacity-0'
+        );
+    }
+}
+
         // بارگذاری اولیه
         window.addEventListener('DOMContentLoaded', () => {
             loadCartFromStorage();
@@ -2780,15 +2816,17 @@ window.addEventListener('online', function () {
         offlineOverlay.classList.add('hidden-offline');
     }
 
-    // ۲. فقط منابع واقعاً خراب را دوباره امتحان کن.
-    //    Cache-busting برای همه CSS/تصاویر روی اینترنت ضعیف اشتباه است؛
-    //    چون cache مرورگر و Service Worker را دور می‌زند و درخواست تازه می‌سازد.
+    // ۲. بارگذاری مجدد فایل‌های CSS که لود نشده بودند
+    document.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
+        const href = link.href.split('?')[0];
+        link.href = href + '?reload=' + new Date().getTime();
+    });
+
+    // ۳. بارگذاری مجدد تصاویری که لود نشده بودند
     document.querySelectorAll('img').forEach(img => {
         if (!img.complete || img.naturalWidth === 0) {
-            const src = img.getAttribute('src');
-            if (src && !src.startsWith('data:')) {
-                img.src = src;
-            }
+            const src = img.src.split('?')[0];
+            img.src = src + '?reload=' + new Date().getTime();
         }
     });
 
@@ -2827,5 +2865,50 @@ function checkConnectionManually() {
     title="رفتن به دکمه‌های ارسال سفارش">
     ↓
 </button>
-</body>
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js').then((registration) => {
+          registration.onupdatefound = () => {
+            const meNewWorker = registration.installing;
+            meNewWorker.onstatechange = () => {
+              if (meNewWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                showUpdateBanner(registration);
+              }
+            };
+          };
+        });
+
+        let refreshing = false;
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          if (!refreshing) {
+            refreshing = true;
+            window.location.reload();
+          }
+        });
+      }
+
+      function showUpdateBanner(registration) {
+        const banner = document.createElement('div');
+        banner.style.cssText = `
+          position: fixed; bottom: 20px; right: 20px;
+          background: #1e293b; color: #fff; padding: 16px 24px;
+          border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+          z-index: 9999; display: flex; align-items: center; gap: 12px;
+        `;
+        banner.innerHTML = `
+          <span>نسخه جدید برنامه آماده است!</span>
+          <button id="reload-btn" style="background: #2563eb; color: #fff; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">
+            به‌روزرسانی
+          </button>
+        `;
+        document.body.appendChild(banner);
+
+        document.getElementById('reload-btn').addEventListener('click', () => {
+          if (registration.waiting) {
+            registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+          }
+        });
+      }
+    </script>
+  </body>
 </html>
