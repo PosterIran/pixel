@@ -1617,7 +1617,7 @@
             htmlContent += `</div></div>`;
             
             let total_f = total;
-            let discountPercent = (total_f >= 1000000000) ? 0.1 : (total_f >= 700000000 ? 0.00 : (total_f >= 500000000 ? 0.00 : 0));
+            let discountPercent = (total_f >= 1000000000) ? 0.0 : (total_f >= 700000000 ? 0.00 : (total_f >= 500000000 ? 0.00 : 0));
             let discount = total_f * discountPercent;
             let afterDiscount = total_f - discount;
             let packageCount = Math.floor(afterDiscount / 200000000) + 1;
@@ -1819,7 +1819,7 @@
             });
 
             let total_f = total;
-            let discountPercent = (total_f >= 1000000000) ? 0.1 : 0;
+            let discountPercent = (total_f >= 1000000000) ? 0.0 : 0;
             let discount = total_f * discountPercent;
             let afterDiscount = total_f - discount;
             let packageCount = Math.floor(afterDiscount / 200000000) + 1;
