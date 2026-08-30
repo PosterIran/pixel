@@ -13,7 +13,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
     <!-- ۲. اتصال به استایل‌ها (CSS) همراه با Cache-Busting جهت هماهنگی با آپدیت‌ها -->
-    <link rel="stylesheet" href="./css/style.css?v=2.1.6">
+    <link rel="stylesheet" href="./css/style.css?v=2.1.7">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -1850,17 +1850,21 @@ text += `\n✅ سفارش شما با موفقیت ثبت شد. در اسرع و
                 window.open(url, '_blank');
                 clearCartAfterOrder();
             } else if (platform === 'eitaa') {
-                copyToClipboard(text).then(() => {
-                    showToast('متن فاکتور در حافظه کپی شد. اکنون در ایتا پیست کنید.', 'ایتا', 'success');
-                    clearCartAfterOrder();
-                    setTimeout(() => {
-                        window.open(`https://eitaa.com/@PosterIran`, '_blank');
-                    }, 1200);
-                }).catch(err => {
-                    showToast('کپی متن ناموفق بود. لطفاً دستی اقدام نمایید.', 'خطا', 'error');
-                });
-            }
-        }
+  // روش اول: تلاش برای ارسال مستقیم متن به ایتا از طریق Protocol URL
+  const eitaaUrl = `https://eitaa.com/posteriran_admin`;
+  
+  // تلاش برای کپی کردن متن
+  copyToClipboard(invoiceText)
+    .then(() => {
+      showToast("متن فاکتور کپی شد! در پیام‌رسان ایتا Paste کنید", "ایتا", "info");
+      window.location.href = eitaaUrl; // باز کردن مستقیم بدون setTimeout برای جلوگیری از بلوک شدن
+    })
+    .catch(() => {
+      // اگر گوشی کپی خودکار را پشتیبانی نکرد، مستقیما ایتا باز شود
+      showToast("لطفاً متن فاکتور را دستی کپی کنید", "", "warning");
+      window.location.href = eitaaUrl;
+    });
+}
 
         /* ----------------------------------------------------
            توابع مدیریت کامل تاریخچه سفارشات (Order History System)
