@@ -2705,7 +2705,16 @@ function hideInstallBanner() {
                 );
 
                 // بررسی فوری برای نسخه جدید
-                registration.update();
+                ```js
+// بررسی فوری برای نسخه جدید
+registration.update();
+
+// بررسی مجدد نسخه جدید بعد از چند ثانیه
+setTimeout(function () {
+    registration.update();
+}, 3000);
+```
+
 
                 // اگر نسخه جدید قبلاً منتظر فعال شدن است
                 if (registration.waiting) {
