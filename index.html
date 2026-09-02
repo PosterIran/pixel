@@ -1113,7 +1113,7 @@
                 { filename: "دفترچه ای بزرگ دوستی.jpg", name: "دفترچه ای بزرگ دوستی", price: 750000, allowedQuantities: [0, 60, 120, 240, 480], outOfStock: false },
                 { filename: "دفترچه ای کوچک دوستی.jpg", name: "دفترچه ای کوچک دوستی", price: 600000, allowedQuantities: [0, 60, 120, 240, 480], outOfStock: false },
                 { filename: "فلش کارت اعداد.jpg", name: "فلش کارت اعداد", price: 700000, allowedQuantities: [0, 60, 120, 240, 480], outOfStock: false },
-                { filename: "فلش کارت نگاره ها و نشانه ها.jpg", name: "فلش کارت نگاره‌ها و نشانه‌ها", price: 700000, allowedQuantities: [0, 60, 120, 240, 480], outOfStock: false },
+                { filename: "فلش کارت نگاره ها و نشانه ها.jpg", name: "فلش کارت نگاره‌ها و نشانه‌ها", price: 700000, allowedQuantities: [0, 60, 120, 240, 480], outOfStock: true },
                 { filename: "فلش کارت الفبا.jpg", name: "فلش کارت الفبا", price: 600000, allowedQuantities: [0], outOfStock: true },
                 { filename: "استیکر A4.jpg", name: "استیکر A4", price: 200000, allowedQuantities: [0, 100, 200, 300, 400, 500, 1200, 2400], outOfStock: false },
             ]}
@@ -1738,6 +1738,89 @@
     
     return nextNumber;
 }
+// =========================================================
+// کنترل حداقل سفارش مجموع گروه‌های ۷۰×۵۰
+// گروه 4 = سایز ۷۰×۵۰ یکروچاپ
+// گروه 5 = سایز ۷۰×۵۰ یووی‌دار
+// =========================================================
+function check70x50MinimumOrder(platform) {
+
+    const group4Name = groupInfo[4].name;
+    const group5Name = groupInfo[5].name;
+
+    let total70x50Qty = 0;
+
+    Object.values(cart).forEach(item => {
+
+        if (
+            item.groupName === group4Name ||
+            item.groupName === group5Name
+        ) {
+            total70x50Qty += Number(item.quantity) || 0;
+        }
+
+    });
+
+    // اگر هیچ محصولی از این دو گروه در سبد نیست
+    // محدودیتی وجود ندارد
+    if (total70x50Qty === 0) {
+        return true;
+    }
+
+    // اگر مجموع حداقل 200 عدد است
+    // سفارش مجاز است
+    if (total70x50Qty >= 200) {
+        return true;
+    }
+
+    // اگر مجموع بین 1 تا 199 عدد باشد
+    const remainingQty = 200 - total70x50Qty;
+
+    showCustomConfirm(
+        "حداقل تعداد سفارش رعایت نشده",
+        `مجموع سفارش شما از دو گروه سایز ۷۰×۵۰ در حال حاضر ${toPersianDigits(total70x50Qty)} عدد است. برای ثبت سفارش، مجموع این دو گروه باید حداقل ۲۰۰ عدد باشد. لطفاً ${toPersianDigits(remainingQty)} عدد دیگر اضافه کنید، یا تمام محصولات این دو گروه را حذف کنید و سفارش را ادامه دهید.`,
+        () => {
+
+            // حذف کامل محصولات گروه 4 و 5
+            Object.keys(cart).forEach(productId => {
+
+                const item = cart[productId];
+
+                if (
+                    item.groupName === group4Name ||
+                    item.groupName === group5Name
+                ) {
+                    delete cart[productId];
+                }
+
+            });
+
+            // ذخیره سبد جدید
+            saveCartToStorage();
+
+            // بروزرسانی سبد
+            updateBadge();
+            updateCartDisplay();
+
+            showToast(
+                "محصولات سایز ۷۰×۵۰ از سبد خرید حذف شدند.",
+                "سبد خرید",
+                "warning"
+            );
+
+            // دوباره شروع فرآیند ارسال سفارش
+            submitOrder(platform, false);
+
+        },
+        "حذف کامل و ادامه",
+        "افزایش تعداد",
+        "bg-red-600 hover:bg-red-700",
+        '<i class="fas fa-exclamation-triangle text-2xl"></i>',
+        "bg-yellow-100 text-yellow-600"
+    );
+
+    return false;
+}
 
         function submitOrder(platform, isConfirmed = false) {
             const name = document.getElementById('customerName').value;
@@ -1748,6 +1831,10 @@
                 showToast('لطفاً اطلاعات را کامل کرده و سبد را پر کنید.', 'خطا در ثبت', 'error');
                 return;
             }
+            // بررسی حداقل ۲۰۰ عدد برای مجموع دو گروه سایز ۷۰×۵۰
+if (!isConfirmed && !check70x50MinimumOrder(platform)) {
+    return;
+}
 
             if (!isConfirmed) {
                 let title = "";
