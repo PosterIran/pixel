@@ -69,48 +69,63 @@ self.addEventListener('fetch', (event) => {
   if (requestUrl.host.includes('generativelanguage.googleapis.com') || requestUrl.pathname.includes('/Image/')) {
     event.respondWith(
       fetch(event.request)
-        .then((networkResponse) => {
-          // اگر پاسخ موفق بود، آن را در کش ذخیره کن (برای دفعات بعدی که آفلاین بود)
-          if (networkResponse.ok) {
-            const responseToCache = networkResponse.clone();
-            caches.open(CACHE_NAME).then((cache) => {
-              cache.put(event.request, responseToCache);
-            });
-          }
-          return networkResponse;
-        })
-        .catch(() => caches.match(event.request))
-    );
-    return;
-  }
-  
-  // ب) فایل‌های استاتیک محلی و حیاتی (HTML, CSS, JS, Manifest, Icons)
-  // استراتژی: Cache First (اول کش)، اگر نبود شبکه. (این سریع‌ترین حالت برای PWA است)
-  const isLocalAsset = event.request.destination === 'document' ||
-    event.request.destination === 'script' ||
-    event.request.destination === 'style' ||
-    requestUrl.origin === self.location.origin;
-  
-  if (isLocalAsset) {
-    event.respondWith(
-      caches.match(event.request).then((cachedResponse) => {
-        if (cachedResponse) {
-          return cachedResponse; // بازگشت آنی از کش (سرعت نور!)
+      .then((networkResponse) => {
+        // اگر پاسخ موفق بود، آن را در کش ذخیره کن (برای دفعات بعدی که آفلاین بود)
+        if (networkResponse.ok) {
+          const responseToCache = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseToCache);
+          });
         }
-        // اگر در کش نبود، از شبکه بگیر و در کش ذخیره کن
-        return fetch(event.request).then((networkResponse) => {
-          if (networkResponse.ok) {
-            const responseToCache = networkResponse.clone();
-            caches.open(CACHE_NAME).then((cache) => {
-              cache.put(event.request, responseToCache);
-            });
-          }
-          return networkResponse;
-        });
+        return networkResponse;
       })
+      .catch(() => caches.match(event.request))
     );
     return;
   }
+  // ب) فایل‌های محلی سایت
+// Network First:
+// اگر اینترنت باشد همیشه آخرین نسخه دریافت می‌شود.
+// اگر اینترنت قطع باشد نسخه کش‌شده استفاده می‌شود.
+
+const isLocalAsset =
+  event.request.destination === 'document' ||
+  event.request.destination === 'script' ||
+  event.request.destination === 'style' ||
+  requestUrl.origin === self.location.origin;
+
+if (isLocalAsset) {
+
+  event.respondWith(
+
+    fetch(event.request, { cache: 'no-store' })
+
+      .then((networkResponse) => {
+
+        if (networkResponse.ok) {
+
+          const responseToCache = networkResponse.clone();
+
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseToCache);
+          });
+
+        }
+
+        return networkResponse;
+
+      })
+
+      .catch(() => {
+
+        return caches.match(event.request);
+
+      })
+
+  );
+
+  return;
+}
   
   // ج) سایر فایل‌های خارجی (مثل فونت‌ها و CDNها)
   // استراتژی: Cache First
