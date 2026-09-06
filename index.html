@@ -2895,54 +2895,7 @@ window.addEventListener('resize', function() {
 setTimeout(function() {
     updateCartScrollArrow();
 }, 500);
-/* === مدیریت هوشمند اینترنت بدون رفرش صفحه === */
-window.addEventListener('online', function () {
-    // ۱. مخفی کردن لایه قطعی اینترنت
-    const offlineOverlay = document.getElementById('offlineOverlay');
-    if (offlineOverlay) {
-        offlineOverlay.classList.add('hidden-offline');
-    }
 
-    // ۲. بارگذاری مجدد فایل‌های CSS که لود نشده بودند
-    document.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
-        const href = link.href.split('?')[0];
-        link.href = href + '?reload=' + new Date().getTime();
-    });
-
-    // ۳. بارگذاری مجدد تصاویری که لود نشده بودند
-    document.querySelectorAll('img').forEach(img => {
-        if (!img.complete || img.naturalWidth === 0) {
-            const src = img.src.split('?')[0];
-            img.src = src + '?reload=' + new Date().getTime();
-        }
-    });
-
-    if (typeof showToast === 'function') {
-        showToast("اتصال اینترنت برقرار شد.", "", "success");
-    }
-});
-
-window.addEventListener('offline', function () {
-    const offlineOverlay = document.getElementById('offlineOverlay');
-    if (offlineOverlay) {
-        offlineOverlay.classList.remove('hidden-offline');
-    }
-});
-
-function checkConnectionManually() {
-    if (navigator.onLine) {
-        const offlineOverlay = document.getElementById('offlineOverlay');
-        if (offlineOverlay) {
-            offlineOverlay.classList.add('hidden-offline');
-        }
-    } else {
-        if (typeof showToast === 'function') {
-            showToast("اتصال اینترنت هنوز برقرار نیست!", "", "error");
-        } else {
-            alert("اتصال اینترنت هنوز برقرار نیست!");
-        }
-    }
-}
 </script>
 <!-- فلش شناور راهنمای دکمه‌های ارسال سفارش -->
 <button
@@ -2953,50 +2906,508 @@ function checkConnectionManually() {
     ↓
 </button>
     <script>
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js').then((registration) => {
-          registration.onupdatefound = () => {
-            const meNewWorker = registration.installing;
-            meNewWorker.onstatechange = () => {
-              if (meNewWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                showUpdateBanner(registration);
-              }
+/* =========================================================
+   سیستم هوشمند تشخیص و ترمیم ظاهر سایت پس از بازگشت اینترنت
+   ========================================================= */
+
+(function () {
+
+    let repairRunning = false;
+    let repairTimer = null;
+
+    /*
+     * بررسی می‌کند آیا Tailwind واقعاً روی صفحه فعال است یا نه.
+     * اگر سایت مثل حالت تصویر شماره ۱ به‌هم ریخته باشد،
+     * این تابع false برمی‌گرداند.
+     */
+    function isLayoutHealthy() {
+
+        try {
+
+            // -----------------------------------------
+            // 1. بررسی Grid بخش مزایا
+            // -----------------------------------------
+            const benefitsGrid =
+                document.querySelector('#benefits .grid');
+
+            if (!benefitsGrid) {
+                return false;
+            }
+
+            const gridStyle =
+                window.getComputedStyle(benefitsGrid);
+
+            if (gridStyle.display !== 'grid') {
+                console.warn('⚠️ Grid فعال نیست.');
+                return false;
+            }
+
+
+            // -----------------------------------------
+            // 2. بررسی Hero
+            // -----------------------------------------
+            const hero =
+                document.querySelector('.hero-gradient');
+
+            if (!hero) {
+                return false;
+            }
+
+            const heroStyle =
+                window.getComputedStyle(hero);
+
+            /*
+             * py-20 در Tailwind باید تقریباً 80px
+             * padding بالا و پایین ایجاد کند.
+             */
+            const paddingTop =
+                parseFloat(heroStyle.paddingTop);
+
+            if (paddingTop < 60) {
+                console.warn('⚠️ Tailwind روی Hero اعمال نشده.');
+                return false;
+            }
+
+
+            // -----------------------------------------
+            // 3. بررسی container
+            // -----------------------------------------
+            const container =
+                document.querySelector('#benefits .container');
+
+            if (!container) {
+                return false;
+            }
+
+
+            // -----------------------------------------
+            // 4. بررسی یکی از کارت‌های مزایا
+            // -----------------------------------------
+            const benefitCard =
+                document.querySelector('#benefits .grid > div');
+
+            if (!benefitCard) {
+                return false;
+            }
+
+            const cardStyle =
+                window.getComputedStyle(benefitCard);
+
+            /*
+             * کارت‌ها باید عرض واقعی داشته باشند.
+             */
+            if (parseFloat(cardStyle.width) <= 0) {
+                return false;
+            }
+
+
+            // -----------------------------------------
+            // اگر همه چیز صحیح است
+            // -----------------------------------------
+            return true;
+
+        } catch (error) {
+
+            console.error(
+                'خطا در بررسی سلامت چیدمان:',
+                error
+            );
+
+            return false;
+        }
+    }
+
+
+    /*
+     * بررسی واقعی اتصال اینترنت
+     */
+    async function hasStableInternet() {
+
+        if (!navigator.onLine) {
+            return false;
+        }
+
+        try {
+
+            await fetch(
+                'https://cdn.tailwindcss.com',
+                {
+                    method: 'GET',
+                    mode: 'no-cors',
+                    cache: 'no-store'
+                }
+            );
+
+            return true;
+
+        } catch (error) {
+
+            console.warn(
+                '⚠️ اتصال اینترنت هنوز پایدار نیست.'
+            );
+
+            return false;
+        }
+    }
+
+
+    /*
+     * بارگذاری دوباره Tailwind
+     */
+    function reloadTailwind() {
+
+        return new Promise((resolve) => {
+
+            const oldScript =
+                document.querySelector(
+                    'script[src*="cdn.tailwindcss.com"]'
+                );
+
+            if (oldScript) {
+                oldScript.remove();
+            }
+
+            const newScript =
+                document.createElement('script');
+
+            newScript.src =
+                'https://cdn.tailwindcss.com?repair=' +
+                Date.now();
+
+            newScript.onload = function () {
+
+                console.log(
+                    '✅ Tailwind دوباره بارگذاری شد.'
+                );
+
+                /*
+                 * کمی فرصت می‌دهیم Tailwind
+                 * کلاس‌های صفحه را پردازش کند.
+                 */
+                setTimeout(resolve, 800);
             };
-          };
-        });
 
-        let refreshing = false;
-        navigator.serviceWorker.addEventListener('controllerchange', () => {
-          if (!refreshing) {
-            refreshing = true;
-            window.location.reload();
-          }
-        });
-      }
+            newScript.onerror = function () {
 
-      function showUpdateBanner(registration) {
-        const banner = document.createElement('div');
-        banner.style.cssText = `
-          position: fixed; bottom: 20px; right: 20px;
-          background: #1e293b; color: #fff; padding: 16px 24px;
-          border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-          z-index: 9999; display: flex; align-items: center; gap: 12px;
-        `;
-        banner.innerHTML = `
-          <span>نسخه جدید برنامه آماده است!</span>
-          <button id="reload-btn" style="background: #2563eb; color: #fff; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">
-            به‌روزرسانی
-          </button>
-        `;
-        document.body.appendChild(banner);
+                console.error(
+                    '❌ بارگذاری مجدد Tailwind ناموفق بود.'
+                );
 
-        document.getElementById('reload-btn').addEventListener('click', () => {
-          if (registration.waiting) {
-            registration.waiting.postMessage({ type: 'SKIP_WAITING' });
-          }
+                resolve();
+            };
+
+            document.head.appendChild(newScript);
+
         });
-      }
-    </script>
+    }
+
+
+    /*
+     * بارگذاری مجدد تصاویر خراب
+     */
+    function repairBrokenImages() {
+
+        const images =
+            document.querySelectorAll('img');
+
+        images.forEach(function (img) {
+
+            if (
+                !img.complete ||
+                img.naturalWidth === 0
+            ) {
+
+                const originalSrc =
+                    img.src.split('?')[0];
+
+                img.src =
+                    originalSrc +
+                    '?repair=' +
+                    Date.now();
+            }
+
+        });
+    }
+
+
+    /*
+     * سیستم اصلی ترمیم
+     */
+    async function repairLayoutAfterInternet() {
+
+        if (repairRunning) {
+            return;
+        }
+
+        repairRunning = true;
+
+        try {
+
+            /*
+             * ابتدا مطمئن شویم اینترنت واقعاً برگشته.
+             */
+            const online =
+                await hasStableInternet();
+
+            if (!online) {
+                return;
+            }
+
+
+            /*
+             * اگر ظاهر سایت از ابتدا سالم است:
+             * هیچ کاری انجام نده.
+             */
+            if (isLayoutHealthy()) {
+
+                console.log(
+                    '✅ ظاهر سایت سالم است؛ نیازی به ترمیم نیست.'
+                );
+
+                const overlay =
+                    document.getElementById(
+                        'offlineOverlay'
+                    );
+
+                if (overlay) {
+                    overlay.classList.add(
+                        'hidden-offline'
+                    );
+                }
+
+                return;
+            }
+
+
+            /*
+             * سایت خراب است.
+             * ابتدا Tailwind را دوباره بارگذاری می‌کنیم.
+             */
+            console.warn(
+                '⚠️ خرابی چیدمان شناسایی شد؛ در حال ترمیم...'
+            );
+
+            await reloadTailwind();
+
+
+            /*
+             * دوباره بررسی می‌کنیم.
+             */
+            if (isLayoutHealthy()) {
+
+                console.log(
+                    '✅ سایت بدون Reload کامل ترمیم شد.'
+                );
+
+                repairBrokenImages();
+
+                const overlay =
+                    document.getElementById(
+                        'offlineOverlay'
+                    );
+
+                if (overlay) {
+                    overlay.classList.add(
+                        'hidden-offline'
+                    );
+                }
+
+                if (
+                    typeof showToast ===
+                    'function'
+                ) {
+
+                    showToast(
+                        'ظاهر سایت اصلاح شد.',
+                        '',
+                        'success'
+                    );
+                }
+
+                return;
+            }
+
+
+            /*
+             * اگر Tailwind هم نتوانست مشکل را حل کند،
+             * یک Reload کامل انجام می‌دهیم.
+             *
+             * فقط یک بار اجازه Reload داریم.
+             */
+            const alreadyReloaded =
+                sessionStorage.getItem(
+                    'layoutRepairReloaded'
+                );
+
+            if (!alreadyReloaded) {
+
+                console.warn(
+                    '⚠️ ترمیم مستقیم موفق نبود؛ Reload انجام می‌شود.'
+                );
+
+                sessionStorage.setItem(
+                    'layoutRepairReloaded',
+                    '1'
+                );
+
+                window.location.reload();
+
+                return;
+            }
+
+
+            /*
+             * اگر قبلاً Reload انجام شده،
+             * دیگر Reload بی‌نهایت انجام نمی‌دهیم.
+             */
+            console.warn(
+                '⚠️ Reload قبلاً انجام شده؛ از Reload مجدد جلوگیری شد.'
+            );
+
+            sessionStorage.removeItem(
+                'layoutRepairReloaded'
+            );
+
+        } finally {
+
+            repairRunning = false;
+        }
+    }
+
+
+    /*
+     * وقتی اینترنت قطع می‌شود
+     */
+    window.addEventListener(
+        'offline',
+        function () {
+
+            const overlay =
+                document.getElementById(
+                    'offlineOverlay'
+                );
+
+            if (overlay) {
+                overlay.classList.remove(
+                    'hidden-offline'
+                );
+            }
+
+            console.log(
+                '🔴 اینترنت قطع شد.'
+            );
+        }
+    );
+
+
+    /*
+     * وقتی مرورگر اعلام می‌کند اینترنت برگشته
+     */
+    window.addEventListener(
+        'online',
+        function () {
+
+            console.log(
+                '🟡 اینترنت برگشت؛ منتظر پایداری اتصال...'
+            );
+
+            clearTimeout(repairTimer);
+
+            /*
+             * ۲.۵ ثانیه صبر می‌کنیم.
+             * این باعث می‌شود با یک اتصال لحظه‌ای
+             * فوراً عملیات ترمیم شروع نشود.
+             */
+            repairTimer =
+                setTimeout(
+                    repairLayoutAfterInternet,
+                    2500
+                );
+        }
+    );
+
+
+    /*
+     * بررسی اولیه هنگام باز شدن سایت
+     */
+    window.addEventListener(
+        'DOMContentLoaded',
+        function () {
+
+            setTimeout(
+                function () {
+
+                    if (navigator.onLine) {
+
+                        /*
+                         * اگر سایت از ابتدا سالم است،
+                         * هیچ کاری انجام نمی‌شود.
+                         */
+                        if (
+                            isLayoutHealthy()
+                        ) {
+
+                            console.log(
+                                '✅ سایت از ابتدا سالم است.'
+                            );
+
+                        } else {
+
+                            /*
+                             * اگر صفحه هنگام باز شدن
+                             * به علت آفلاین بودن خراب شده،
+                             * بعد از پایدار شدن اینترنت ترمیم شود.
+                             */
+                            repairLayoutAfterInternet();
+                        }
+                    }
+
+                },
+                1200
+            );
+
+        }
+    );
+
+
+    /*
+     * بررسی دستی
+     */
+    window.checkConnectionManually =
+        function () {
+
+            if (!navigator.onLine) {
+
+                if (
+                    typeof showToast ===
+                    'function'
+                ) {
+
+                    showToast(
+                        'اتصال اینترنت هنوز برقرار نیست!',
+                        '',
+                        'error'
+                    );
+
+                } else {
+
+                    alert(
+                        'اتصال اینترنت هنوز برقرار نیست!'
+                    );
+                }
+
+                return;
+            }
+
+
+            /*
+             * اینترنت هست؛ بررسی و ترمیم
+             */
+            repairLayoutAfterInternet();
+        };
+
+})();
+</script>
     <script src="live-reload.js"></script>
   </body>
 </html>
