@@ -1,5 +1,5 @@
 // نام کانتینر کش به همراه شماره نسخه (با تغییر این عدد، کل کش قبلی پاک و از نو ساخته می‌شود)
-const CACHE_NAME = 'poster-iran-cache-v2.1.1';
+const CACHE_NAME = 'poster-iran-cache-v2.1.0';
 
 // لیست فایل‌های کلیدی و حیاتی برنامه
 // نکته: فایل js/script.js حذف شد چون در HTML شما وجود نداشت. اگر وجود دارد، آن را برگردانید.
@@ -7,7 +7,7 @@ const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './manifest.json',
-  './css/style.css',
+  './css/style.css?v=2.1.0',
   './icons/icon-192x192.png',
   './icons/icon-512x512.png',
   'https://cdn.tailwindcss.com',
@@ -19,7 +19,7 @@ const ASSETS_TO_CACHE = [
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log('📦 کش‌گذاری فایل‌های پایه نسخه v2.1.2 آغاز شد.');
+      console.log('📦 کش‌گذاری فایل‌های پایه نسخه v2.1.0 آغاز شد.');
       
       // استفاده از cache: 'reload' فقط در مرحله نصب عالی است تا مطمئن شویم فایل‌های تازه از سرور می‌آیند
       const cachePromises = ASSETS_TO_CACHE.map((url) => {
@@ -83,49 +83,34 @@ self.addEventListener('fetch', (event) => {
     );
     return;
   }
-  // ب) فایل‌های محلی سایت
-// Network First:
-// اگر اینترنت باشد همیشه آخرین نسخه دریافت می‌شود.
-// اگر اینترنت قطع باشد نسخه کش‌شده استفاده می‌شود.
-
-const isLocalAsset =
-  event.request.destination === 'document' ||
-  event.request.destination === 'script' ||
-  event.request.destination === 'style' ||
-  requestUrl.origin === self.location.origin;
-
-if (isLocalAsset) {
-
-  event.respondWith(
-
-    fetch(event.request, { cache: 'no-store' })
-
-      .then((networkResponse) => {
-
-        if (networkResponse.ok) {
-
-          const responseToCache = networkResponse.clone();
-
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseToCache);
-          });
-
+  
+  // ب) فایل‌های استاتیک محلی و حیاتی (HTML, CSS, JS, Manifest, Icons)
+  // استراتژی: Cache First (اول کش)، اگر نبود شبکه. (این سریع‌ترین حالت برای PWA است)
+  const isLocalAsset = event.request.destination === 'document' ||
+    event.request.destination === 'script' ||
+    event.request.destination === 'style' ||
+    requestUrl.origin === self.location.origin;
+  
+  if (isLocalAsset) {
+    event.respondWith(
+      caches.match(event.request).then((cachedResponse) => {
+        if (cachedResponse) {
+          return cachedResponse; // بازگشت آنی از کش (سرعت نور!)
         }
-
-        return networkResponse;
-
+        // اگر در کش نبود، از شبکه بگیر و در کش ذخیره کن
+        return fetch(event.request).then((networkResponse) => {
+          if (networkResponse.ok) {
+            const responseToCache = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, responseToCache);
+            });
+          }
+          return networkResponse;
+        });
       })
-
-      .catch(() => {
-
-        return caches.match(event.request);
-
-      })
-
-  );
-
-  return;
-}
+    );
+    return;
+  }
   
   // ج) سایر فایل‌های خارجی (مثل فونت‌ها و CDNها)
   // استراتژی: Cache First
