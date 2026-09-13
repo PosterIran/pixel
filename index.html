@@ -13,7 +13,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
     <!-- ۲. اتصال به استایل‌ها (CSS) همراه با Cache-Busting جهت هماهنگی با آپدیت‌ها -->
-    <link rel="stylesheet" href="./css/style.css?v=2.1.1">
+    <link rel="stylesheet" href="./css/style.css?v=2.1.2">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -1457,9 +1457,12 @@
             return;
         }
         
-        // پیدا کردن خود محصول
+        // پاکسازی پسوند برای مقایسه ایمن
+        const itemBaseName = item.filename.replace(/\.(webp|jpg|jpeg)$/i, '');
+        
+        // پیدا کردن خود محصول مستقل از پسوند عکس
         const product = group.images.find(
-            img => img.filename === item.filename
+            img => img.filename.replace(/\.(webp|jpg|jpeg)$/i, '') === itemBaseName
         );
         
         // محصول حذف شده یا ناموجود
@@ -1479,12 +1482,14 @@
             adjustedCount++;
         }
         
-        // محصول معتبر است
-        validCart[productId] = {
+        // بروزرسانی محصول با پسوند جدید (.webp)
+        const newProductId = group.name + "_" + product.filename;
+        
+        validCart[newProductId] = {
             ...item,
             name: product.name,
             price: product.price,
-            filename: product.filename,
+            filename: product.filename, // به‌روزرسانی پسوند به webp
             groupName: group.name,
             quantity: normalizedQuantity,
             allowedQtys: product.allowedQuantities
@@ -1932,11 +1937,20 @@ text += `\n✅ سفارش شما با موفقیت ثبت شد. در اسرع و
             localStorage.setItem('cart_submitted', 'true');
 
             if (platform === 'whatsapp') {
-                const whatsappNumber = "989010195885";
-                const url = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodeURIComponent(text)}`;
-                window.open(url, '_blank');
-                clearCartAfterOrder();
-            } else if (platform === 'eitaa') {
+    const whatsappNumber = "989010195885";
+    const url = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodeURIComponent(text)}`;
+    
+    // کپی متن فاکتور در حافظه موقت قبل از انتقال به واتس‌آپ
+    copyToClipboard(text).then(() => {
+        showToast('متن فاکتور کپی شد و به واتس‌آپ منتقل می‌شوید.', 'واتس‌آپ', 'success');
+    }).catch(err => {
+        console.error('خطا در کپی حافظه موقت:', err);
+    });
+    
+    window.open(url, '_blank');
+    clearCartAfterOrder();
+}
+else if (platform === 'eitaa') {
                 copyToClipboard(text).then(() => {
                     showToast('متن فاکتور در حافظه کپی شد. اکنون در ایتا پیست کنید.', 'ایتا', 'success');
                     clearCartAfterOrder();
@@ -2198,11 +2212,11 @@ Object.keys(groupInfo).forEach(groupId => {
     const history = JSON.parse(
         localStorage.getItem('previousOrders') || '[]'
     );
-
+    
     const order = history.find(
         o => String(o.id) === String(orderId)
     );
-
+    
     if (!order) {
         showToast(
             'سفارش مورد نظر یافت نشد.',
@@ -2211,87 +2225,89 @@ Object.keys(groupInfo).forEach(groupId => {
         );
         return;
     }
-
+    
     cart = {};
-
+    
     let removedCount = 0;
     let adjustedCount = 0;
-
+    
     order.items.forEach(item => {
-
+        
         // پیدا کردن گروه محصول
         const group = Object.values(groupInfo).find(
             g => g.name === item.groupName
         );
-
+        
         if (!group || !Array.isArray(group.images)) {
             removedCount++;
             return;
         }
-
-        // پیدا کردن خود محصول
+        
+        // پاکسازی پسوند برای مقایسه بدون وابستگی به فرمت عکس
+        const itemBaseName = item.filename ? item.filename.replace(/\.(webp|jpg|jpeg)$/i, '') : '';
+        
+        // پیدا کردن محصول در کاتالوگ جدید
         const product = group.images.find(
-            img => img.filename === item.filename
+            img => img.filename.replace(/\.(webp|jpg|jpeg)$/i, '') === itemBaseName || img.name === item.name
         );
-
+        
         // محصول حذف شده یا ناموجود
         if (!product || product.outOfStock === true) {
             removedCount++;
             return;
         }
-
+        
         // هماهنگ کردن تعداد با محدوده فعلی محصول
         const normalizedQuantity = normalizeQuantity(
             item.quantity,
             product.allowedQuantities
         );
-
+        
         // بررسی اینکه تعداد تغییر کرده یا نه
         if (Number(item.quantity) !== normalizedQuantity) {
             adjustedCount++;
         }
-
-        const productId =
-            item.groupName + "_" + item.filename;
-
+        
+        const productId = item.groupName + "_" + product.filename;
+        
         cart[productId] = {
             ...item,
             name: product.name,
             price: product.price,
-            filename: product.filename,
+            filename: product.filename, // اصلاح نام فایل به webp
             groupName: group.name,
             quantity: normalizedQuantity,
             allowedQtys: product.allowedQuantities
         };
     });
-
+    
     saveCartToStorage();
     updateBadge();
     showScreen('cart');
-
+    
     // پیام مربوط به کالاهای حذف شده یا ناموجود
     if (removedCount > 0) {
-
+        
         showToast(
             `⚠️ ${toPersianDigits(removedCount)} کالا به دلیل حذف شدن یا ناموجود بودن به سبد اضافه نشد.`,
             'سفارش مجدد',
             'warning'
         );
     }
-
+    
     // پیام مربوط به اصلاح تعداد
     if (adjustedCount > 0) {
-
+        
         showToast(
             `🔄 تعداد ${toPersianDigits(adjustedCount)} کالا با محدوده انتخاب فعلی اصلاح شد.`,
             'سفارش مجدد',
             'info'
         );
     }
-
+    
     // اگر هیچ مشکلی وجود نداشت
     if (removedCount === 0 && adjustedCount === 0) {
-
+        
         showToast(
             `✅ سفارش #${toPersianDigits(orderId)} به سبد خرید منتقل شد.`,
             'سفارش مجدد',
