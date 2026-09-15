@@ -1,5 +1,5 @@
 // نام کانتینر کش به همراه شماره نسخه (با تغییر این عدد، کل کش قبلی پاک و از نو ساخته می‌شود)
-const CACHE_NAME = 'poster-iran-cache-v2.1.665';
+const CACHE_NAME = 'poster-iran-cache-v2.1.765';
 
 // لیست فایل‌های کلیدی و حیاتی برنامه
 // نکته: فایل js/script.js حذف شد چون در HTML شما وجود نداشت. اگر وجود دارد، آن را برگردانید.
@@ -7,7 +7,7 @@ const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './manifest.json',
-  './css/style.css?v=2.1.6',
+  './css/style.css?v=2.1.7',
   './icons/icon-192x192.png',
   './icons/icon-512x512.png',
   'https://cdn.tailwindcss.com',
