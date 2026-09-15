@@ -13,7 +13,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
     <!-- ۲. اتصال به استایل‌ها (CSS) همراه با Cache-Busting جهت هماهنگی با آپدیت‌ها -->
-    <link rel="stylesheet" href="./css/style.css?v=2.1.5">
+    <link rel="stylesheet" href="./css/style.css?v=2.1.6">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -1934,35 +1934,53 @@ text += `💳 مبلغ نهایی: ${toPersianPrice(finalPayable)} ریال\n`;
 text += `\n✅ سفارش شما با موفقیت ثبت شد. در اسرع وقت هماهنگی لازم صورت می‌گیرد.`;
 
             // ذخیره‌سازی سفارش در تاریخچه سفارشات
-            saveOrderToHistory(orderNum, finalPayable, total, discount, shipping);
-            localStorage.setItem('cart_submitted', 'true');
+saveOrderToHistory(orderNum, finalPayable, total, discount, shipping);
+localStorage.setItem('cart_submitted', 'true');
 
-            if (platform === 'whatsapp') {
+if (platform === 'whatsapp') {
     const whatsappNumber = "989010195885";
-    const url = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodeURIComponent(text)}`;
+    const encodedText = encodeURIComponent(text);
     
-    // کپی متن فاکتور در حافظه موقت قبل از انتقال به واتس‌آپ
+    // پروتکل مستقیم باز کردن اپلیکیشن واتس‌آپ در موبایل
+    const appUrl = `whatsapp://send?phone=${whatsappNumber}&text=${encodedText}`;
+    // لینک جایگزین در صورتی که اپلیکیشن باز نشود
+    const webUrl = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedText}`;
+    
+    // کپی متن فاکتور در حافظه موقت
     copyToClipboard(text).then(() => {
         showToast('متن فاکتور کپی شد و به واتس‌آپ منتقل می‌شوید.', 'واتس‌آپ', 'success');
     }).catch(err => {
         console.error('خطا در کپی حافظه موقت:', err);
     });
     
-    window.open(url, '_blank');
+    // تلاش برای باز کردن مستقیم اپلیکیشن
+    window.location.href = appUrl;
+    
+    // در صورتی که اپلیکیشن نصب نباشد، هدایت به لینک وب پس از ۱ ثانیه
+    setTimeout(() => {
+        window.open(webUrl, '_blank');
+    }, 1000);
+    
     clearCartAfterOrder();
 }
 else if (platform === 'eitaa') {
-                copyToClipboard(text).then(() => {
-                    showToast('متن فاکتور در حافظه کپی شد. اکنون در ایتا پیست کنید.', 'ایتا', 'success');
-                    clearCartAfterOrder();
-                    setTimeout(() => {
-                        window.open(`https://eitaa.com/@PosterIran`, '_blank');
-                    }, 1200);
-                }).catch(err => {
-                    showToast('کپی متن ناموفق بود. لطفاً دستی اقدام نمایید.', 'خطا', 'error');
-                });
-            }
-        }
+    const eitaaUsername = "PosterIran"; // آی‌دی ایتا بدون علامت @
+    const encodedText = encodeURIComponent(text);
+    
+    // لینک مستقیم جهت باز کردن برنامه ایتا و ارسال متن فاکتور
+    const eitaaUrl = `https://eitaa.com/${eitaaUsername}?text=${encodedText}`;
+    
+    copyToClipboard(text).then(() => {
+        showToast('متن فاکتور کپی شد و به ایتا منتقل می‌شوید.', 'ایتا', 'success');
+        clearCartAfterOrder();
+        
+        setTimeout(() => {
+            window.location.href = eitaaUrl;
+        }, 500);
+    }).catch(err => {
+        showToast('کپی متن ناموفق بود. لطفاً دستی اقدام نمایید.', 'خطا', 'error');
+    });
+}
 
         /* ----------------------------------------------------
            توابع مدیریت کامل تاریخچه سفارشات (Order History System)
