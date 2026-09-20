@@ -13,7 +13,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
     <!-- ۲. اتصال به استایل‌ها (CSS) همراه با Cache-Busting جهت هماهنگی با آپدیت‌ها -->
-    <link rel="stylesheet" href="./css/style.css?v=2.1.5">
+    <link rel="stylesheet" href="./css/style.css?v=2.1.7">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -608,7 +608,7 @@
                             <span class="group-open:rotate-180 transition">↓</span>
                         </summary>
                         <p class="mt-4 text-gray-600 leading-relaxed">
-                            بله، پوستر ایران محصولات خود را از طریق چاپار ، تیپاکس و باربری تمام نقاط کشور ارسال می‌کند.
+                            بله، پوستر ایران محصولات خود را از طریق چاپار ، تیپاکس و باربری به تمام نقاط کشور ارسال می‌کند.
                         </p>
                     </details>
                     <details class="group bg-white rounded-xl p-6 border border-gray-200">
@@ -626,7 +626,7 @@
                             <span class="group-open:rotate-180 transition">↓</span>
                         </summary>
                         <p class="mt-4 text-gray-600 leading-relaxed">
-                            پس از انتخاب پوسترهای مورد نظر در سبد خرید و تکمیل اطلاعات فردی، بر روی دکمه «ارسال واتس‌آپ» کلیک کنید تا متن فاکتور به همراه جزئیات به صورت خودکار به چت پشتیبانی ما در واتس‌آپ منتقل و ارسال شود.
+                            پس از انتخاب پوسترهای مورد نظر در سبد خرید و تکمیل اطلاعات فردی، بر روی دکمه «ارسال واتس‌آپ» کلیک کنید تا متن فاکتور به همراه جزئیات به صورت خودکار به چت پشتیبانی ما در واتس‌آپ منتقل و ارسال شود.(برای ارسال در واتس‌آپ در حال حاضر نیاز به فیلترشکن است)
                         </p>
                     </details>
                     <details class="group bg-white rounded-xl p-6 border border-gray-200">
@@ -641,7 +641,7 @@
                     
                     <details class="group bg-white rounded-xl p-6 border border-gray-200">
                         <summary class="font-bold cursor-pointer list-none flex justify-between items-center text-blue-900">
-                            برنامه را چطور در گوشی آیفون نصب کنم؟
+                            برنامه را چطور در موبایل نصب کنم؟
                             <span class="group-open:rotate-180 transition">↓</span>
                         </summary>
                         <p class="mt-4 text-gray-600 leading-relaxed">
@@ -701,7 +701,7 @@
                     <h4 class="font-bold text-gray-700">اطلاعات مشتری:</h4>
                     <input type="text" id="customerName" oninput="saveCustomerData()" placeholder="نام و نام خانوادگی" class="w-full p-4 rounded-xl border outline-none focus:ring-2 focus:ring-blue-500">
                     <input type="tel" id="customerPhone" oninput="saveCustomerData()" placeholder="شماره موبایل" class="w-full p-4 rounded-xl border outline-none focus:ring-2 focus:ring-blue-500">
-                    <textarea id="customerAddress" oninput="saveCustomerData()" placeholder="آدرس دقیق پستی" rows="3" class="w-full p-4 rounded-xl border outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                    <textarea id="customerAddress" oninput="saveCustomerData()" placeholder="آدرس کامل تحویل" rows="3" class="w-full p-4 rounded-xl border outline-none focus:ring-2 focus:ring-blue-500"></textarea>
                 </div>
                 <div class="mt-8 p-4 bg-blue-50 rounded-2xl border-2 border-dashed border-blue-200">
                     <p class="text-blue-800 text-sm font-bold mb-4 text-center">
@@ -1827,121 +1827,177 @@ function check70x50MinimumOrder(platform) {
 
     return false;
 }
+// تابع تشخیص دسترسی به واتس‌آپ (سنجش روشن بودن فیلترشکن)
+async function checkWhatsAppAccess() {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 2500); // زمان انتظار ۲.۵ ثانیه
 
-        function submitOrder(platform, isConfirmed = false) {
-            const name = document.getElementById('customerName').value;
-            const phone = document.getElementById('customerPhone').value;
-            const address = document.getElementById('customerAddress').value;
-            
-            if (!name || !phone || !address || Object.keys(cart).length === 0) {
-                showToast('لطفاً اطلاعات را کامل کرده و سبد را پر کنید.', 'خطا در ثبت', 'error');
-                return;
-            }
-            // بررسی حداقل ۲۰۰ عدد برای مجموع دو گروه سایز ۷۰×۵۰
-if (!isConfirmed && !check70x50MinimumOrder(platform)) {
-    return;
+    try {
+        await fetch('https://web.whatsapp.com/favicon.ico', {
+            mode: 'no-cors',
+            cache: 'no-store',
+            signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+        return true; // فیلترشکن روشن است
+    } catch (error) {
+        clearTimeout(timeoutId);
+        return false; // فیلترشکن خاموش است
+    }
 }
 
-            if (!isConfirmed) {
-                let title = "";
-                let message = "";
-                let yesColorClass = "";
-                let iconHtml = "";
-                let iconBgClass = "";
-
-                if (platform === 'whatsapp') {
-                    title = "تایید ارسال سفارش در واتس‌آپ";
-                    message = "پس از انتخاب پوسترهای مورد نظر در سبد خرید و تکمیل اطلاعات فردی، با تایید این مرحله، متن فاکتور به همراه جزئیات به صورت خودکار به چت پشتیبانی ما در واتس‌آپ منتقل و ارسال خواهد شد.";
-                    yesColorClass = "bg-green-600 hover:bg-green-700 shadow-lg shadow-green-100";
-                    iconHtml = '<i class="fab fa-whatsapp text-2xl"></i>';
-                    iconBgClass = "bg-green-100 text-green-600";
-                } else if (platform === 'eitaa') {
-                    title = "تایید ارسال سفارش در ایتا";
-                    message = "با تایید این مرحله، متن نهایی فاکتور به صورت خودکار در حافظه گوشی شما کپی می‌شود و به پشتیبانی پوستر ایران در ایتا هدایت خواهید شد تا بتوانید متن را به راحتی پیست (Paste) و ارسال کنید.";
-                    yesColorClass = "bg-orange-500 hover:bg-orange-600 shadow-lg shadow-orange-100";
-                    iconHtml = '<i class="fas fa-paper-plane text-2xl"></i>';
-                    iconBgClass = "bg-orange-100 text-orange-600";
-                }
-
-                showCustomConfirm(title, message, () => {
-                    submitOrder(platform, true);
-                }, "ارسال", "انصراف", yesColorClass, iconHtml, iconBgClass);
-                return;
-            }
+        async function submitOrder(platform, isConfirmed = false) {
+    const name = document.getElementById('customerName').value;
+    const phone = document.getElementById('customerPhone').value;
+    const address = document.getElementById('customerAddress').value;
+    
+    if (!name || !phone || !address || Object.keys(cart).length === 0) {
+        showToast('لطفاً اطلاعات را کامل کرده و سبد را پر کنید.', 'خطا در ثبت', 'error');
+        return;
+    }
+    
+    // بررسی حداقل ۲۰۰ عدد برای مجموع دو گروه سایز ۷۰×۵۰
+    if (!isConfirmed && !check70x50MinimumOrder(platform)) {
+        return;
+    }
+    
+    if (!isConfirmed) {
+        let title = "";
+        let message = "";
+        let yesColorClass = "";
+        let iconHtml = "";
+        let iconBgClass = "";
+        
+        if (platform === 'whatsapp') {
+            title = "تایید ارسال سفارش در واتس‌آپ";
+            message = "پس از انتخاب پوسترهای مورد نظر در سبد خرید و تکمیل اطلاعات فردی، با تایید این مرحله، متن فاکتور به همراه جزئیات به صورت خودکار به چت پشتیبانی ما در واتس‌آپ منتقل و ارسال خواهد شد.";
+            yesColorClass = "bg-green-600 hover:bg-green-700 shadow-lg shadow-green-100";
+            iconHtml = '<i class="fab fa-whatsapp text-2xl"></i>';
+            iconBgClass = "bg-green-100 text-green-600";
+        } else if (platform === 'eitaa') {
+            title = "تایید ارسال سفارش در ایتا";
+            message = "با تایید این مرحله، متن نهایی فاکتور به صورت خودکار در حافظه گوشی شما کپی می‌شود و به پشتیبانی پوستر ایران در ایتا هدایت خواهید شد تا بتوانید متن را به راحتی پیست (Paste) و ارسال کنید.";
+            yesColorClass = "bg-orange-500 hover:bg-orange-600 shadow-lg shadow-orange-100";
+            iconHtml = '<i class="fas fa-paper-plane text-2xl"></i>';
+            iconBgClass = "bg-orange-100 text-orange-600";
+        }
+        
+        showCustomConfirm(title, message, () => {
+            submitOrder(platform, true);
+        }, "ارسال", "انصراف", yesColorClass, iconHtml, iconBgClass);
+        return;
+    }
+    
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('fa-IR');
+    const timeStr = now.toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' });
+    const orderNum = getOrderNumber();
+    
+    let text = `🗓️ تاریخ: ${dateStr} | ساعت: ${timeStr}\n`;
+    text += `🛍️ سفارش جدید - شماره: ${toPersianDigits(orderNum)}\n\n`;
+    text += `📌 آدرس: ${address}\n`;
+    text += `👤 نام: ${name}\n`;
+    text += `📱 همراه: ${phone}\n\n`;
+    text += `📋 جزئیات سفارش:\n`;
+    text += `---------------------------------------\n`;
+    
+    let total = 0;
+    let groupSummariesText = `📊 خلاصه گروه‌ها:\n`;
+    const itemsInCart = Object.values(cart);
+    
+    Object.keys(groupInfo).forEach(groupId => {
+        const group = groupInfo[groupId];
+        const gName = group.name;
+        const groupItemsInCart = itemsInCart.filter(item => item.groupName === gName);
+        
+        if (groupItemsInCart.length > 0) {
+            text += `\n🔹 ${gName}:\n`;
+            let groupQty = 0;
+            let groupTotal = 0;
             
-            const now = new Date();
-            const dateStr = now.toLocaleDateString('fa-IR');
-            const timeStr = now.toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' });
-            const orderNum = getOrderNumber();
-            
-            let text = `🗓️ تاریخ: ${dateStr} | ساعت: ${timeStr}\n`;
-            text += `🛍️ سفارش جدید - شماره: ${toPersianDigits(orderNum)}\n\n`;
-            text += `📌 آدرس: ${address}\n`;
-            text += `👤 نام: ${name}\n`;
-            text += `📱 همراه: ${phone}\n\n`;
-            text += `📋 جزئیات سفارش:\n`;
-            text += `---------------------------------------\n`;
-            
-            let total = 0;
-            let groupSummariesText = `📊 خلاصه گروه‌ها:\n`;
-            const itemsInCart = Object.values(cart);
-            
-            Object.keys(groupInfo).forEach(groupId => {
-                const group = groupInfo[groupId];
-                const gName = group.name;
-                const groupItemsInCart = itemsInCart.filter(item => item.groupName === gName);
-                
-                if (groupItemsInCart.length > 0) {
-                    text += `\n🔹 ${gName}:\n`;
-                    let groupQty = 0;
-                    let groupTotal = 0;
-                    
-                    group.images.forEach(imgData => {
-                        const productId = gName + "_" + imgData.filename;
-                        const item = cart[productId];
-                        if (item) {
-                            let itemSum = item.quantity * item.price;
-                            text += `- ${item.name}: ${toPersianDigits(item.quantity)} عدد\n`;
-                            groupQty += item.quantity;
-                            groupTotal += itemSum;
-                            total += itemSum;
-                        }
-                    });
-                    groupSummariesText += `▪️ ${gName}: ${toPersianDigits(groupQty)} عدد (${toPersianPrice(groupTotal)} ریال)\n`;
+            group.images.forEach(imgData => {
+                const productId = gName + "_" + imgData.filename;
+                const item = cart[productId];
+                if (item) {
+                    let itemSum = item.quantity * item.price;
+                    text += `- ${item.name}: ${toPersianDigits(item.quantity)} عدد\n`;
+                    groupQty += item.quantity;
+                    groupTotal += itemSum;
+                    total += itemSum;
                 }
             });
-
-            let total_f = total;
-            let discountPercent = (total_f >= 1000000000) ? 0.0 : 0;
-            let discount = total_f * discountPercent;
-            let afterDiscount = total_f - discount;
-            let packageCount = Math.floor(afterDiscount / 350000000) + 1;
-            let shipping = packageCount * 1000000;
-            let finalPayable = afterDiscount + shipping;
-
-            text += `\n---------------------------------------\n`;
-            text += groupSummariesText;
-            text += `---------------------------------------\n`;
-text += `💰 مبلغ کالاها: ${toPersianPrice(total)} ریال\n`;
-
-if (discount > 0) {
-    text += `🎁 تخفیف (${toPersianDigits(discountPercent * 100)}٪): ${toPersianPrice(discount)} ریال\n`;
+            groupSummariesText += `▪️ ${gName}: ${toPersianDigits(groupQty)} عدد (${toPersianPrice(groupTotal)} ریال)\n`;
+        }
+    });
+    
+    let total_f = total;
+    let discountPercent = (total_f >= 1000000000) ? 0.0 : 0;
+    let discount = total_f * discountPercent;
+    let afterDiscount = total_f - discount;
+    let packageCount = Math.floor(afterDiscount / 350000000) + 1;
+    let shipping = packageCount * 1000000;
+    let finalPayable = afterDiscount + shipping;
+    
+    text += `\n---------------------------------------\n`;
+    text += groupSummariesText;
+    text += `---------------------------------------\n`;
+    text += `💰 مبلغ کالاها: ${toPersianPrice(total)} ریال\n`;
+    
+    if (discount > 0) {
+        text += `🎁 تخفیف (${toPersianDigits(discountPercent * 100)}٪): ${toPersianPrice(discount)} ریال\n`;
+    }
+    
+    text += `🚚 ارسال‌به‌باربری (${toPersianDigits(packageCount)} بسته): ${toPersianPrice(shipping)} ریال\n`;
+    text += `💳 مبلغ نهایی: ${toPersianPrice(finalPayable)} ریال\n`;
+    
+    text += `\n✅ سفارش شما با موفقیت ثبت شد. در اسرع وقت هماهنگی لازم صورت می‌گیرد.`;
+    
+    if (platform === 'whatsapp') {
+        showToast("در حال بررسی اتصال به واتس‌آپ...", "", "info");
+        const isVpnOn = await checkWhatsAppAccess();
+        
+        if (!isVpnOn) {
+            showCustomConfirm(
+                "⚠️ نیاز به فیلترشکن",
+                "برای ارسال سفارش از طریق واتس‌آپ، باید فیلترشکن (VPN) شما روشن باشد.\nلطفاً فیلترشکن خود را روشن کرده و سپس دکمه ارسال را بزنید.",
+                () => {
+                    processWhatsAppSend(text, orderNum, finalPayable, total, discount, shipping);
+                },
+                "متوجه شدم، ارسال کن",
+                "انصراف",
+                "bg-green-600 hover:bg-green-700",
+                '<i class="fas fa-shield-alt text-2xl"></i>',
+                "bg-yellow-100 text-yellow-600"
+            );
+            return;
+        }
+        
+        processWhatsAppSend(text, orderNum, finalPayable, total, discount, shipping);
+    }
+    else if (platform === 'eitaa') {
+        saveOrderToHistory(orderNum, finalPayable, total, discount, shipping);
+        localStorage.setItem('cart_submitted', 'true');
+        
+        copyToClipboard(text).then(() => {
+            showToast('متن فاکتور در حافظه کپی شد. اکنون در ایتا پیست کنید.', 'ایتا', 'success');
+            clearCartAfterOrder();
+            setTimeout(() => {
+                window.open(`https://eitaa.com/@PosterIran`, '_blank');
+            }, 1200);
+        }).catch(err => {
+            showToast('کپی متن ناموفق بود. لطفاً دستی اقدام نمایید.', 'خطا', 'error');
+        });
+    }
 }
 
-text += `🚚 ارسال‌به‌باربری (${toPersianDigits(packageCount)} بسته): ${toPersianPrice(shipping)} ریال\n`;
-text += `💳 مبلغ نهایی: ${toPersianPrice(finalPayable)} ریال\n`;
-
-text += `\n✅ سفارش شما با موفقیت ثبت شد. در اسرع وقت هماهنگی لازم صورت می‌گیرد.`;
-
-            // ذخیره‌سازی سفارش در تاریخچه سفارشات
-            saveOrderToHistory(orderNum, finalPayable, total, discount, shipping);
-            localStorage.setItem('cart_submitted', 'true');
-
-            if (platform === 'whatsapp') {
+// تابع کمکی اختصاصی برای باز کردن واتس‌آپ
+function processWhatsAppSend(text, orderNum, finalPayable, total, discount, shipping) {
+    saveOrderToHistory(orderNum, finalPayable, total, discount, shipping);
+    localStorage.setItem('cart_submitted', 'true');
+    
     const whatsappNumber = "989010195885";
     const url = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodeURIComponent(text)}`;
     
-    // کپی متن فاکتور در حافظه موقت قبل از انتقال به واتس‌آپ
     copyToClipboard(text).then(() => {
         showToast('متن فاکتور کپی شد و به واتس‌آپ منتقل می‌شوید.', 'واتس‌آپ', 'success');
     }).catch(err => {
@@ -1951,18 +2007,6 @@ text += `\n✅ سفارش شما با موفقیت ثبت شد. در اسرع و
     window.open(url, '_blank');
     clearCartAfterOrder();
 }
-else if (platform === 'eitaa') {
-                copyToClipboard(text).then(() => {
-                    showToast('متن فاکتور در حافظه کپی شد. اکنون در ایتا پیست کنید.', 'ایتا', 'success');
-                    clearCartAfterOrder();
-                    setTimeout(() => {
-                        window.open(`https://eitaa.com/@PosterIran`, '_blank');
-                    }, 1200);
-                }).catch(err => {
-                    showToast('کپی متن ناموفق بود. لطفاً دستی اقدام نمایید.', 'خطا', 'error');
-                });
-            }
-        }
 
         /* ----------------------------------------------------
            توابع مدیریت کامل تاریخچه سفارشات (Order History System)
