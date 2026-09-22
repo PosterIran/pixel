@@ -1,5 +1,5 @@
 // نام کانتینر کش به همراه شماره نسخه (با تغییر این عدد، کل کش قبلی پاک و از نو ساخته می‌شود)
-const CACHE_NAME = 'poster-iran-cache-v2.1.8';
+const CACHE_NAME = 'poster-iran-cache-v2.1.9';
 
 // لیست فایل‌های کلیدی و حیاتی برنامه
 // نکته: فایل js/script.js حذف شد چون در HTML شما وجود نداشت. اگر وجود دارد، آن را برگردانید.
@@ -7,7 +7,7 @@ const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './manifest.json',
-  './css/style.css?v=2.1.8',
+  './css/style.css?v=2.1.9',
   './icons/icon-192x192.png',
   './icons/icon-512x512.png',
   'https://cdn.tailwindcss.com',
@@ -19,7 +19,7 @@ const ASSETS_TO_CACHE = [
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log('📦 کش‌گذاری فایل‌های پایه نسخه v2.1.8 آغاز شد.');
+      console.log('📦 کش‌گذاری فایل‌های پایه نسخه v2.1.9 آغاز شد.');
       
       // استفاده از cache: 'reload' فقط در مرحله نصب عالی است تا مطمئن شویم فایل‌های تازه از سرور می‌آیند
       const cachePromises = ASSETS_TO_CACHE.map((url) => {
