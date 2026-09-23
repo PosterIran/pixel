@@ -13,7 +13,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
     <!-- ۲. اتصال به استایل‌ها (CSS) همراه با Cache-Busting جهت هماهنگی با آپدیت‌ها -->
-    <link rel="stylesheet" href="./css/style.css?v=2.2.2">
+    <link rel="stylesheet" href="./css/style.css?v=2.2.7">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -604,16 +604,16 @@
                 <div class="space-y-4">
                     <details class="group bg-white rounded-xl p-6 border border-gray-200">
                         <summary class="font-bold cursor-pointer list-none flex justify-between items-center text-blue-900">
-                            آیا ارسال به شهرستان دارید؟
+                            آیا امکان ارسال به سراسر کشور فراهم است؟
                             <span class="group-open:rotate-180 transition">↓</span>
                         </summary>
                         <p class="mt-4 text-gray-600 leading-relaxed">
-                            بله، پوستر ایران محصولات خود را از طریق چاپار ، تیپاکس و باربری به تمام نقاط کشور ارسال می‌کند.
+                            بله، مرسولات پوستر ایران از طریق باربری ، تیپاکس و چاپار به تمام استان‌ها و شهرهای کشور ارسال می‌گردد.
                         </p>
                     </details>
                     <details class="group bg-white rounded-xl p-6 border border-gray-200">
                         <summary class="font-bold cursor-pointer list-none flex justify-between items-center text-blue-900">
-                            چگونه می‌توانم سفارش خود را ثبت کنم؟
+                            نحوه ثبت و ارسال سفارش چگونه است؟
                             <span class="group-open:rotate-180 transition">↓</span>
                         </summary>
                         <p class="mt-4 text-gray-600 leading-relaxed">
@@ -645,7 +645,7 @@
                             <span class="group-open:rotate-180 transition">↓</span>
                         </summary>
                         <p class="mt-4 text-gray-600 leading-relaxed">
-                        برای نصب، از منوی مرورگر گزینه Add to Home Screen را بزنید.
+                        کافیست در مرورگر گوشی خود دکمه گزینه (Option) را لمس کرده و گزینه «افزودن به صفحه اصلی» یا «Add to Home Screen» را انتخاب کنید.
                         </p>
                     </details>
                 </div>
@@ -690,7 +690,7 @@
         <section id="cartScreen" class="hidden-section container mx-auto px-4 py-0 max-w-4xl">
             <div class="bg-white rounded-3xl shadow-xl p-6 md:p-10 border border-gray-100">
                 <div class="flex items-center gap-3 mb-8 border-b pb-4">
-                    <h2 class="text-3xl font-bold text-gray-800">🛒 سبد خرید</h2>
+                    <h2 class="text-3xl font-bold text-gray-800">🛒 سبد خرید و ثبت سفارش</h2>
                 </div>
                 <div id="cartList" class="space-y-4 mb-8"></div>
                 <div class="bg-blue-50 p-6 rounded-2xl mb-8 flex justify-between items-center">
@@ -773,13 +773,13 @@
                 <h2 class="text-3xl font-bold text-blue-900 mb-6">پوستر ایران</h2>
                 <p class="text-gray-700 leading-8 mb-1 text-justify">انتشارات پوستر ایران با افتخار یکی از پیشگامان در زمینه تولید و چاپ پوستر در کشور است. ما با تکیه بر سال‌ها تجربه در زمینه چاپ و شناخت دقیق از نیازهای نظام آموزشی, مجموعه‌ای از پوسترهای جذاب، کاربردی و هماهنگ با محتوای کتب درسی تهیه کرده‌ایم تا فرآیند یادگیری را برای دانش‌آموزان ساده‌تر، عمیق‌تر و لذت‌بخش‌تر کنیم. پوسترهای آموزشی با کیفیت عالی و محتوای استاندارد، ابزاری کارآمد برای معلمان، دانش‌آموزان و مدارس در سراسر کشور به شمار می‌آیند.</p>
                 <p class="text-gray-700 leading-8 mb-6 text-justify">"پوستر ایران" همواره در تلاش است تا با نوآوری و پایبندی به اصول آموزشی، نقش مؤثری در ارتقاء سطح آموزش ایفا کند.</p>
-                <div class="space-y-4 text-gray-600">
-                    <p>آدرس ما : تهران ، خیابان پانزده خرداد ، بازار آهنگران ، کوچه مسجدجامع ، پاساژ کاغذوتحریر، زیرزمن اول ، پلاک ۷۴</p>
+                <div class="space-y-3 text-xs text-slate-400 border-t border-cyan-500/20 pt-4">
+                    <p class="flex items-center gap-2"><i class="fas fa-map-marker-alt text-gray-600"></i> تهران، خیابان ۱۵ خرداد، بازار آهنگران، کوچه مسجد جامع، پاساژ کاغذ و تحریر، زیرزمین اول، پلاک ۷۴</p>
                     <p> <a href="https://maps.google.com/?cid=1396884775989221050&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNl" target="_blank" class="text-blue-500 font-bold hover:underline">  (📍 مشاهده موقعیت جغرافیایی روی نقشه)</a></p>
                 
                     <!-- افزودن قابلیت شماره‌گیری مستقیم با لمس شماره‌ها -->
-                    <p>📞 تلفن: <a href="tel:02155611875" class="text-blue-600 font-bold hover:text-blue-800 hover:underline transition-colors">۰۲۱۵۵۶۱۱۸۷۵</a></p>
-                    <p>📱 موبایل: <a href="tel:09010195885" class="text-blue-600 font-bold hover:text-blue-800 hover:underline transition-colors">۰۹۰۱۰۱۹۵۸۸۵</a></p>
+                    <p>📞 تلفن ثابت: <a href="tel:02155611875" class="text-blue-600 font-bold hover:text-blue-800 hover:underline transition-colors">۰۲۱۵۵۶۱۱۸۷۵</a></p>
+                    <p>📱 همراه پشتیبانی: <a href="tel:09010195885" class="text-blue-600 font-bold hover:text-blue-800 hover:underline transition-colors">۰۹۰۱۰۱۹۵۸۸۵</a></p>
                 </div>
             </div>
         </section>
