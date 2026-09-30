@@ -13,7 +13,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
     <!-- ۲. اتصال به استایل‌ها (CSS) همراه با Cache-Busting جهت هماهنگی با آپدیت‌ها -->
-    <link rel="stylesheet" href="./css/style.css?v=2.3.4">
+    <link rel="stylesheet" href="./css/style.css?v=2.3.5">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -1107,16 +1107,16 @@
                 { filename: "شکل صداها و الفبای فارسی.webp", name: "شکل صداها و الفبای فارسی", price: 900000, allowedQuantities: [0, 20, 30, 50, 100, 200, 300, 500], outOfStock: true },
             ]},
             6: { name: "سایر محصولات", images: [
-                { filename: "دفترچه ای بزرگ ضرب.webp", name: "دفترچه ای بزرگ ضرب", price: 850000, allowedQuantities: [0, 60, 120, 240, 480], outOfStock: false },
-                { filename: "دفترچه ای کوچک ضرب.webp", name: "دفترچه ای کوچک ضرب", price: 600000, allowedQuantities: [0, 60, 120, 240, 480], outOfStock: false },
-                { filename: "دفترچه ای بزرگ الفبا.webp", name: "دفترچه ای بزرگ الفبا", price: 850000, allowedQuantities: [0, 60, 120, 240, 480], outOfStock: false },
-                { filename: "دفترچه ای کوچک الفبا.webp", name: "دفترچه ای کوچک الفبا", price: 600000, allowedQuantities: [0, 60, 120, 240, 480], outOfStock: false },
-                { filename: "دفترچه ای بزرگ دوستی.webp", name: "دفترچه ای بزرگ دوستی", price: 850000, allowedQuantities: [0, 60, 120, 240, 480], outOfStock: false },
-                { filename: "دفترچه ای کوچک دوستی.webp", name: "دفترچه ای کوچک دوستی", price: 600000, allowedQuantities: [0, 60, 120, 240, 480], outOfStock: false },
-                { filename: "فلش کارت اعداد.webp", name: "فلش کارت اعداد", price: 800000, allowedQuantities: [0, 60, 120, 240, 480], outOfStock: false },
+                { filename: "دفترچه ای بزرگ ضرب.webp", name: "دفترچه ای بزرگ ضرب", price: 850000, allowedQuantities: [0, 36, 60, 120, 240, 480], outOfStock: false },
+                { filename: "دفترچه ای کوچک ضرب.webp", name: "دفترچه ای کوچک ضرب", price: 600000, allowedQuantities: [0, 36, 60, 120, 240, 480], outOfStock: false },
+                { filename: "دفترچه ای بزرگ الفبا.webp", name: "دفترچه ای بزرگ الفبا", price: 850000, allowedQuantities: [0, 36, 60, 120, 240, 480], outOfStock: false },
+                { filename: "دفترچه ای کوچک الفبا.webp", name: "دفترچه ای کوچک الفبا", price: 600000, allowedQuantities: [0, 36, 60, 120, 240, 480], outOfStock: false },
+                { filename: "دفترچه ای بزرگ دوستی.webp", name: "دفترچه ای بزرگ دوستی", price: 850000, allowedQuantities: [0, 36, 60, 120, 240, 480], outOfStock: false },
+                { filename: "دفترچه ای کوچک دوستی.webp", name: "دفترچه ای کوچک دوستی", price: 600000, allowedQuantities: [0, 36, 60, 120, 240, 480], outOfStock: false },
+                { filename: "فلش کارت اعداد.webp", name: "فلش کارت اعداد", price: 800000, allowedQuantities: [0, 36, 60, 120, 240, 480], outOfStock: false },
                 { filename: "استیکر A4.webp", name: "استیکر A4", price: 200000, allowedQuantities: [0, 100, 200, 300, 400, 500, 1200, 2400], outOfStock: false },
-                { filename: "فلش کارت نگاره ها و نشانه ها.webp", name: "فلش کارت نگاره‌ها و نشانه‌ها", price: 800000, allowedQuantities: [0, 60, 120, 240, 480], outOfStock: true },
-                { filename: "فلش کارت الفبا.webp", name: "فلش کارت الفبا", price: 600000, allowedQuantities: [0], outOfStock: true },
+                { filename: "فلش کارت نگاره ها و نشانه ها.webp", name: "فلش کارت نگاره‌ها و نشانه‌ها", price: 800000, allowedQuantities: [0, 36, 60, 120, 240, 480], outOfStock: true },
+                { filename: "فلش کارت الفبا.webp", name: "فلش کارت الفبا", price: 600000, allowedQuantities: [0, 36, 60, 120, 240, 480], outOfStock: false },
             ]}
         };
 
@@ -2767,6 +2767,10 @@ function hideInstallBanner() {
 
                 // بررسی فوری برای نسخه جدید
                 registration.update();
+                
+                setInterval(() => {
+    registration.update();
+}, 5000);
 
                 // اگر نسخه جدید قبلاً منتظر فعال شدن است
                 if (registration.waiting) {
@@ -2967,26 +2971,7 @@ setTimeout(function() {
     ↓
 </button>
     <script>
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js').then((registration) => {
-          registration.onupdatefound = () => {
-            const meNewWorker = registration.installing;
-            meNewWorker.onstatechange = () => {
-              if (meNewWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                showUpdateBanner(registration);
-              }
-            };
-          };
-        });
-
-        let refreshing = false;
-        navigator.serviceWorker.addEventListener('controllerchange', () => {
-          if (!refreshing) {
-            refreshing = true;
-            window.location.reload();
-          }
-        });
-      }
+      
 
       function showUpdateBanner(registration) {
         const banner = document.createElement('div');
