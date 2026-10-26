@@ -1,73 +1,130 @@
+// نام کانتینر کش به همراه شماره نسخه (با تغییر این عدد، کل کش قبلی پاک و از نو ساخته می‌شود)
+const CACHE_NAME = 'poster-iran-cache-v3.0.7';
 
+// لیست فایل‌های کلیدی و حیاتی برنامه
+// نکته: فایل js/script.js حذف شد چون در HTML شما وجود نداشت. اگر وجود دارد، آن را برگردانید.
+const ASSETS_TO_CACHE = [
+  './',
+  './index.html',
+  './manifest.json',
+  './css/style.css?v=3.0.7',
+  './icons/icon-192x192.png',
+  './icons/icon-512x512.png',
+  'https://cdn.tailwindcss.com',
+  'https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap',
+  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css'
+];
 
-        /* ----------------------------------------------------
-           کاتالوگ و پایگاه داده محصولات:
-           برای ناموجود کردن یک پوستر کافیست ویژگی زیر را در شیء آن محصول بنویسید:
-           outOfStock: true
-        ---------------------------------------------------- */
-        const groupInfo = {
-            1: { name: "سایز ۲۹×۲۱ دوروچاپ", images: [
-                { filename: "حساب آموز اول (افقی).webp", name: "حساب آموز اول (افقی)", price: 350000, allowedQuantities: [0, 30, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "حساب آموز اول (عمودی).webp", name: "حساب آموز اول (عمودی)", price: 350000, allowedQuantities: [0, 30, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "حساب آموز دوم (عمودی).webp", name: "حساب آموز دوم (عمودی)", price: 350000, allowedQuantities: [0, 30, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "حساب آموز سوم.webp", name: "حساب آموز سوم", price: 350000, allowedQuantities: [0, 30, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "حساب آموز چهارم.webp", name: "حساب آموز چهارم", price: 350000, allowedQuantities: [0, 30, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "حساب آموز پنجم.webp", name: "حساب آموز پنجم", price: 350000, allowedQuantities: [0, 30, 50, 100, 200], outOfStock: true },
-                { filename: "حساب آموز ششم.webp", name: "حساب آموز ششم", price: 350000, allowedQuantities: [0, 30, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "جدول تناوبی عناصر.webp", name: "جدول تناوبی عناصر", price: 350000, allowedQuantities: [0, 30, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "الفبای فارسی و انگلیسی.webp", name: "الفبای فارسی و انگلیسی", price: 350000, allowedQuantities: [0, 30, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "جمع و تفریق.webp", name: "جمع و تفریق", price: 350000, allowedQuantities: [0, 30, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "جدول دوستی تمرینی.webp", name: "جدول دوستی تمرینی", price: 350000, allowedQuantities: [0, 30, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "جدول دوستی کامل.webp", name: "جدول دوستی کامل", price: 350000, allowedQuantities: [0, 30, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "ضرب و تقسیم تمرینی.webp", name: "ضرب و تقسیم تمرینی", price: 350000, allowedQuantities: [0, 30, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "ضرب و تقسیم.webp", name: "ضرب و تقسیم", price: 350000, allowedQuantities: [0, 30, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "ضرب و تمرین ضرب.webp", name: "ضرب و تمرین ضرب", price: 350000, allowedQuantities: [0, 30, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "اعداد.webp", name: "اعداد ساده", price: 350000, allowedQuantities: [0, 30, 50, 100, 200, 300, 400, 500], outOfStock: false }, 
-                { filename: "اعداد با ساعت و محور.webp", name: " اعداد با ساعت و محور", price: 350000, allowedQuantities: [0, 30, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "آموزش زمان و ساعت.webp", name: "آموزش زمان و ساعت", price: 350000, allowedQuantities: [0, 30, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "محیط و مساحت اشکال هندسی.webp", name: "محیط و مساحت اشکال هندسی", price: 350000, allowedQuantities: [0, 30, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "جدول تقریب اعداد.webp", name: "جدول تقریب اعداد", price: 350000, allowedQuantities: [0, 30, 50, 100, 200, 300, 400, 500], outOfStock: false },
-            ]},
-            2: { name: "سایز ۴۲×۳۰ یکروچاپ", images: [
-                { filename: "جدول ضرب.webp", name: "جدول ضرب", price: 350000, allowedQuantities: [0, 30, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "جدول ضرب حیوانات.webp", name: "جدول ضرب حیوانات", price: 350000, allowedQuantities: [0, 30, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "جدول دوستی کامل.webp", name: "جدول دوستی کامل", price: 350000, allowedQuantities: [0, 30, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "الفبای فارسی.webp", name: "الفبای فارسی", price: 350000, allowedQuantities: [0, 30, 50, 100, 200, 300, 400, 500], outOfStock: false },
-            ]},
-            3: { name: "سایز ۵۰×۳۵ دوروچاپ", images: [
-                { filename: "آموزش زمان و ساعت.webp", name: "آموزش زمان و ساعت", price: 700000, allowedQuantities: [0, 30, 50, 100], outOfStock: false },
-                { filename: "ضرب و تقسیم تمرینی.webp", name: "ضرب و تقسیم تمرینی", price: 700000, allowedQuantities: [0, 30, 50, 100], outOfStock: false },
-            ]},
-            4: { name: "سایز ۷۰×۵۰ یکروچاپ", images: [
-                { filename: "الفبای فارسی شکل دار.webp", name: "الفبای فارسی شکل دار", price: 700000, allowedQuantities: [0, 20, 30, 40, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "جدول دوستی.webp", name: "جدول دوستی", price: 700000, allowedQuantities: [0, 20, 30, 40, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "جدول ضرب.webp", name: "جدول ضرب", price: 700000, allowedQuantities: [0, 20, 30, 40, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "اعداد 1 تا 100.webp", name: "اعداد یک تا صد", price: 700000, allowedQuantities: [0, 20, 30, 40, 50, 100, 200, 300, 400, 500], outOfStock: false },
-            ]},
-            5: { name: "سایز ۷۰×۵۰ یووی‌دار", images: [
-                { filename: "ضرب تمرینی مربعی.webp", name: "ضرب تمرینی مربعی", price: 900000, allowedQuantities: [0, 20, 30, 40, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "ضرب تمرینی ستونی.webp", name: "ضرب تمرینی ستونی", price: 900000, allowedQuantities: [0, 20, 30, 40, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "آموزش زمان وساعت.webp", name: "آموزش زمان وساعت", price: 900000, allowedQuantities: [0, 20, 30, 40, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "جدول دوستی تمرینی.webp", name: "جدول دوستی تمرینی", price: 900000, allowedQuantities: [0, 20, 30, 40, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "اعداد یک تا صد.webp", name: "اعداد یک تا صد", price: 900000, allowedQuantities: [0, 20, 30, 40, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "اعداد ده تا هزار.webp", name: "اعداد ده تا هزار", price: 900000, allowedQuantities: [0, 20, 30, 40, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "جدول تناوبی عناصر.webp", name: "جدول تناوبی عناصر", price: 900000, allowedQuantities: [0, 20, 30, 40, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "محیط و مساحت اشکال هندسی.webp", name: "محیط و مساحت اشکال هندسی", price: 900000, allowedQuantities: [0, 20, 30, 40, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "نقشـه ایـران.webp", name: "نقشـه ایـران", price: 900000, allowedQuantities: [0, 20, 30, 40, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "نقشـه جهـان.webp", name: "نقشـه جهـان" , price: 900000, allowedQuantities: [0, 20, 30, 40, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "آناتـومی بـدن انسـان.webp", name: "آناتـومی بـدن انسـان", price: 900000, allowedQuantities: [0, 20, 30, 40, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "بـدن من.webp", name: "بـدن من", price: 900000, allowedQuantities: [0, 20, 30, 40, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "برنامه هفتگی.webp", name: "برنامه هفتگی", price: 900000, allowedQuantities: [0, 20, 30, 40, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                
-            ]},
-            6: { name: "سایر محصولات", images: [
-                { filename: "دفترچه ای بزرگ ضرب.webp", name: "دفترچه ای بزرگ ضرب", price: 850000, allowedQuantities: [0, 36, 60, 120, 240, 384], outOfStock: false },
-                { filename: "دفترچه ای بزرگ دوستی.webp", name: "دفترچه ای بزرگ دوستی", price: 850000, allowedQuantities: [0, 36, 60, 120, 240, 384], outOfStock: false },
-                { filename: "دفترچه ای کوچک ضرب.webp", name: "دفترچه ای کوچک ضرب", price: 600000, allowedQuantities: [0, 36, 60, 120, 240, 720], outOfStock: false },
-                { filename: "دفترچه ای کوچک الفبا.webp", name: "دفترچه ای کوچک الفبا", price: 600000, allowedQuantities: [0, 36, 60, 120, 240, 720], outOfStock: false },
-                { filename: "دفترچه ای کوچک دوستی.webp", name: "دفترچه ای کوچک دوستی", price: 600000, allowedQuantities: [0, 36, 60, 120, 240, 720], outOfStock: false },
-                { filename: "فلش کارت اعداد.webp", name: "فلش کارت اعداد", price: 800000, allowedQuantities: [0, 40, 50, 60, 120, 240, 500], outOfStock: false },
-                { filename: "فلش کارت الفبا.webp", name: "فلش کارت الفبا", price: 500000, allowedQuantities: [0, 36, 60, 120, 240, 570], outOfStock: false },
-                { filename: "استیکر A4.webp", name: "استیکر آ۴ ", price: 200000, allowedQuantities: [0, 100, 200, 300, 400, 500, 1200, 2400], outOfStock: false },
-            ]}
-        };
+// ۱. نصب سرویس‌ورکر و کش کردن فایل‌های حیاتی
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => {
+      console.log('📦 کش‌گذاری فایل‌های پایه نسخه v3.0.7 آغاز شد.');
+      
+      // استفاده از cache: 'reload' فقط در مرحله نصب عالی است تا مطمئن شویم فایل‌های تازه از سرور می‌آیند
+      const cachePromises = ASSETS_TO_CACHE.map((url) => {
+        return fetch(url, { cache: 'reload' })
+          .then((response) => {
+            if (response.ok) {
+              return cache.put(url, response);
+            }
+            console.warn(`⚠️ کش نشدن فایل (احتمالاً ۴۰۴ یا مشکل CORS): ${url}`);
+          })
+          .catch((err) => {
+            console.error(`❌ خطای شبکه در کش کردن: ${url}`, err);
+          });
+      });
+      
+      return Promise.all(cachePromises);
+    })
+    // نکته مهم: self.skipWaiting() از اینجا حذف شد تا کنترل به‌روزرسانی به منطق HTML شما (message) سپرده شود.
+  );
+});
+
+// ۲. فعال‌سازی و پاکسازی کش‌های قدیمی
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cache) => {
+          if (cache !== CACHE_NAME) {
+            console.log('🧹 در حال حذف کش منسوخ شده:', cache);
+            return caches.delete(cache);
+          }
+        })
+      );
+    }).then(() => {
+      console.log('✅ سرویس‌ورکر جدید فعال شد و کنترل صفحات را به دست گرفت.');
+      return self.clients.claim();
+    })
+  );
+});
+
+// ۳. استراتژی هوشمند دریافت داده‌ها (Fetch Strategy)
+self.addEventListener('fetch', (event) => {
+  const requestUrl = new URL(event.request.url);
+  
+  // الف) درخواست‌های خارجی خاص (مثل API هوش مصنوعی یا تصاویر بزرگ گالری)
+  // استراتژی: Network First (اول شبکه)، اگر نشد کش
+  if (requestUrl.host.includes('generativelanguage.googleapis.com') || requestUrl.pathname.includes('/Image/')) {
+    event.respondWith(
+      fetch(event.request)
+      .then((networkResponse) => {
+        // اگر پاسخ موفق بود، آن را در کش ذخیره کن (برای دفعات بعدی که آفلاین بود)
+        if (networkResponse.ok) {
+          const responseToCache = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseToCache);
+          });
+        }
+        return networkResponse;
+      })
+      .catch(() => caches.match(event.request))
+    );
+    return;
+  }
+  
+  // ب) فایل‌های استاتیک محلی و حیاتی (HTML, CSS, JS, Manifest, Icons)
+  // استراتژی: Cache First (اول کش)، اگر نبود شبکه. (این سریع‌ترین حالت برای PWA است)
+  const isLocalAsset = event.request.destination === 'document' ||
+    event.request.destination === 'script' ||
+    event.request.destination === 'style' ||
+    requestUrl.origin === self.location.origin;
+  
+  if (isLocalAsset) {
+    event.respondWith(
+      caches.match(event.request).then((cachedResponse) => {
+        if (cachedResponse) {
+          return cachedResponse; // بازگشت آنی از کش (سرعت نور!)
+        }
+        // اگر در کش نبود، از شبکه بگیر و در کش ذخیره کن
+        return fetch(event.request).then((networkResponse) => {
+          if (networkResponse.ok) {
+            const responseToCache = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, responseToCache);
+            });
+          }
+          return networkResponse;
+        });
+      })
+    );
+    return;
+  }
+  
+  // ج) سایر فایل‌های خارجی (مثل فونت‌ها و CDNها)
+  // استراتژی: Cache First
+  event.respondWith(
+    caches.match(event.request).then((cachedResponse) => {
+      return cachedResponse || fetch(event.request);
+    })
+  );
+});
+
+// ۴. مدیریت دستور فعال‌سازی فوری از طرف فایل HTML
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.action === 'skipWaiting') {
+    console.log('🔄 دستور skipWaiting از کلاینت دریافت شد. فعال‌سازی فوری...');
+    self.skipWaiting();
+  }
+});
