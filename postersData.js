@@ -34,10 +34,6 @@
                 { filename: "جدول دوستی کامل.webp", name: "جدول دوستی کامل", price: 350000, allowedQuantities: [0, 30, 50, 100, 200, 300, 400, 500], outOfStock: false },
                 { filename: "الفبای فارسی.webp", name: "الفبای فارسی", price: 350000, allowedQuantities: [0, 30, 50, 100, 200, 300, 400, 500], outOfStock: false },
             ]},
-            3: { name: "سایز ۵۰×۳۵ دوروچاپ", images: [
-                { filename: "آموزش زمان و ساعت.webp", name: "آموزش زمان و ساعت", price: 700000, allowedQuantities: [0, 30, 50, 100], outOfStock: false },
-                { filename: "ضرب و تقسیم تمرینی.webp", name: "ضرب و تقسیم تمرینی", price: 700000, allowedQuantities: [0, 30, 50, 100], outOfStock: false },
-            ]},
             4: { name: "سایز ۷۰×۵۰ یکروچاپ", images: [
                 { filename: "الفبای فارسی شکل دار.webp", name: "الفبای فارسی شکل دار", price: 700000, allowedQuantities: [0, 20, 30, 40, 50, 100, 200, 300, 400, 500], outOfStock: false },
                 { filename: "جدول دوستی.webp", name: "جدول دوستی", price: 700000, allowedQuantities: [0, 20, 30, 40, 50, 100, 200, 300, 400, 500], outOfStock: false },
