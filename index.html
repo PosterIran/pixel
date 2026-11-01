@@ -679,6 +679,22 @@ nav {
                         </button>
                     </div>
 
+                    <!-- بخش روش دستی و کپی متن سفارش در پایین دو کلید اصلی -->
+                    <div class="mt-6 pt-5 border-t border-blue-100 text-center">
+                        <p class="text-xs text-gray-600 mb-3 leading-relaxed px-2">
+                            💡 چنانچه مایلید سفارش خود را از طریق روش دیگری (پیام‌رسان‌های دیگر یا پیامک) ثبت کنید، ابتدا روی دکمه زیر بزنید تا متن سفارش کپی شود، سپس آن را در پیام‌رسان دلخواه برای ما ارسال نمایید.
+                        </p>
+                        
+
+                    <!-- دکمه جدید کپی متن سفارش در بالا -->
+                    <div class="mb-3">
+                        <button onclick="submitOrder('copy')" 
+                            class="w-full flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-2xl shadow-lg active:scale-95 transition-all gap-2">
+                            <span class="text-lg">📋</span>
+                            <span class="font-bold text-sm">کپی متن سفارش</span>
+                        </button>
+                    </div>
+
                     <button onclick="clearCart()" class="w-full mt-4 text-red-500 text-xs hover:text-red-400 transition">
                         🗑️ انصراف و پاک کردن سبد خرید
                     </button>
@@ -1793,42 +1809,56 @@ async function checkWhatsAppAccess() {
     
     text += `\n✅ سفارش شما با موفقیت ثبت شد. در اسرع وقت هماهنگی لازم با شما صورت می‌گیرد.`;
     
-    if (platform === 'whatsapp') {
-        showToast("در حال بررسی اتصال به واتس‌آپ...", "", "info");
-        const isVpnOn = await checkWhatsAppAccess();
-        
-        if (!isVpnOn) {
-            showCustomConfirm(
-                "⚠️ نیاز به فیلترشکن",
-                "برای ارسال سفارش از طریق واتس‌آپ، باید فیلترشکن (VPN) شما روشن باشد.\nلطفاً فیلترشکن خود را روشن کرده و سپس دکمه ارسال را بزنید.",
-                () => {
-                    processWhatsAppSend(text, orderNum, finalPayable, total, discount, shipping);
-                },
-                "متوجه شدم، ارسال کن",
-                "انصراف",
-                "bg-green-600 hover:bg-green-700",
-                '<i class="fas fa-shield-alt text-2xl"></i>',
-                "bg-yellow-100 text-yellow-600"
-            );
-            return;
-        }
-        
-        processWhatsAppSend(text, orderNum, finalPayable, total, discount, shipping);
+    // حالت جدید برای دکمه کپی متن سفارش
+if (platform === 'copy') {
+    saveOrderToHistory(orderNum, finalPayable, total, discount, shipping);
+    localStorage.setItem('cart_submitted', 'true');
+    
+    copyToClipboard(text).then(() => {
+        showToast('متن فاکتور با موفقیت در حافظه کپی شد!', 'کپی متن', 'success');
+        clearCartAfterOrder();
+    }).catch(err => {
+        showToast('کپی متن ناموفق بود.', 'خطا', 'error');
+    });
+    return;
+}
+
+if (platform === 'whatsapp') {
+    showToast("در حال بررسی اتصال به واتس‌آپ...", "", "info");
+    const isVpnOn = await checkWhatsAppAccess();
+    
+    if (!isVpnOn) {
+        showCustomConfirm(
+            "⚠️ نیاز به فیلترشکن",
+            "برای ارسال سفارش از طریق واتس‌آپ، باید فیلترشکن (VPN) شما روشن باشد.\nلطفاً فیلترشکن خود را روشن کرده و سپس دکمه ارسال را بزنید.",
+            () => {
+                processWhatsAppSend(text, orderNum, finalPayable, total, discount, shipping);
+            },
+            "متوجه شدم، ارسال کن",
+            "انصراف",
+            "bg-green-600 hover:bg-green-700",
+            '<i class="fas fa-shield-alt text-2xl"></i>',
+            "bg-yellow-100 text-yellow-600"
+        );
+        return;
     }
-    else if (platform === 'eitaa') {
-        saveOrderToHistory(orderNum, finalPayable, total, discount, shipping);
-        localStorage.setItem('cart_submitted', 'true');
-        
-        copyToClipboard(text).then(() => {
-            showToast('متن فاکتور در حافظه کپی شد. اکنون در ایتا پیست کنید.', 'ایتا', 'success');
-            clearCartAfterOrder();
-            setTimeout(() => {
-                window.open(`https://eitaa.com/@PosterIran`, '_blank');
-            }, 1200);
-        }).catch(err => {
-            showToast('کپی متن ناموفق بود. لطفاً دستی اقدام نمایید.', 'خطا', 'error');
-        });
-    }
+    
+    processWhatsAppSend(text, orderNum, finalPayable, total, discount, shipping);
+}
+else if (platform === 'eitaa') {
+    saveOrderToHistory(orderNum, finalPayable, total, discount, shipping);
+    localStorage.setItem('cart_submitted', 'true');
+    
+    copyToClipboard(text).then(() => {
+        showToast('متن فاکتور در حافظه کپی شد. اکنون در ایتا پیست کنید.', 'ایتا', 'success');
+        clearCartAfterOrder();
+        setTimeout(() => {
+            window.open(`https://eitaa.com/@PosterIran`, '_blank');
+        }, 1200);
+    }).catch(err => {
+        showToast('کپی متن ناموفق بود. لطفاً دستی اقدام نمایید.', 'خطا', 'error');
+    });
+}
 }
 
 // تابع کمکی اختصاصی برای باز کردن واتس‌آپ
