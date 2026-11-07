@@ -441,6 +441,34 @@ nav {
 .product-img.loaded {
     opacity: 1;
 }
+/* پوشش تمام صفحه برای لود اولیه لوگو با پس‌زمینه سفید خالص و بدون حاشیه */
+#introLoader {
+    position: fixed;
+    inset: 0;
+    background-color: #ffffff;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* تصویر لوگو در بدو ورود با اندازه بزرگ و فرمت شفاف (PNG) */
+#introLoader img {
+    width: 260px; /* سایز بزرگ اولیه لوگو */
+    max-width: 80vw;
+    height: auto;
+    object-fit: contain;
+    transition: transform 2s cubic-bezier(0.4, 0, 0.2, 1), opacity 2s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* حالت خروج: چندین برابر شدن سایز و محو شدن تدریجی */
+#introLoader.fade-out img {
+    transform: scale(3.5); /* زوم شدن زیاد در لحظه آخر */
+    opacity: 0; /* محو کامل */
+}
     </style>
 </head>
 <body class="bg-gray-50 text-gray-900 pb-28">
@@ -799,21 +827,48 @@ nav {
                 <button id="confirmNoBtn" class="flex-1 bg-gray-100 text-gray-700 py-3 rounded-xl font-bold text-sm hover:bg-gray-200 transition-colors">انصراف</button>
             </div>
         </div>
-    </div>
-
-    <!-- مودال بزرگنمایی تصویر با قابلیت Spinner -->
-    <div id="imageModal" class="fixed inset-0 z-[200] hidden bg-black/95 flex items-center justify-center p-4 backdrop-blur-md" onclick="closeModal()">
-        <span class="absolute top-5 right-5 text-white text-5xl cursor-pointer hover:text-red-500 transition-colors z-[210]">&times;</span>
-        
-        <!-- انیمیشن بارگذاری سفارشی (Spinner) -->
-        <div id="modalSpinner" class="absolute inset-0 flex items-center justify-center z-10">
-            <div class="w-12 h-12 border-4 border-white/20 border-t-blue-500 rounded-full animate-spin-custom"></div>
+    </div><!-- مودال بزرگنمایی تصویر با قابلیت Touch Swipe / Mouse Drag و انتخاب تعداد -->
+<div id="imageModal" class="fixed inset-0 z-[200] hidden bg-black/95 flex items-center justify-center p-4 backdrop-blur-md select-none" onclick="closeModal()">
+    <span class="absolute top-5 right-5 text-white text-5xl cursor-pointer hover:text-red-500 transition-colors z-[210]">&times;</span>
+    
+    <!-- دکمه قبلی (راست در RTL) -->
+    <button id="modalPrevBtn" onclick="navigateModal(-1, event)" class="absolute right-4 top-1/2 -translate-y-1/2 text-white bg-white/10 hover:bg-white/30 backdrop-blur-md rounded-full w-12 h-12 flex items-center justify-center text-xl transition-all z-[210] border border-white/20 disabled:opacity-30 disabled:cursor-not-allowed">
+        <i class="fas fa-chevron-right"></i>
+    </button>
+    
+    <!-- دکمه بعدی (چپ در RTL) -->
+    <button id="modalNextBtn" onclick="navigateModal(1, event)" class="absolute left-4 top-1/2 -translate-y-1/2 text-white bg-white/10 hover:bg-white/30 backdrop-blur-md rounded-full w-12 h-12 flex items-center justify-center text-xl transition-all z-[210] border border-white/20 disabled:opacity-30 disabled:cursor-not-allowed">
+        <i class="fas fa-chevron-left"></i>
+    </button>
+    
+    <!-- عنوان پوستر و ویجت انتخاب تعداد در پایین -->
+    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-[210]" onclick="event.stopPropagation()">
+        <!-- ویجت انتخاب تعداد داخل مودال -->
+        <div id="modalQtyWrapper" class="bg-black/70 backdrop-blur-md px-4 py-2 rounded-2xl border border-white/20 flex items-center gap-3 shadow-xl">
+            <span class="text-white text-xs font-bold">تعداد در سبد:</span>
+            <select id="modalQtySelect" onchange="changeModalQuantity(this.value)" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-black px-3 py-1.5 rounded-xl outline-none cursor-pointer transition-colors shadow-md">
+                <!-- گزینه‌ها به صورت پویا پر می‌شوند -->
+            </select>
         </div>
-        
-        <!-- تصویر باکیفیت -->
-        <img id="modalImage" class="max-w-full max-h-[85vh] rounded-xl shadow-2xl border-2 border-white/20 object-contain shadow-white/10 opacity-0 scale-95 transition-all duration-300 z-20" src="" alt="بزرگنمایی" onclick="event.stopPropagation()">
+        <!-- عنوان پوستر -->
+        <div id="modalTitle" class="text-white bg-black/60 px-4 py-1.5 rounded-xl border border-white/10 text-xs font-bold pointer-events-none shadow-md"></div>
     </div>
-
+    
+    <!-- انیمیشن بارگذاری (Spinner) -->
+    <div id="modalSpinner" class="absolute inset-0 flex items-center justify-center z-10">
+        <div class="w-12 h-12 border-4 border-white/20 border-t-blue-500 rounded-full animate-spin-custom"></div>
+    </div><!-- کانتینر تصویر اصلی در مودال -->
+<div class="relative max-w-full max-h-[80vh] flex items-center justify-center overflow-hidden mb-16" onclick="event.stopPropagation()">
+    <!-- برچسب ناموجود در بزرگنمایی (اضافه شدن pointer-events-none) -->
+    <div id="modalOutOfStockBadge" class="absolute inset-0 bg-black/50 items-center justify-center z-30 hidden pointer-events-none">
+        <span class="bg-red-600 text-white text-sm font-black px-4 py-2 rounded-xl shadow-lg border border-white/20">
+            <i class="fas fa-exclamation-circle ml-1"></i> این محصول موقتاً ناموجود است
+        </span>
+    </div>
+    
+    <img id="modalImage" class="max-w-full max-h-[75vh] rounded-xl shadow-2xl border-2 border-white/20 object-contain opacity-0 scale-95 transition-all duration-300 ease-out z-20 cursor-grab active:cursor-grabbing" src="" alt="بزرگنمایی">
+</div>
+</div>
     <!-- پاپ‌آپ نصب PWA -->
     <div id="install-banner" class="fixed bottom-24 left-4 right-4 md:left-auto md:right-4 md:max-w-sm z-[9999] p-5 rounded-3xl border border-white/30 bg-white/80 backdrop-blur-xl shadow-2xl flex flex-col gap-4 transform translate-y-20 opacity-0 pointer-events-none transition-all duration-700">
         <div class="flex items-start gap-3">
@@ -1183,7 +1238,8 @@ nav {
                 
                 box.innerHTML = `
     <div class="w-full h-32 mb-2 rounded-lg img-container flex items-center justify-center overflow-hidden cursor-pointer relative" 
-         onclick="openModal('${originalSrc}')">
+         // تغییر دهيد:
+onclick="openModal('${info.name}', '${img.filename}')">
         <img src="${thumbSrc}" 
              class="w-full h-full object-contain product-img" 
              onload="this.classList.add('loaded')"
@@ -1447,7 +1503,8 @@ nav {
                             htmlContent += `
                             <div class="p-4 flex items-center justify-between">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-12 h-12 bg-gray-50 rounded-xl overflow-hidden border border-gray-100 flex-shrink-0 p-1 cursor-pointer" onclick="openModal('${originalSrc}')">
+                                    <div class="w-12 h-12 bg-gray-50 rounded-xl overflow-hidden border border-gray-100 flex-shrink-0 p-1 cursor-pointer" // تغییر دهید:
+onclick="openModal('${item.groupName}', '${item.filename}')">
                                         <img src="${thumbSrc}" class="w-full h-full object-contain" onerror="this.onerror=null; this.src='${originalSrc}';">
                                     </div>
                                     <div>
@@ -2299,40 +2356,258 @@ Object.keys(groupInfo).forEach(groupId => {
                 "bg-red-100 text-red-600"
             );
         }
+        let currentModalImages = [];
+let currentModalIndex = -1;
+let currentModalGroupName = '';
 
-        // نمایش تصویر بزرگنمایی‌شده
-        function openModal(src) {
-            const modal = document.getElementById('imageModal');
-            const img = document.getElementById('modalImage');
-            const spinner = document.getElementById('modalSpinner');
-            
-            if (!modal || !img) return;
-            
-            spinner.style.display = 'flex';
-            img.classList.add('opacity-0', 'scale-95');
-            img.src = src;
-            
-            img.onload = () => {
-                spinner.style.display = 'none';
-                img.classList.remove('opacity-0', 'scale-95');
-            };
-            
-            modal.classList.remove('hidden');
-            if (history.state === null || history.state.modal !== 'open') {
-                history.pushState({ modal: 'open' }, 'Modal', '#image-modal');
-            }
+let startX = 0;
+let currentTranslateX = 0;
+let isDragging = false;
+const dragThreshold = 50;
+
+function openModal(groupName, filename) {
+    const groupKey = Object.keys(groupInfo).find(k => groupInfo[k].name === groupName);
+    if (!groupKey) return;
+    
+    currentModalGroupName = groupName;
+    currentModalImages = groupInfo[groupKey].images;
+    currentModalIndex = currentModalImages.findIndex(img => img.filename === filename);
+    
+    if (currentModalIndex === -1) return;
+    
+    const modal = document.getElementById('imageModal');
+    if (!modal) return;
+    
+    updateModalImage(false);
+    
+    modal.classList.remove('hidden');
+    if (history.state === null || history.state.modal !== 'open') {
+        history.pushState({ modal: 'open' }, 'Modal', '#image-modal');
+    }
+}
+
+function updateModalImage(withAnimation = true, slideDirection = 0) {
+    const imgData = currentModalImages[currentModalIndex];
+    if (!imgData) return;
+    
+    const modalImg = document.getElementById('modalImage');
+    const spinner = document.getElementById('modalSpinner');
+    const titleEl = document.getElementById('modalTitle');
+    const prevBtn = document.getElementById('modalPrevBtn');
+    const nextBtn = document.getElementById('modalNextBtn');
+    const qtySelect = document.getElementById('modalQtySelect');
+    const outOfStockBadge = document.getElementById('modalOutOfStockBadge');
+    const originalSrc = getOriginalUrl(currentModalGroupName, imgData.filename);
+    
+    // فیکس کامل فریم عکس قبل از اجرای انیمیشن
+    modalImg.style.transform = 'translateX(0px) scale(1)';
+    modalImg.style.opacity = '1';
+
+    // بررسی وضعیت موجودی محصول
+    const isOutOfStock = imgData.outOfStock === true;
+
+    // نمایش یا مخفی کردن برچسب ناموجود در مودال
+    if (outOfStockBadge) {
+        if (isOutOfStock) {
+            outOfStockBadge.classList.remove('hidden');
+            outOfStockBadge.classList.add('flex');
+        } else {
+            outOfStockBadge.classList.add('hidden');
+            outOfStockBadge.classList.remove('flex');
         }
+    }
 
-        function closeModal(fromPopState = false) {
-            const modal = document.getElementById('imageModal');
-            if (modal) {
-                modal.classList.add('hidden');
-            }
-            if (!fromPopState && history.state && history.state.modal === 'open') {
-                history.back();
-            }
+    // تنظیم مقادیر دراپ‌داون تعداد برای این تصویر خاص
+    if (qtySelect) {
+        const productId = currentModalGroupName + "_" + imgData.filename;
+        const currentQty = cart[productId]?.quantity || 0;
+        const qtys = imgData.allowedQuantities || [0, 50, 100, 200];
+        
+        if (isOutOfStock) {
+            qtySelect.innerHTML = `<option value="0">ناموجود</option>`;
+            qtySelect.disabled = true;
+            qtySelect.className = "bg-gray-700 text-gray-300 text-xs font-black px-3 py-1.5 rounded-xl outline-none cursor-not-allowed opacity-70";
+        } else {
+            qtySelect.innerHTML = qtys.map(q => 
+                `<option value="${q}" ${q === currentQty ? 'selected' : ''}>${q === 0 ? 'انتخاب تعداد (۰)' : toPersianDigits(q) + ' عدد'}</option>`
+            ).join('');
+            qtySelect.disabled = false;
+            qtySelect.className = "bg-blue-600 hover:bg-blue-700 text-white text-xs font-black px-3 py-1.5 rounded-xl outline-none cursor-pointer transition-colors shadow-md";
         }
+    }
 
+    if (withAnimation) {
+        modalImg.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+        modalImg.style.transform = `translateX(${slideDirection * 120}px) scale(0.9)`;
+        modalImg.style.opacity = '0';
+    }
+    
+    setTimeout(() => {
+        spinner.style.display = 'flex';
+        modalImg.src = originalSrc;
+        
+        if (titleEl) {
+            titleEl.innerText = `${imgData.name} (${toPersianDigits(currentModalIndex + 1)} از ${toPersianDigits(currentModalImages.length)})`;
+        }
+        
+        if (prevBtn) prevBtn.disabled = (currentModalIndex === 0);
+        if (nextBtn) nextBtn.disabled = (currentModalIndex === currentModalImages.length - 1);
+        
+        modalImg.onload = () => {
+            spinner.style.display = 'none';
+            modalImg.style.transition = 'none';
+            
+            modalImg.style.transform = `translateX(${slideDirection * -120}px) scale(0.9)`;
+            modalImg.style.opacity = '0';
+            
+            requestAnimationFrame(() => {
+                modalImg.style.transition = 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                modalImg.style.transform = 'translateX(0px) scale(1)';
+                modalImg.style.opacity = '1';
+                modalImg.classList.remove('opacity-0', 'scale-95');
+            });
+        };
+    }, withAnimation ? 350 : 0);
+}
+
+// تابع تغییر تعداد از داخل مودال بزرگنمایی
+function changeModalQuantity(qtyValue) {
+    const imgData = currentModalImages[currentModalIndex];
+    if (!imgData) return;
+    
+    const qtys = imgData.allowedQuantities || [0, 50, 100, 200];
+    addToCart(imgData.filename, imgData.name, parseInt(qtyValue), imgData.price, currentModalGroupName, qtys);
+    
+    // اگر کاربر در صفحه گالری باشد، لیست گالری هم به‌روزرسانی می‌شود تا دکمه‌ها هماهنگ بمانند
+    if (currentScreen === 'gallery') {
+        loadImages(false);
+    }
+}
+
+function navigateModal(direction, event) {
+    if (event) event.stopPropagation();
+    if (!currentModalImages || currentModalImages.length === 0) return;
+    
+    const newIndex = currentModalIndex + direction;
+    
+    if (newIndex >= 0 && newIndex < currentModalImages.length) {
+        currentModalIndex = newIndex;
+        updateModalImage(true, direction);
+    }
+}
+
+function closeModal(fromPopState = false) {
+    const modal = document.getElementById('imageModal');
+    if (modal) {
+        modal.classList.add('hidden');
+    }
+    currentModalImages = [];
+    currentModalIndex = -1;
+    
+    if (!fromPopState && history.state && history.state.modal === 'open') {
+        history.back();
+    }
+}
+
+/* مدیریت بهینه، دقیق و هوشمند سوایپ (برای تمام تصاویر از جمله اول و آخر) */
+function setupModalSwipeEvents() {
+    const modalImg = document.getElementById('modalImage');
+    if (!modalImg) return;
+    
+    let isTouchActive = false;
+
+    const handleStart = (clientX) => {
+        isDragging = true;
+        isTouchActive = true;
+        startX = clientX;
+        currentTranslateX = 0;
+        modalImg.style.transition = 'none';
+    };
+    
+    const handleMove = (clientX) => {
+        if (!isDragging) return;
+        const diffX = clientX - startX;
+        currentTranslateX = diffX;
+        
+        // تشخیص کشیدن به سمت قبل (در مرز اول) یا بعد (در مرز آخر)
+        const isTryingInvalidPrev = (currentModalIndex === 0 && diffX > 0);
+        const isTryingInvalidNext = (currentModalIndex === currentModalImages.length - 1 && diffX < 0);
+        
+        if (isTryingInvalidPrev || isTryingInvalidNext) {
+            // ایجاد مقاومت کشسانی و افکت کشسانی ملایم
+            modalImg.style.transform = `translateX(${diffX * 0.2}px)`;
+        } else {
+            // حرکت عادی همراه انگشت
+            modalImg.style.transform = `translateX(${diffX}px)`;
+        }
+    };
+    
+    const handleEnd = () => {
+        if (!isDragging) return;
+        isDragging = false;
+        
+        modalImg.style.transition = 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
+        
+        const isTryingInvalidPrev = (currentModalIndex === 0 && currentTranslateX > 0);
+        const isTryingInvalidNext = (currentModalIndex === currentModalImages.length - 1 && currentTranslateX < 0);
+        
+        // اگر در لبه‌ها حرکتی نامعتبر انجام شده، تصویر فورا به مرکز برمی‌گردد
+        if (isTryingInvalidPrev || isTryingInvalidNext) {
+            modalImg.style.transform = 'translateX(0px) scale(1)';
+            modalImg.style.opacity = '1';
+            return;
+        }
+        
+        // اگر جابجایی معتبر و بیشتر از حد آستانه باشد
+        if (Math.abs(currentTranslateX) > dragThreshold) {
+            modalImg.style.transform = 'translateX(0px) scale(1)';
+            if (currentTranslateX < 0) {
+                navigateModal(1); // تصویر بعدی
+            } else {
+                navigateModal(-1); // تصویر قبلی
+            }
+        } else {
+            // اگر جابجایی کم بود، برگشت به مرکز
+            modalImg.style.transform = 'translateX(0px) scale(1)';
+            modalImg.style.opacity = '1';
+        }
+    };
+    
+    // رویدادهای لمسی (موبایل و تبلت)
+    modalImg.addEventListener('touchstart', (e) => {
+        if (e.touches && e.touches.length > 0) {
+            handleStart(e.touches[0].clientX);
+        }
+    }, { passive: true });
+
+    modalImg.addEventListener('touchmove', (e) => {
+        if (e.touches && e.touches.length > 0) {
+            handleMove(e.touches[0].clientX);
+        }
+    }, { passive: true });
+
+    modalImg.addEventListener('touchend', handleEnd);
+    modalImg.addEventListener('touchcancel', handleEnd);
+    
+    // رویدادهای موس (دسکتاپ)
+    modalImg.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        handleStart(e.clientX);
+    });
+
+    window.addEventListener('mousemove', (e) => {
+        if (isDragging && !isTouchActive) {
+            handleMove(e.clientX);
+        }
+    });
+
+    window.addEventListener('mouseup', () => {
+        if (isDragging && !isTouchActive) {
+            handleEnd();
+        }
+        isTouchActive = false;
+    });
+}
         // آپدیت زنده ساعت و تاریخ
         function updateDateTime() {
             const now = new Date();
@@ -2582,6 +2857,18 @@ function hideInstallBanner() {
                 showScreen('home', false, true);
             }
         });
+        document.addEventListener('keydown', (e) => {
+    const modal = document.getElementById('imageModal');
+    if (modal && !modal.classList.contains('hidden')) {
+        if (e.key === 'ArrowRight') navigateModal(1);
+        if (e.key === 'ArrowLeft') navigateModal(-1);
+        if (e.key === 'Escape') closeModal();
+    }
+});
+
+window.addEventListener('DOMContentLoaded', () => {
+    setupModalSwipeEvents();
+});
     </script>
     <script>
     // ====================================================
