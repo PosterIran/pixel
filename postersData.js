@@ -17,7 +17,6 @@
                 { filename: "جمع و تفریق.webp", name: "جمع و تفریق", price: 350000, allowedQuantities: [0, 20, 30, 50, 100, 200, 300, 400, 500], outOfStock: false },
                 { filename: "جدول دوستی تمرینی.webp", name: "جدول دوستی تمرینی", price: 350000, allowedQuantities: [0, 20, 30, 50, 100, 200, 300, 400, 500], outOfStock: false },
                 { filename: "جدول دوستی کامل.webp", name: "جدول دوستی کامل", price: 350000, allowedQuantities: [0, 20, 30, 50, 100, 200, 300, 400, 500], outOfStock: false },
-                { filename: "ضرب و تقسیم تمرینی.webp", name: "ضرب و تقسیم تمرینی", price: 350000, allowedQuantities: [0, 20, 30, 50, 100, 200, 300, 400, 500], outOfStock: false },
                 { filename: "ضرب و تقسیم.webp", name: "ضرب و تقسیم", price: 350000, allowedQuantities: [0, 20, 30, 50, 100, 200, 300, 400, 500], outOfStock: false },
                 { filename: "ضرب و تمرین ضرب.webp", name: "ضرب و تمرین ضرب", price: 350000, allowedQuantities: [0, 20, 30, 50, 100, 200, 300, 400, 500], outOfStock: false },
                 { filename: "اعداد.webp", name: "اعداد ساده", price: 350000, allowedQuantities: [0, 20, 30, 50, 100, 200, 300, 400, 500], outOfStock: false }, 
