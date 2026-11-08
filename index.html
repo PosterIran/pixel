@@ -1782,46 +1782,53 @@ async function checkWhatsAppAccess() {
 }
 
         async function submitOrder(platform, isConfirmed = false) {
-    const name = document.getElementById('customerName').value;
-    const phone = document.getElementById('customerPhone').value;
-    const address = document.getElementById('customerAddress').value;
-    
-    if (!name || !phone || !address || Object.keys(cart).length === 0) {
-        showToast('لطفاً اطلاعات را کامل کرده و سبد را پر کنید.', 'خطا در ثبت', 'error');
-        return;
-    }
-    
-    // بررسی حداقل ۲۰۰ عدد برای مجموع دو گروه سایز ۷۰×۵۰
-    if (!isConfirmed && !check70x50MinimumOrder(platform)) {
-        return;
-    }
-    
-    if (!isConfirmed) {
-        let title = "";
-        let message = "";
-        let yesColorClass = "";
-        let iconHtml = "";
-        let iconBgClass = "";
+        const name = document.getElementById('customerName').value;
+        const phone = document.getElementById('customerPhone').value;
+        const address = document.getElementById('customerAddress').value;
         
-        if (platform === 'whatsapp') {
-            title = "تایید ارسال سفارش در واتس‌آپ";
-            message = "پس از انتخاب پوسترهای مورد نظر در سبد خرید و تکمیل اطلاعات فردی، با تایید این مرحله، متن فاکتور به همراه جزئیات به صورت خودکار به چت پشتیبانی ما در واتس‌آپ منتقل و ارسال خواهد شد.";
-            yesColorClass = "bg-green-600 hover:bg-green-700 shadow-lg shadow-green-100";
-            iconHtml = '<i class="fab fa-whatsapp text-2xl"></i>';
-            iconBgClass = "bg-green-100 text-green-600";
-        } else if (platform === 'eitaa') {
-            title = "تایید ارسال سفارش در ایتا";
-            message = "با تایید این مرحله، متن نهایی فاکتور به صورت خودکار در حافظه گوشی شما کپی می‌شود و به پشتیبانی پوستر ایران در ایتا هدایت خواهید شد تا بتوانید متن را به راحتی پیست (Paste) و ارسال کنید.";
-            yesColorClass = "bg-orange-500 hover:bg-orange-600 shadow-lg shadow-orange-100";
-            iconHtml = '<i class="fas fa-paper-plane text-2xl"></i>';
-            iconBgClass = "bg-orange-100 text-orange-600";
+        if (!name || !phone || !address || Object.keys(cart).length === 0) {
+            showToast('لطفاً اطلاعات را کامل کرده و سبد را پر کنید.', 'خطا در ثبت', 'error');
+            return;
         }
         
-        showCustomConfirm(title, message, () => {
-            submitOrder(platform, true);
-        }, "ارسال", "انصراف", yesColorClass, iconHtml, iconBgClass);
-        return;
-    }
+        // بررسی حداقل ۲۰۰ عدد برای مجموع دو گروه سایز ۷۰×۵۰
+        if (!isConfirmed && !check70x50MinimumOrder(platform)) {
+            return;
+        }
+        
+        // اگر دکمه کپی متن سفارش زده شده باشد، نیازی به نمایش پاپ‌آپ تاییدیه نیست و مستقیم اجرا می‌شود
+        if (platform === 'copy') {
+            isConfirmed = true;
+        }
+        
+        if (!isConfirmed) {
+            let title = "";
+            let message = "";
+            let yesColorClass = "";
+            let iconHtml = "";
+            let iconBgClass = "";
+            
+            if (platform === 'whatsapp') {
+                title = "تایید ارسال سفارش در واتس‌آپ";
+                message = "پس از انتخاب پوسترهای مورد نظر در سبد خرید و تکمیل اطلاعات فردی، با تایید این مرحله، متن فاکتور به همراه جزئیات به صورت خودکار به چت پشتیبانی ما در واتس‌آپ منتقل و ارسال خواهد شد.";
+                yesColorClass = "bg-green-600 hover:bg-green-700 shadow-lg shadow-green-100";
+                iconHtml = '<i class="fab fa-whatsapp text-2xl"></i>';
+                iconBgClass = "bg-green-100 text-green-600";
+            } else if (platform === 'eitaa') {
+                title = "تایید ارسال سفارش در ایتا";
+                message = "با تایید این مرحله، متن نهایی فاکتور به صورت خودکار در حافظه گوشی شما کپی می‌شود و به پشتیبانی پوستر ایران در ایتا هدایت خواهید شد تا بتوانید متن را به راحتی پیست (Paste) و ارسال کنید.";
+                yesColorClass = "bg-orange-500 hover:bg-orange-600 shadow-lg shadow-orange-100";
+                iconHtml = '<i class="fas fa-paper-plane text-2xl"></i>';
+                iconBgClass = "bg-orange-100 text-orange-600";
+            }
+            
+            showCustomConfirm(title, message, () => {
+                submitOrder(platform, true);
+            }, "ارسال", "انصراف", yesColorClass, iconHtml, iconBgClass);
+            return;
+        }
+        
+        // ادامه کدهای قبلی مربوط به ساخت متن و کپی/ارسال...
     
     const now = new Date();
     const dateStr = now.toLocaleDateString('fa-IR');
