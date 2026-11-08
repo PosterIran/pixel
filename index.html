@@ -2860,9 +2860,31 @@ function hideInstallBanner() {
         document.addEventListener('keydown', (e) => {
     const modal = document.getElementById('imageModal');
     if (modal && !modal.classList.contains('hidden')) {
-        if (e.key === 'ArrowRight') navigateModal(1);
-        if (e.key === 'ArrowLeft') navigateModal(-1);
-        if (e.key === 'Escape') closeModal();
+        if (e.key === 'ArrowRight') {
+            navigateModal(1); // تصویر بعدی
+        }
+        if (e.key === 'ArrowLeft') {
+            navigateModal(-1); // تصویر قبلی
+        }
+        // پشتیبانی از کلیدهای Home و End برای رفتن به اولین یا آخرین تصویر گروه
+        if (e.key === 'Home') {
+            if (currentModalImages && currentModalImages.length > 0) {
+                const direction = 0 - currentModalIndex;
+                currentModalIndex = 0;
+                updateModalImage(true, direction);
+            }
+        }
+        if (e.key === 'End') {
+            if (currentModalImages && currentModalImages.length > 0) {
+                const lastIndex = currentModalImages.length - 1;
+                const direction = lastIndex - currentModalIndex;
+                currentModalIndex = lastIndex;
+                updateModalImage(true, direction);
+            }
+        }
+        if (e.key === 'Escape') {
+            closeModal();
+        }
     }
 });
 
