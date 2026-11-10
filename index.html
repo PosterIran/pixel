@@ -1242,7 +1242,7 @@ nav {
                     <div class="w-full flex items-center gap-2 mt-auto pt-2 border-t">
                         <span class="text-[10px] text-gray-400 font-bold">تعداد:</span>
                         <div class="relative bg-blue-50 border border-blue-100 rounded-xl px-2 py-1 flex-1 text-center">
-                            <select onchange="addToCart('${img.filename}', '${img.name}', parseInt(this.value), ${img.price}, '${info.name}', ${JSON.stringify(qtys)}); loadImages(false);" 
+                            <select onchange="addToCart('${img.filename}', '${img.name}', parseInt(this.value), ${img.price}, '${info.name}', ${JSON.stringify(qtys)})" 
                                     class="w-full text-[11px] font-bold text-blue-700 bg-transparent outline-none cursor-pointer appearance-none text-center">
                                 ${optionsHtml}
                             </select>
@@ -1271,39 +1271,39 @@ onclick="openModal('${info.name}', '${img.filename}')">
         }
 
         function addToCart(filename, name, qty, price, groupName, allowedQtys) {
-            const productId = groupName + "_" + filename;
-            const previousQty = cart[productId] ? cart[productId].quantity : 0;
-
-            if (qty === 0) {
-                delete cart[productId];
-                updateBadge();
-                saveCartToStorage();
-                showToast(`❌ «${name}» از سبد خرید برداشته شد.`, groupName, "remove");
+    const productId = groupName + "_" + filename;
+    const previousQty = cart[productId] ? cart[productId].quantity : 0;
+    
+    if (qty === 0) {
+        delete cart[productId];
+        updateBadge();
+        saveCartToStorage();
+        showToast(`❌ «${name}» از سبد خرید برداشته شد.`, groupName, "remove");
+    } else {
+        cart[productId] = {
+            filename: filename,
+            name: name,
+            quantity: qty,
+            price: price,
+            groupName: groupName,
+            allowedQtys: allowedQtys
+        };
+        updateBadge();
+        saveCartToStorage();
+        
+        if (previousQty > 0 && previousQty !== qty) {
+            if (qty > previousQty) {
+                const diff = qty - previousQty;
+                showToast(`📈 تعداد «${name}» به ${toPersianDigits(qty)} عدد افزایش یافت (به میزان ${toPersianDigits(diff)}+ عدد)`, groupName, "success");
             } else {
-                cart[productId] = {
-                    filename: filename,
-                    name: name,
-                    quantity: qty,
-                    price: price,
-                    groupName: groupName,
-                    allowedQtys: allowedQtys 
-                };
-                updateBadge();
-                saveCartToStorage();
-
-                if (previousQty > 0 && previousQty !== qty) {
-                    if (qty > previousQty) {
-                        const diff = qty - previousQty;
-                        showToast(`📈 تعداد «${name}» به ${toPersianDigits(qty)} عدد افزایش یافت (به میزان ${toPersianDigits(diff)}+ عدد)`, groupName, "success");
-                    } else {
-                        const diff = previousQty - qty;
-                        showToast(`📉 تعداد «${name}» به ${toPersianDigits(qty)} عدد کاهش یافت (به میزان ${toPersianDigits(diff)}- عدد)`, groupName, "info");
-                    }
-                } else {
-                    showToast(`✨ ${toPersianDigits(qty)} عدد «${name}» به سبد خرید اضافه شد!`, groupName, "success");
-                }
+                const diff = previousQty - qty;
+                showToast(`📉 تعداد «${name}» به ${toPersianDigits(qty)} عدد کاهش یافت (به میزان ${toPersianDigits(diff)}- عدد)`, groupName, "info");
             }
+        } else {
+            showToast(`✨ ${toPersianDigits(qty)} عدد «${name}» به سبد خرید اضافه شد!`, groupName, "success");
         }
+    }
+}
 
         function updateBadge() {
             const itemsCount = Object.keys(cart).length;
@@ -1699,82 +1699,143 @@ onclick="openModal('${item.groupName}', '${item.filename}')">
 // گروه 5 = سایز ۷۰×۵۰ یووی‌دار
 // =========================================================
 function check70x50MinimumOrder(platform) {
-
-    const group4Name = groupInfo[4].name;
-    const group5Name = groupInfo[5].name;
-
-    let total70x50Qty = 0;
-
+    // بررسی گروه‌های ۱ و ۲
+    const group1Name = groupInfo[1] ? groupInfo[1].name : "";
+    const group2Name = groupInfo[2] ? groupInfo[2].name : "";
+    
+    // گروه ۴ و ۵ (سایزهای ۷۰×۵۰ قبلی)
+    const group4Name = groupInfo[4] ? groupInfo[4].name : "";
+    const group5Name = groupInfo[5] ? groupInfo[5].name : "";
+    
+    let totalGroup1Qty = 0;
+    let totalGroup2Qty = 0;
+    let totalOtherGroupsQty = 0;
+    
     Object.values(cart).forEach(item => {
-
-        if (
-            item.groupName === group4Name ||
-            item.groupName === group5Name
-        ) {
+        if (item.groupName === group1Name) {
+            totalGroup1Qty += Number(item.quantity) || 0;
+        } else if (item.groupName === group2Name) {
+            totalGroup2Qty += Number(item.quantity) || 0;
+        } else {
+            totalOtherGroupsQty += Number(item.quantity) || 0;
+        }
+    });
+    
+    // ۱. اگر فقط از گروه ۱ انتخاب شده و هیچ گروه دیگری انتخاب نشده است (مجموع حداقل ۱۰۰)
+    if (totalGroup1Qty > 0 && totalGroup2Qty === 0 && totalOtherGroupsQty === 0) {
+        if (totalGroup1Qty < 100) {
+            showCustomConfirm(
+                "حداقل تعداد سفارش رعایت نشده",
+                `اگر فقط از گروه «سایز ۲۹×۲۱» سفارش می‌دهید، حداقل تعداد انتخابی باید ۱۰۰ عدد باشد. (تعداد فعلی: ${toPersianDigits(totalGroup1Qty)} عدد)`,
+                () => {
+                    // حذف کامل محصولات گروه ۱
+                    Object.keys(cart).forEach(productId => {
+                        if (cart[productId].groupName === group1Name) delete cart[productId];
+                    });
+                    saveCartToStorage();
+                    updateBadge();
+                    updateCartDisplay();
+                    submitOrder(platform, false);
+                },
+                "حذف کامل و ادامه",
+                "اصلاح تعداد",
+                "bg-red-600 hover:bg-red-700",
+                '<i class="fas fa-exclamation-triangle text-2xl"></i>',
+                "bg-yellow-100 text-yellow-600"
+            );
+            return false;
+        }
+    }
+    
+    // ۲. اگر فقط از گروه ۲ انتخاب شده و هیچ گروه دیگری انتخاب نشده است (مجموع حداقل ۱۰۰)
+    if (totalGroup2Qty > 0 && totalGroup1Qty === 0 && totalOtherGroupsQty === 0) {
+        if (totalGroup2Qty < 100) {
+            showCustomConfirm(
+                "حداقل تعداد سفارش رعایت نشده",
+                `اگر فقط از گروه «سایز ۴۲×۳۰» سفارش می‌دهید، حداقل تعداد انتخابی باید ۱۰۰ عدد باشد. (تعداد فعلی: ${toPersianDigits(totalGroup2Qty)} عدد)`,
+                () => {
+                    // حذف کامل محصولات گروه ۲
+                    Object.keys(cart).forEach(productId => {
+                        if (cart[productId].groupName === group2Name) delete cart[productId];
+                    });
+                    saveCartToStorage();
+                    updateBadge();
+                    updateCartDisplay();
+                    submitOrder(platform, false);
+                },
+                "حذف کامل و ادامه",
+                "اصلاح تعداد",
+                "bg-red-600 hover:bg-red-700",
+                '<i class="fas fa-exclamation-triangle text-2xl"></i>',
+                "bg-yellow-100 text-yellow-600"
+            );
+            return false;
+        }
+    }
+    
+    // ۳. اگر فقط از این دو گروه (گروه ۱ و ۲) با هم انتخاب شوند و هیچ گروه دیگری نباشد -> فقط شرط بر حداقل تعداد گروه دوم ۱۰۰ باشد؟ 
+    // (طبق درخواست شما: "و اگر فقط از این دو گروه با هم انتخاب شوند فقط شرط بر حداقل تعداد گروه دو ۱۰۰ باشد")
+    if (totalGroup1Qty > 0 && totalGroup2Qty > 0 && totalOtherGroupsQty === 0) {
+        if (totalGroup2Qty < 100) {
+            showCustomConfirm(
+                "حداقل تعداد سفارش رعایت نشده",
+                `هنگام سفارش هم‌زمان از گروه ۱ و ۲، تعداد محصولات گروه «سایز ۴۲×۳۰» باید حداقل ۱۰۰ عدد باشد. (تعداد فعلی گروه دو: ${toPersianDigits(totalGroup2Qty)} عدد)`,
+                () => {
+                    // حذف محصولات گروه ۲ یا هر دو بر اساس نیاز (اینجا گروه ۲ پاک می‌شود تا کاربر اصلاح کند)
+                    Object.keys(cart).forEach(productId => {
+                        if (cart[productId].groupName === group2Name) delete cart[productId];
+                    });
+                    saveCartToStorage();
+                    updateBadge();
+                    updateCartDisplay();
+                    submitOrder(platform, false);
+                },
+                "حذف گروه دوم و ادامه",
+                "اصلاح تعداد",
+                "bg-red-600 hover:bg-red-700",
+                '<i class="fas fa-exclamation-triangle text-2xl"></i>',
+                "bg-yellow-100 text-yellow-600"
+            );
+            return false;
+        }
+    }
+    
+    // بررسی قانون قبلی سایز ۷۰×۵۰ (گروه ۴ و ۵)
+    let total70x50Qty = 0;
+    Object.values(cart).forEach(item => {
+        if (item.groupName === group4Name || item.groupName === group5Name) {
             total70x50Qty += Number(item.quantity) || 0;
         }
-
     });
-
-    // اگر هیچ محصولی از این دو گروه در سبد نیست
-    // محدودیتی وجود ندارد
-    if (total70x50Qty === 0) {
-        return true;
+    
+    if (total70x50Qty > 0 && total70x50Qty < 200) {
+        const remainingQty = 200 - total70x50Qty;
+        showCustomConfirm(
+            "حداقل تعداد سفارش رعایت نشده",
+            `مجموع سفارش شما از دو گروه سایز ۷۰×۵۰ در حال حاضر ${toPersianDigits(total70x50Qty)} عدد است. برای ثبت سفارش، مجموع این دو گروه باید حداقل ۲۰۰ عدد باشد. لطفاً ${toPersianDigits(remainingQty)} عدد دیگر اضافه کنید، یا تمام محصولات این دو گروه را حذف کنید و سفارش را ادامه دهید.`,
+            () => {
+                Object.keys(cart).forEach(productId => {
+                    const item = cart[productId];
+                    if (item.groupName === group4Name || item.groupName === group5Name) {
+                        delete cart[productId];
+                    }
+                });
+                saveCartToStorage();
+                updateBadge();
+                updateCartDisplay();
+                showToast("محصولات سایز ۷۰×۵۰ از سبد خرید حذف شدند.", "سبد خرید", "warning");
+                submitOrder(platform, false);
+            },
+            "حذف کامل و ادامه",
+            "افزایش تعداد",
+            "bg-red-600 hover:bg-red-700",
+            '<i class="fas fa-exclamation-triangle text-2xl"></i>',
+            "bg-yellow-100 text-yellow-600"
+        );
+        return false;
     }
-
-    // اگر مجموع حداقل 200 عدد است
-    // سفارش مجاز است
-    if (total70x50Qty >= 200) {
-        return true;
-    }
-
-    // اگر مجموع بین 1 تا 199 عدد باشد
-    const remainingQty = 200 - total70x50Qty;
-
-    showCustomConfirm(
-        "حداقل تعداد سفارش رعایت نشده",
-        `مجموع سفارش شما از دو گروه سایز ۷۰×۵۰ در حال حاضر ${toPersianDigits(total70x50Qty)} عدد است. برای ثبت سفارش، مجموع این دو گروه باید حداقل ۲۰۰ عدد باشد. لطفاً ${toPersianDigits(remainingQty)} عدد دیگر اضافه کنید، یا تمام محصولات این دو گروه را حذف کنید و سفارش را ادامه دهید.`,
-        () => {
-
-            // حذف کامل محصولات گروه 4 و 5
-            Object.keys(cart).forEach(productId => {
-
-                const item = cart[productId];
-
-                if (
-                    item.groupName === group4Name ||
-                    item.groupName === group5Name
-                ) {
-                    delete cart[productId];
-                }
-
-            });
-
-            // ذخیره سبد جدید
-            saveCartToStorage();
-
-            // بروزرسانی سبد
-            updateBadge();
-            updateCartDisplay();
-
-            showToast(
-                "محصولات سایز ۷۰×۵۰ از سبد خرید حذف شدند.",
-                "سبد خرید",
-                "warning"
-            );
-
-            // دوباره شروع فرآیند ارسال سفارش
-            submitOrder(platform, false);
-
-        },
-        "حذف کامل و ادامه",
-        "افزایش تعداد",
-        "bg-red-600 hover:bg-red-700",
-        '<i class="fas fa-exclamation-triangle text-2xl"></i>',
-        "bg-yellow-100 text-yellow-600"
-    );
-
-    return false;
+    
+    return true;
 }
 // تابع تشخیص دسترسی به واتس‌آپ (سنجش روشن بودن فیلترشکن)
 async function checkWhatsAppAccess() {
@@ -1796,54 +1857,21 @@ async function checkWhatsAppAccess() {
 }
 
         async function submitOrder(platform, isConfirmed = false) {
-        const name = document.getElementById('customerName').value;
-        const phone = document.getElementById('customerPhone').value;
-        const address = document.getElementById('customerAddress').value;
-        
-        if (!name || !phone || !address || Object.keys(cart).length === 0) {
-            showToast('لطفاً اطلاعات را کامل کرده و سبد را پر کنید.', 'خطا در ثبت', 'error');
-            return;
-        }
-        
-        // بررسی حداقل ۲۰۰ عدد برای مجموع دو گروه سایز ۷۰×۵۰
-        if (!isConfirmed && !check70x50MinimumOrder(platform)) {
-            return;
-        }
-        
-        // اگر دکمه کپی متن سفارش زده شده باشد، نیازی به نمایش پاپ‌آپ تاییدیه نیست و مستقیم اجرا می‌شود
-        if (platform === 'copy') {
-            isConfirmed = true;
-        }
-        
-        if (!isConfirmed) {
-            let title = "";
-            let message = "";
-            let yesColorClass = "";
-            let iconHtml = "";
-            let iconBgClass = "";
-            
-            if (platform === 'whatsapp') {
-                title = "تایید ارسال سفارش در واتس‌آپ";
-                message = "پس از انتخاب پوسترهای مورد نظر در سبد خرید و تکمیل اطلاعات فردی، با تایید این مرحله، متن فاکتور به همراه جزئیات به صورت خودکار به چت پشتیبانی ما در واتس‌آپ منتقل و ارسال خواهد شد.";
-                yesColorClass = "bg-green-600 hover:bg-green-700 shadow-lg shadow-green-100";
-                iconHtml = '<i class="fab fa-whatsapp text-2xl"></i>';
-                iconBgClass = "bg-green-100 text-green-600";
-            } else if (platform === 'eitaa') {
-                title = "تایید ارسال سفارش در ایتا";
-                message = "با تایید این مرحله، متن نهایی فاکتور به صورت خودکار در حافظه گوشی شما کپی می‌شود و به پشتیبانی پوستر ایران در ایتا هدایت خواهید شد تا بتوانید متن را به راحتی پیست (Paste) و ارسال کنید.";
-                yesColorClass = "bg-orange-500 hover:bg-orange-600 shadow-lg shadow-orange-100";
-                iconHtml = '<i class="fas fa-paper-plane text-2xl"></i>';
-                iconBgClass = "bg-orange-100 text-orange-600";
-            }
-            
-            showCustomConfirm(title, message, () => {
-                submitOrder(platform, true);
-            }, "ارسال", "انصراف", yesColorClass, iconHtml, iconBgClass);
-            return;
-        }
-        
-        // ادامه کدهای قبلی مربوط به ساخت متن و کپی/ارسال...
+    const name = document.getElementById('customerName').value;
+    const phone = document.getElementById('customerPhone').value;
+    const address = document.getElementById('customerAddress').value;
     
+    if (!name || !phone || !address || Object.keys(cart).length === 0) {
+        showToast('لطفاً اطلاعات را کامل کرده و سبد را پر کنید.', 'خطا در ثبت', 'error');
+        return;
+    }
+    
+    // بررسی حداقل تعداد گروه‌ها
+    if (!isConfirmed && !check70x50MinimumOrder(platform)) {
+        return;
+    }
+    
+    // آماده‌سازی متغیرهای فاکتور پیش از بررسی پلتفرم‌ها
     const now = new Date();
     const dateStr = now.toLocaleDateString('fa-IR');
     const timeStr = now.toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' });
@@ -1908,56 +1936,72 @@ async function checkWhatsAppAccess() {
     
     text += `\n✅ سفارش شما با موفقیت ثبت شد. در اسرع وقت هماهنگی لازم با شما صورت می‌گیرد.`;
     
-    // حالت جدید برای دکمه کپی متن سفارش
-if (platform === 'copy') {
-    saveOrderToHistory(orderNum, finalPayable, total, discount, shipping);
-    localStorage.setItem('cart_submitted', 'true');
-    
-    copyToClipboard(text).then(() => {
-        showToast('متن فاکتور با موفقیت در حافظه کپی شد!', 'کپی متن', 'success');
-        clearCartAfterOrder();
-    }).catch(err => {
-        showToast('کپی متن ناموفق بود.', 'خطا', 'error');
-    });
-    return;
-}
-
-if (platform === 'whatsapp') {
-    showToast("در حال بررسی اتصال به واتس‌آپ...", "", "info");
-    const isVpnOn = await checkWhatsAppAccess();
-    
-    if (!isVpnOn) {
-        showCustomConfirm(
-            "⚠️ نیاز به فیلترشکن",
-            "برای ارسال سفارش از طریق واتس‌آپ، باید فیلترشکن (VPN) شما روشن باشد.\nلطفاً فیلترشکن خود را روشن کرده و سپس دکمه ارسال را بزنید.",
-            () => {
-                processWhatsAppSend(text, orderNum, finalPayable, total, discount, shipping);
-            },
-            "متوجه شدم، ارسال کن",
-            "انصراف",
-            "bg-green-600 hover:bg-green-700",
-            '<i class="fas fa-shield-alt text-2xl"></i>',
-            "bg-yellow-100 text-yellow-600"
-        );
+    // حالت کپی متن سفارش همراه با نمایش پیام واضح گام‌به‌گام
+    if (platform === 'copy') {
+        saveOrderToHistory(orderNum, finalPayable, total, discount, shipping);
+        localStorage.setItem('cart_submitted', 'true');
+        
+        copyToClipboard(text).then(() => {
+            showToast('متن فاکتور با موفقیت در حافظه کپی شد!', 'کپی متن', 'success');
+            
+            showCustomConfirm(
+                "📋 متن سفارش کپی شد!",
+                "متن کامل فاکتور و آدرس شما با موفقیت در حافظه موقت دستگاه کپی شد.\n\n" +
+                "ادامه روند کار:\n" +
+                "۱. وارد پیام‌رسان دلخواه خود (ایتا، واتس‌آپ، تلگرام یا پیامک) شوید.\n" +
+                "۲. وارد چت پشتیبانی ما شوید.\n" +
+                "۳. در قسمت کادر ارسال پیام، کلمه Paste (یا چسباندن) را بزنید و پیام را ارسال کنید.",
+                () => {
+                    clearCartAfterOrder();
+                },
+                "متوجه شدم (تکمیل)",
+                "انصراف",
+                "bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-100",
+                '<i class="fas fa-clipboard-check text-2xl"></i>',
+                "bg-blue-100 text-blue-600"
+            );
+        }).catch(err => {
+            showToast('کپی متن ناموفق بود. لطفاً مجدداً تلاش کنید.', 'خطا', 'error');
+        });
         return;
     }
     
-    processWhatsAppSend(text, orderNum, finalPayable, total, discount, shipping);
-}
-else if (platform === 'eitaa') {
-    saveOrderToHistory(orderNum, finalPayable, total, discount, shipping);
-    localStorage.setItem('cart_submitted', 'true');
-    
-    copyToClipboard(text).then(() => {
-        showToast('متن فاکتور در حافظه کپی شد. اکنون در ایتا پیست کنید.', 'ایتا', 'success');
-        clearCartAfterOrder();
-        setTimeout(() => {
-            window.open(`https://eitaa.com/@PosterIran`, '_blank');
-        }, 1200);
-    }).catch(err => {
-        showToast('کپی متن ناموفق بود. لطفاً دستی اقدام نمایید.', 'خطا', 'error');
-    });
-}
+    if (platform === 'whatsapp') {
+        showToast("در حال بررسی اتصال به واتس‌آپ...", "", "info");
+        const isVpnOn = await checkWhatsAppAccess();
+        
+        if (!isVpnOn) {
+            showCustomConfirm(
+                "⚠️ نیاز به فیلترشکن",
+                "برای ارسال سفارش از طریق واتس‌آپ، باید فیلترشکن (VPN) شما روشن باشد.\nلطفاً فیلترشکن خود را روشن کرده و سپس دکمه ارسال را بزنید.",
+                () => {
+                    processWhatsAppSend(text, orderNum, finalPayable, total, discount, shipping);
+                },
+                "متوجه شدم، ارسال کن",
+                "انصراف",
+                "bg-green-600 hover:bg-green-700",
+                '<i class="fas fa-shield-alt text-2xl"></i>',
+                "bg-yellow-100 text-yellow-600"
+            );
+            return;
+        }
+        
+        processWhatsAppSend(text, orderNum, finalPayable, total, discount, shipping);
+    }
+    else if (platform === 'eitaa') {
+        saveOrderToHistory(orderNum, finalPayable, total, discount, shipping);
+        localStorage.setItem('cart_submitted', 'true');
+        
+        copyToClipboard(text).then(() => {
+            showToast('متن فاکتور در حافظه کپی شد. اکنون در ایتا پیست کنید.', 'ایتا', 'success');
+            clearCartAfterOrder();
+            setTimeout(() => {
+                window.open(`https://eitaa.com/@PosterIran`, '_blank');
+            }, 1200);
+        }).catch(err => {
+            showToast('کپی متن ناموفق بود. لطفاً دستی اقدام نمایید.', 'خطا', 'error');
+        });
+    }
 }
 
 // تابع کمکی اختصاصی برای باز کردن واتس‌آپ
