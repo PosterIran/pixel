@@ -61,6 +61,6 @@
                 { filename: "دفترچه ای کوچک دوستی.webp", name: "دفترچه ای کوچک دوستی", price: 600000, allowedQuantities: [0, 36, 60, 120, 240, 720], outOfStock: false },
                 { filename: "فلش کارت اعداد.webp", name: "فلش کارت اعداد", price: 800000, allowedQuantities: [0, 40, 50, 60, 120, 240, 500], outOfStock: false },
                 { filename: "فلش کارت الفبا.webp", name: "فلش کارت الفبا", price: 500000, allowedQuantities: [0, 36, 60, 120, 240, 570], outOfStock: false },
-                { filename: "استیکر A4.webp", name: "استیکر آ۴ ", price: 200000, allowedQuantities: [0, 100, 200, 300, 400, 500, 1200, 2400], outOfStock: false },
+                { filename: "استیکر A4.webp", name: "استیکر آ۴ ", price: 250000, allowedQuantities: [0, 100, 200, 300, 400, 500, 1200, 2400], outOfStock: false },
             ]}
         };
