@@ -1937,34 +1937,34 @@ async function checkWhatsAppAccess() {
     text += `\n✅ سفارش شما با موفقیت ثبت شد. در اسرع وقت هماهنگی لازم با شما صورت می‌گیرد.`;
     
     // حالت کپی متن سفارش همراه با نمایش پیام واضح گام‌به‌گام
-    if (platform === 'copy') {
-        saveOrderToHistory(orderNum, finalPayable, total, discount, shipping);
-        localStorage.setItem('cart_submitted', 'true');
+if (platform === 'copy') {
+    copyToClipboard(text).then(() => {
+        showToast('متن فاکتور با موفقیت در حافظه کپی شد!', 'کپی متن', 'success');
         
-        copyToClipboard(text).then(() => {
-            showToast('متن فاکتور با موفقیت در حافظه کپی شد!', 'کپی متن', 'success');
-            
-            showCustomConfirm(
-                "📋 متن سفارش کپی شد!",
-                "متن کامل فاکتور و آدرس شما با موفقیت در حافظه موقت دستگاه کپی شد.\n\n" +
-                "ادامه روند کار:\n" +
-                "۱. وارد پیام‌رسان دلخواه خود (ایتا، واتس‌آپ، تلگرام یا پیامک) شوید.\n" +
-                "۲. وارد چت پشتیبانی ما شوید.\n" +
-                "۳. در قسمت کادر ارسال پیام، کلمه Paste (یا چسباندن) را بزنید و پیام را ارسال کنید.",
-                () => {
-                    clearCartAfterOrder();
-                },
-                "متوجه شدم (تکمیل)",
-                "انصراف",
-                "bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-100",
-                '<i class="fas fa-clipboard-check text-2xl"></i>',
-                "bg-blue-100 text-blue-600"
-            );
-        }).catch(err => {
-            showToast('کپی متن ناموفق بود. لطفاً مجدداً تلاش کنید.', 'خطا', 'error');
-        });
-        return;
-    }
+        showCustomConfirm(
+            "📋 متن سفارش کپی شد!",
+            "متن کامل فاکتور و آدرس شما با موفقیت در حافظه موقت دستگاه کپی شد.\n\n" +
+            "ادامه روند کار:\n" +
+            "۱. وارد پیام‌رسان دلخواه خود (ایتا، واتس‌آپ، تلگرام یا پیامک) شوید.\n" +
+            "۲. وارد چت پشتیبانی ما (۰۹۰۱۰۱۹۵۸۸۵) شوید.\n" +
+            "۳. در قسمت کادر ارسال پیام، کلمه Paste (یا چسباندن) را بزنید و پیام را ارسال کنید.",
+            () => {
+                // این بخش فقط با زدن دکمه «متوجه شدم (تکمیل)» اجرا می‌شود:
+                saveOrderToHistory(orderNum, finalPayable, total, discount, shipping);
+                localStorage.setItem('cart_submitted', 'true');
+                clearCartAfterOrder();
+            },
+            "متوجه شدم (تکمیل)",
+            "بستن",
+            "bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-100",
+            '<i class="fas fa-clipboard-check text-2xl"></i>',
+            "bg-blue-100 text-blue-600"
+        );
+    }).catch(err => {
+        showToast('کپی متن ناموفق بود. لطفاً مجدداً تلاش کنید.', 'خطا', 'error');
+    });
+    return;
+}
     
     if (platform === 'whatsapp') {
         showToast("در حال بررسی اتصال به واتس‌آپ...", "", "info");
