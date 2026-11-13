@@ -478,6 +478,30 @@ nav {
     transform: scale(3.5); /* زوم شدن زیاد در لحظه آخر */
     opacity: 0; /* محو کامل */
 }
+/* کارت محصولی که در سبد خرید حضور دارد */
+.image-box.in-cart-card {
+    border: 2px solid #2563eb !important;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.2) !important;
+    background-color: #f8fafc !important;
+}
+
+/* نشانگر تعداد انتخاب شده روی تصویر گالری */
+.cart-badge-indicator {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background-color: #2563eb;
+    color: white;
+    font-size: 10px;
+    font-weight: 900;
+    padding: 3px 8px;
+    border-radius: 9999px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    z-index: 28;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
     </style>
 </head>
 <body class="bg-gray-50 text-gray-900 pb-28">
@@ -1208,32 +1232,35 @@ nav {
             if (!info) return;
             
             info.images.forEach(img => {
-                const productId = info.name + "_" + img.filename;
-                const currentQty = cart[productId]?.quantity || 0;
-                const qtys = img.allowedQuantities || [0, 50, 100, 200];
-                const isOutOfStock = img.outOfStock === true;
-                
-                const box = document.createElement('div');
-                box.className = 'image-box bg-white p-3 rounded-2xl border shadow-sm flex flex-col items-center' + (isOutOfStock ? ' opacity-70 out-of-stock-card' : '');
-                
-                let optionsHtml = qtys.map(q =>
-                    `<option value="${q}" ${q === currentQty ? 'selected' : ''}>${q === 0 ? 'انتخاب تعداد' : toPersianDigits(q) + ' عدد'}</option>`
-                ).join('');
-                
-                const thumbSrc = getThumbnailUrl(info.name, img.filename);
-                const originalSrc = getOriginalUrl(info.name, img.filename);
-                
-                let controlWidget = '';
-                
-                if (isOutOfStock) {
-                    controlWidget = `
+    const productId = info.name + "_" + img.filename;
+    const isInCart = cart[productId] && cart[productId].quantity > 0;
+    const currentQty = cart[productId]?.quantity || 0;
+    const qtys = img.allowedQuantities || [0, 50, 100, 200];
+    const isOutOfStock = img.outOfStock === true;
+    
+    const box = document.createElement('div');
+    box.className = 'image-box bg-white p-3 rounded-2xl border shadow-sm flex flex-col items-center relative ' +
+        (isOutOfStock ? ' opacity-70 out-of-stock-card ' : '') +
+        (isInCart ? ' in-cart-card ' : '');
+    
+    let optionsHtml = qtys.map(q =>
+        `<option value="${q}" ${q === currentQty ? 'selected' : ''}>${q === 0 ? 'انتخاب تعداد' : toPersianDigits(q) + ' عدد'}</option>`
+    ).join('');
+    
+    const thumbSrc = getThumbnailUrl(info.name, img.filename);
+    const originalSrc = getOriginalUrl(info.name, img.filename);
+    
+    let controlWidget = '';
+    
+    if (isOutOfStock) {
+        controlWidget = `
                     <div class="w-full flex items-center justify-center gap-1 mt-auto pt-2 border-t">
                         <span class="text-[11px] text-red-500 font-extrabold flex items-center gap-1">
                             <i class="fas fa-exclamation-circle text-[9px]"></i> موقتاً ناموجود
                         </span>
                     </div>`;
-                } else {
-                    controlWidget = `
+    } else {
+        controlWidget = `
                     <div class="w-full flex items-center gap-2 mt-auto pt-2 border-t">
                         <span class="text-[10px] text-gray-400 font-bold">تعداد:</span>
                         <div class="relative bg-blue-50 border border-blue-100 rounded-xl px-2 py-1 flex-1 text-center">
@@ -1243,16 +1270,21 @@ nav {
                             </select>
                         </div>
                     </div>`;
-                }
-                
-                box.innerHTML = `
+    }
+    
+    box.innerHTML = `
     <div class="w-full h-32 mb-2 rounded-lg img-container flex items-center justify-center overflow-hidden cursor-pointer relative" 
-         // تغییر دهيد:
-onclick="openModal('${info.name}', '${img.filename}')">
+         onclick="openModal('${info.name}', '${img.filename}')">
         <img src="${thumbSrc}" 
              class="w-full h-full object-contain product-img" 
              onload="this.classList.add('loaded')"
              onerror="this.onerror=null; this.src='${originalSrc}'; this.classList.add('loaded');">
+        
+        ${isInCart ? `
+        <div class="cart-badge-indicator">
+            <i class="fas fa-shopping-cart text-[9px]"></i> ${toPersianDigits(currentQty)} عدد
+        </div>` : ''}
+
         ${isOutOfStock ? `
         <div class="absolute inset-0 bg-black/40 flex items-center justify-center z-25">
             <span class="bg-red-600 text-white text-[10px] font-black px-2 py-1 rounded-lg shadow-sm">عدم موجودی</span>
@@ -1261,8 +1293,8 @@ onclick="openModal('${info.name}', '${img.filename}')">
     <h4 class="font-bold text-[11px] text-center h-8 overflow-hidden mb-1">${img.name}</h4>
     <p class="text-blue-600 font-black text-[11px] mb-3">${toPersianPrice(img.price)} ریال</p>
     ${controlWidget}`;
-                container.appendChild(box);
-            });
+    container.appendChild(box);
+});
         }
 
         function addToCart(filename, name, qty, price, groupName, allowedQtys) {
@@ -1297,6 +1329,11 @@ onclick="openModal('${info.name}', '${img.filename}')">
         } else {
             showToast(`✨ ${toPersianDigits(qty)} عدد «${name}» به سبد خرید اضافه شد!`, groupName, "success");
         }
+    }
+
+    // به‌روزرسانی گالری برای اعمال استایل متمایز و برچسب تعداد
+    if (currentScreen === 'gallery') {
+        loadImages(false);
     }
 }
 
@@ -3707,5 +3744,12 @@ setTimeout(function() {
 })();
 </script>
     <script src="live-reload.js"></script>
+    <!-- فوتر سراسری سایت -->
+    <footer class="w-full bg-slate-900 text-slate-400 py-6 mt-12 border-t border-slate-800 text-center text-xs md:text-sm font-medium">
+        <div class="container mx-auto px-4">
+            <p>
+    تمامی حقوق این برنامه برای پوستر ایران محفوظ است</p>
+        </div>
+    </footer>
   </body>
 </html>
