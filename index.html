@@ -1216,6 +1216,41 @@ nav {
                 "bg-red-100 text-red-600"
             );
         }
+        // تابع به‌روزرسانی نقطه‌ای کارت گالری بدون رندر کل صفحه و چشمک زدن
+function updateSingleGalleryCard(groupName, filename) {
+    const productId = groupName + "_" + filename;
+    const item = cart[productId];
+    const isInCart = item && item.quantity > 0;
+    const currentQty = item ? item.quantity : 0;
+    
+    const cardEl = document.querySelector(`[data-product-key="${productId}"]`);
+    if (!cardEl) return;
+    
+    // تغییر کلاس حاشیه و پس‌زمینه کارت
+    if (isInCart) {
+        cardEl.classList.add('in-cart-card');
+    } else {
+        cardEl.classList.remove('in-cart-card');
+    }
+    
+    // به‌روزرسانی یا ایجاد برچسب تعداد روی عکس
+    const imgContainer = cardEl.querySelector('.img-container');
+    if (imgContainer) {
+        let badge = imgContainer.querySelector('.cart-badge-indicator');
+        if (isInCart) {
+            if (badge) {
+                badge.innerHTML = `<i class="fas fa-shopping-cart text-[9px]"></i> ${toPersianDigits(currentQty)} عدد`;
+            } else {
+                const newBadge = document.createElement('div');
+                newBadge.className = 'cart-badge-indicator';
+                newBadge.innerHTML = `<i class="fas fa-shopping-cart text-[9px]"></i> ${toPersianDigits(currentQty)} عدد`;
+                imgContainer.appendChild(newBadge);
+            }
+        } else {
+            if (badge) badge.remove();
+        }
+    }
+}
 
         function loadImages(shouldScroll = false) {
             const gallerySection = document.getElementById('galleryScreen');
@@ -1239,6 +1274,7 @@ nav {
     const isOutOfStock = img.outOfStock === true;
     
     const box = document.createElement('div');
+    box.setAttribute('data-product-key', productId); // کلید حیاتی برای جلوگیری از رندر کامل گالری و چشمک‌زدن
     box.className = 'image-box bg-white p-3 rounded-2xl border shadow-sm flex flex-col items-center relative ' +
         (isOutOfStock ? ' opacity-70 out-of-stock-card ' : '') +
         (isInCart ? ' in-cart-card ' : '');
@@ -1254,45 +1290,45 @@ nav {
     
     if (isOutOfStock) {
         controlWidget = `
-                    <div class="w-full flex items-center justify-center gap-1 mt-auto pt-2 border-t">
-                        <span class="text-[11px] text-red-500 font-extrabold flex items-center gap-1">
-                            <i class="fas fa-exclamation-circle text-[9px]"></i> موقتاً ناموجود
-                        </span>
-                    </div>`;
+                            <div class="w-full flex items-center justify-center gap-1 mt-auto pt-2 border-t">
+                                <span class="text-[11px] text-red-500 font-extrabold flex items-center gap-1">
+                                    <i class="fas fa-exclamation-circle text-[9px]"></i> موقتاً ناموجود
+                                </span>
+                            </div>`;
     } else {
         controlWidget = `
-                    <div class="w-full flex items-center gap-2 mt-auto pt-2 border-t">
-                        <span class="text-[10px] text-gray-400 font-bold">تعداد:</span>
-                        <div class="relative bg-blue-50 border border-blue-100 rounded-xl px-2 py-1 flex-1 text-center">
-                            <select onchange="addToCart('${img.filename}', '${img.name}', parseInt(this.value), ${img.price}, '${info.name}', ${JSON.stringify(qtys)})" 
-                                    class="w-full text-[11px] font-bold text-blue-700 bg-transparent outline-none cursor-pointer appearance-none text-center">
-                                ${optionsHtml}
-                            </select>
-                        </div>
-                    </div>`;
+                            <div class="w-full flex items-center gap-2 mt-auto pt-2 border-t">
+                                <span class="text-[10px] text-gray-400 font-bold">تعداد:</span>
+                                <div class="relative bg-blue-50 border border-blue-100 rounded-xl px-2 py-1 flex-1 text-center">
+                                    <select onchange="addToCart('${img.filename}', '${img.name}', parseInt(this.value), ${img.price}, '${info.name}', ${JSON.stringify(qtys)})" 
+                                            class="w-full text-[11px] font-bold text-blue-700 bg-transparent outline-none cursor-pointer appearance-none text-center">
+                                        ${optionsHtml}
+                                    </select>
+                                </div>
+                            </div>`;
     }
     
     box.innerHTML = `
-    <div class="w-full h-32 mb-2 rounded-lg img-container flex items-center justify-center overflow-hidden cursor-pointer relative" 
-         onclick="openModal('${info.name}', '${img.filename}')">
-        <img src="${thumbSrc}" 
-             class="w-full h-full object-contain product-img" 
-             onload="this.classList.add('loaded')"
-             onerror="this.onerror=null; this.src='${originalSrc}'; this.classList.add('loaded');">
-        
-        ${isInCart ? `
-        <div class="cart-badge-indicator">
-            <i class="fas fa-shopping-cart text-[9px]"></i> ${toPersianDigits(currentQty)} عدد
-        </div>` : ''}
+            <div class="w-full h-32 mb-2 rounded-lg img-container flex items-center justify-center overflow-hidden cursor-pointer relative" 
+                 onclick="openModal('${info.name}', '${img.filename}')">
+                <img src="${thumbSrc}" 
+                     class="w-full h-full object-contain product-img" 
+                     onload="this.classList.add('loaded')"
+                     onerror="this.onerror=null; this.src='${originalSrc}'; this.classList.add('loaded');">
+                
+                ${isInCart ? `
+                <div class="cart-badge-indicator">
+                    <i class="fas fa-shopping-cart text-[9px]"></i> ${toPersianDigits(currentQty)} عدد
+                </div>` : ''}
 
-        ${isOutOfStock ? `
-        <div class="absolute inset-0 bg-black/40 flex items-center justify-center z-25">
-            <span class="bg-red-600 text-white text-[10px] font-black px-2 py-1 rounded-lg shadow-sm">عدم موجودی</span>
-        </div>` : ''}
-    </div>
-    <h4 class="font-bold text-[11px] text-center h-8 overflow-hidden mb-1">${img.name}</h4>
-    <p class="text-blue-600 font-black text-[11px] mb-3">${toPersianPrice(img.price)} ریال</p>
-    ${controlWidget}`;
+                ${isOutOfStock ? `
+                <div class="absolute inset-0 bg-black/40 flex items-center justify-center z-25">
+                    <span class="bg-red-600 text-white text-[10px] font-black px-2 py-1 rounded-lg shadow-sm">عدم موجودی</span>
+                </div>` : ''}
+            </div>
+            <h4 class="font-bold text-[11px] text-center h-8 overflow-hidden mb-1">${img.name}</h4>
+            <p class="text-blue-600 font-black text-[11px] mb-3">${toPersianPrice(img.price)} ریال</p>
+            ${controlWidget}`;
     container.appendChild(box);
 });
         }
@@ -1331,11 +1367,12 @@ nav {
         }
     }
 
-    // به‌روزرسانی گالری برای اعمال استایل متمایز و برچسب تعداد
-    if (currentScreen === 'gallery') {
-        loadImages(false);
-    }
+    // به‌روزرسانی نقطه‌ای همان کارت در گالری بدون چشمک‌زدن صفحه
+if (currentScreen === 'gallery') {
+    updateSingleGalleryCard(groupName, filename);
 }
+}
+
 
         function updateBadge() {
             const itemsCount = Object.keys(cart).length;
@@ -1549,8 +1586,7 @@ nav {
                             htmlContent += `
                             <div class="p-4 flex items-center justify-between">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-12 h-12 bg-gray-50 rounded-xl overflow-hidden border border-gray-100 flex-shrink-0 p-1 cursor-pointer" // تغییر دهید:
-onclick="openModal('${item.groupName}', '${item.filename}')">
+                                    <div class="w-12 h-12 bg-gray-50 rounded-xl overflow-hidden border border-gray-100 flex-shrink-0 p-1 cursor-pointer" onclick="openModal('${item.groupName}', '${item.filename}')">
                                         <img src="${thumbSrc}" class="w-full h-full object-contain" onerror="this.onerror=null; this.src='${originalSrc}';">
                                     </div>
                                     <div>
@@ -2228,56 +2264,56 @@ function processWhatsAppSend(text, orderNum, finalPayable, total, discount, ship
         }
 
         function updateHistoryDisplay() {
-            const container = document.getElementById('historyList');
-            if (!container) return;
-
-            const history = JSON.parse(localStorage.getItem('previousOrders') || '[]');
-
-            if (history.length === 0) {
-                container.innerHTML = `
+    const container = document.getElementById('historyList');
+    if (!container) return;
+    
+    const history = JSON.parse(localStorage.getItem('previousOrders') || '[]');
+    
+    if (history.length === 0) {
+        container.innerHTML = `
                     <div class="text-center py-12 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
                         <i class="fas fa-history text-4xl text-gray-300 mb-3 block"></i>
                         <p class="text-gray-500 font-bold text-sm">هنوز هیچ سفارشی ثبت نشده است.</p>
                         <button onclick="showScreen('gallery')" class="mt-4 bg-blue-600 text-white text-xs px-4 py-2 rounded-xl font-bold shadow-md hover:bg-blue-700 transition">مشاهده گالری و خرید</button>
                     </div>
                 `;
-                return;
-            }
-
-            let html = '';
-            history.forEach(order => {
-                // دسته‌بندی محصولات داخل سفارش بر اساس گروه
-                const grouped = {};
-
-Object.keys(groupInfo).forEach(groupId => {
-    const groupName = groupInfo[groupId].name;
-
-    const groupItems = order.items.filter(
-        item => item.groupName === groupName
-    );
-
-    if (groupItems.length > 0) {
-        grouped[groupName] = groupItems;
+        return;
     }
-});
-
-                let itemsHtml = '';
-                for (const gName in grouped) {
-                    itemsHtml += `<div class="mt-2 text-xs font-bold text-blue-900 border-b border-gray-100 pb-1 mb-1">▫️ ${gName}:</div><ul class="space-y-1 pl-2">`;
-                    grouped[gName].forEach(it => {
-                        itemsHtml += `<li class="text-xs text-gray-700 flex justify-between"><span>• ${it.name}</span><span class="font-bold text-blue-700">${toPersianDigits(it.quantity)} عدد</span></li>`;
+    
+    let html = '';
+    history.forEach(order => {
+        let itemsHtml = '';
+        
+        Object.keys(groupInfo).forEach(groupId => {
+            const group = groupInfo[groupId];
+            const gName = group.name;
+            const groupItems = order.items.filter(item => item.groupName === gName);
+            
+            if (groupItems.length > 0) {
+                itemsHtml += `<div class="mt-2 text-xs font-bold text-blue-900 border-b border-gray-100 pb-1 mb-1">▫️ ${gName}:</div><ul class="space-y-1 pl-2">`;
+                
+                group.images.forEach(imgData => {
+                    const itemBaseName = imgData.filename.replace(/\.(webp|jpg|jpeg)$/i, '');
+                    const foundItem = groupItems.find(it => {
+                        const itBaseName = it.filename ? it.filename.replace(/\.(webp|jpg|jpeg)$/i, '') : '';
+                        return itBaseName === itemBaseName || it.name === imgData.name;
                     });
-                    itemsHtml += `</ul>`;
-                }
-
-                html += `
+                    if (foundItem) {
+                        itemsHtml += `<li class="text-xs text-gray-700 flex justify-between"><span>• ${foundItem.name}</span><span class="font-bold text-blue-700">${toPersianDigits(foundItem.quantity)} عدد</span></li>`;
+                    }
+                });
+                
+                itemsHtml += `</ul>`;
+            }
+        });
+        
+        html += `
                 <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition">
                     <div class="flex flex-wrap justify-between items-center pb-3 border-b border-gray-100 mb-3 gap-2">
                         <div class="flex items-center gap-2">
                             <span class="bg-blue-100 text-blue-800 text-xs font-black px-2.5 py-1 rounded-lg">سفارش #${toPersianDigits(order.id)}</span>
                             <span class="text-xs text-gray-500"><i class="far fa-clock ml-1"></i>${order.date}</span>
                         </div>
-                        
                     </div>
 
                     <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-100 mb-3 space-y-2">
@@ -2286,7 +2322,7 @@ Object.keys(groupInfo).forEach(groupId => {
 
                     <div class="flex gap-2 justify-end">
                         <button onclick="reorderPreviousOrder('${order.id}')" class="flex-1 sm:flex-none bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1">
-                            <i class="fas fa-redo-alt text-[10px]"></i> سفارش مجدد
+                            <i class="fas fa-redo-alt text-[10px]"></i> انتقال به سبد خرید جهت سفارش مجدد
                         </button>
                         <button onclick="deletePreviousOrder('${order.id}')" class="bg-red-50 hover:bg-red-100 text-red-600 px-3 py-2 rounded-xl text-xs font-bold transition border border-red-200 flex items-center justify-center gap-1">
                             <i class="fas fa-trash-alt text-[10px]"></i> حذف
@@ -2294,10 +2330,10 @@ Object.keys(groupInfo).forEach(groupId => {
                     </div>
                 </div>
                 `;
-            });
-
-            container.innerHTML = html;
-        }
+    });
+    
+    container.innerHTML = html;
+}
 
         function reorderPreviousOrder(orderId) {
     const history = JSON.parse(
@@ -2544,8 +2580,8 @@ function updateModalImage(withAnimation = true, slideDirection = 0) {
         modalImg.src = originalSrc;
         
         if (titleEl) {
-            titleEl.innerText = `${imgData.name} (${toPersianDigits(currentModalIndex + 1)} از ${toPersianDigits(currentModalImages.length)})`;
-        }
+    titleEl.innerText = imgData.name;
+}
         
         if (prevBtn) prevBtn.disabled = (currentModalIndex === 0);
         if (nextBtn) nextBtn.disabled = (currentModalIndex === currentModalImages.length - 1);
@@ -2604,6 +2640,66 @@ function closeModal(fromPopState = false) {
     if (!fromPopState && history.state && history.state.modal === 'open') {
         history.back();
     }
+}
+function generateHistoryOrderText(order) {
+    const now = new Date();
+    const currentDateStr = now.toLocaleDateString('fa-IR') + ' - ' + now.toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' });
+    
+    let text = `🔄 **ارسال مجدد سفارش**\n`;
+    text += `🗓️ تاریخ و ساعت ارسال: ${currentDateStr}\n`;
+    text += `🛍️ سفارش شماره: ${toPersianDigits(order.id)}\n\n`;
+    text += `📌 آدرس: ${order.customerInfo?.address || '---'}\n`;
+    text += `👤 نام: ${order.customerInfo?.name || '---'}\n`;
+    text += `📱 همراه: ${order.customerInfo?.phone || '---'}\n\n`;
+    text += `📋 جزئیات سفارش:\n`;
+    text += `---------------------------------------\n`;
+    
+    let groupSummariesText = `📊 خلاصه گروه‌ها:\n`;
+    
+    Object.keys(groupInfo).forEach(groupId => {
+        const group = groupInfo[groupId];
+        const gName = group.name;
+        const groupItems = order.items.filter(item => item.groupName === gName);
+        
+        if (groupItems.length > 0) {
+            text += `\n🔹 ${gName}:\n`;
+            let groupQty = 0;
+            let groupTotal = 0;
+            
+            group.images.forEach(imgData => {
+                const itemBaseName = imgData.filename.replace(/\.(webp|jpg|jpeg)$/i, '');
+                const foundItem = groupItems.find(it => {
+                    const itBaseName = it.filename ? it.filename.replace(/\.(webp|jpg|jpeg)$/i, '') : '';
+                    return itBaseName === itemBaseName || it.name === imgData.name;
+                });
+                if (foundItem) {
+                    let itemSum = foundItem.quantity * foundItem.price;
+                    text += `- ${foundItem.name}: ${toPersianDigits(foundItem.quantity)} عدد\n`;
+                    groupQty += foundItem.quantity;
+                    groupTotal += itemSum;
+                }
+            });
+            groupSummariesText += `▪️ ${gName}: ${toPersianDigits(groupQty)} عدد (${toPersianPrice(groupTotal)} ریال)\n`;
+        }
+    });
+    
+    text += `\n---------------------------------------\n`;
+    text += groupSummariesText;
+    text += `---------------------------------------\n`;
+    text += `💰 مبلغ کالاها: ${toPersianPrice(order.totalBeforeDiscount || order.totalPrice)} ریال\n`;
+    
+    if (order.discount > 0) {
+        text += `🎁 تخفیف: ${toPersianPrice(order.discount)} ریال\n`;
+    }
+    
+    if (order.shipping > 0) {
+        text += `🚚 ارسال‌به‌باربری: ${toPersianPrice(order.shipping)} ریال\n`;
+    }
+    
+    text += `💳 مبلغ نهایی: ${toPersianPrice(order.totalPrice)} ریال\n`;
+    text += `\n✅ این فاکتور به عنوان سفارش مجدد از بخش تاریخچه ارسال گردید.`;
+    
+    return text;
 }
 
 /* مدیریت بهینه، دقیق و هوشمند سوایپ (برای تمام تصاویر از جمله اول و آخر) */
@@ -3742,6 +3838,71 @@ setTimeout(function() {
         };
 
 })();
+// =========================================================
+// افزودن قابلیت سوایپ افقی برای تغییر دسته‌بندی‌ها در گالری
+// =========================================================
+function setupGallerySwipe() {
+    const galleryScreen = document.getElementById('galleryScreen');
+    if (!galleryScreen) return;
+
+    let touchStartX = 0;
+    let touchEndX = 0;
+    const minSwipeDistance = 70; // حداقل فاصله برحسب پیکسل برای تشخیص سوایپ
+
+    galleryScreen.addEventListener('touchstart', (e) => {
+        // اگر مودال بزرگنمایی باز است، سوایپ گالری غیرفعال باشد تا تداخلی ایجاد نشود
+        const modal = document.getElementById('imageModal');
+        if (modal && !modal.classList.contains('hidden')) return;
+        
+        if (e.touches && e.touches.length > 0) {
+            touchStartX = e.touches[0].clientX;
+        }
+    }, { passive: true });
+
+    galleryScreen.addEventListener('touchend', (e) => {
+        const modal = document.getElementById('imageModal');
+        if (modal && !modal.classList.contains('hidden')) return;
+
+        if (e.changedTouches && e.changedTouches.length > 0) {
+            touchEndX = e.changedTouches[0].clientX;
+            handleGallerySwipe();
+        }
+    }, { passive: true });
+
+    function handleGallerySwipe() {
+        const diffX = touchEndX - touchStartX;
+        
+        // اگر میزان جابجایی کمتر از حد آستانه باشد، نادیده گرفته شود
+        if (Math.abs(diffX) < minSwipeDistance) return;
+
+        const select = document.getElementById('groupSelect');
+        if (!select) return;
+
+        const currentIndex = select.selectedIndex;
+        const optionsCount = select.options.length;
+
+        if (diffX < 0) {
+            // سوایپ به سمت چپ (رفتن به دسته بعدی)
+            if (currentIndex < optionsCount - 1) {
+                select.selectedIndex = currentIndex + 1;
+                loadImages(true);
+                showToast(`📂 ${select.options[select.selectedIndex].text}`, 'تغییر دسته', 'info');
+            }
+        } else {
+            // سوایپ به سمت راست (رفتن به دسته قبلی)
+            if (currentIndex > 0) {
+                select.selectedIndex = currentIndex - 1;
+                loadImages(true);
+                showToast(`📂 ${select.options[select.selectedIndex].text}`, 'تغییر دسته', 'info');
+            }
+        }
+    }
+}
+
+// فعال‌سازی این قابلیت پس از لود کامل صفحه
+window.addEventListener('DOMContentLoaded', () => {
+    setupGallerySwipe();
+});
 </script>
     <script src="live-reload.js"></script>
     <!-- فوتر سراسری سایت -->
