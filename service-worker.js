@@ -1,5 +1,5 @@
 // نام کش اصلی برنامه (فایل‌های حیاتی و استاتیک)
-const CACHE_NAME = 'poster-iran-cache-v3.4.0';
+const CACHE_NAME = 'poster-iran-cache-v3.4.1';
 
 // نام کش اختصاصی و دائمی تصاویر گالری (جدا از کش برنامه تا با آپدیت نسخه‌ها پاک نشود)
 const IMAGE_CACHE_NAME = 'poster-iran-images-v1';
@@ -9,7 +9,7 @@ const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './manifest.json',
-  './css/style.css?v=3.4.0',
+  './css/style.css?v=3.4.1',
   './icons/icon-192x192.png',
   './icons/icon-512x512.png',
   'https://cdn.tailwindcss.com',
@@ -21,7 +21,7 @@ const ASSETS_TO_CACHE = [
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log('📦 کش‌گذاری فایل‌های پایه نسخه v3.4.0 آغاز شد.');
+      console.log('📦 کش‌گذاری فایل‌های پایه نسخه v3.4.1 آغاز شد.');
       
       const cachePromises = ASSETS_TO_CACHE.map((url) => {
         return fetch(url, { cache: 'reload' })
