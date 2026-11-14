@@ -3906,11 +3906,60 @@ window.addEventListener('DOMContentLoaded', () => {
 </script>
     <script src="live-reload.js"></script>
     <!-- فوتر سراسری سایت -->
-    <footer class="w-full bg-slate-900 text-slate-400 py-6 mt-12 border-t border-slate-800 text-center text-xs md:text-sm font-medium">
-        <div class="container mx-auto px-4">
-            <p>
-    تمامی حقوق این برنامه برای پوستر ایران محفوظ است</p>
+<footer class="w-full bg-slate-900 text-slate-300 pt-12 pb-24 md:pb-12 mt-16 border-t border-slate-800 text-xs md:text-sm">
+    <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 mb-8 text-right">
+        
+        <!-- ستون اول: درباره برند -->
+        <div class="space-y-3">
+            <div class="flex items-center gap-2 cursor-pointer" onclick="showScreen('home')">
+                <img src="https://PosterIran.github.io/pixel/icons/logo.png" alt="پوستر ایران" class="h-8 w-8 object-contain">
+                <span class="text-base font-black text-white">پوستر ایران</span>
+            </div>
+            <p class="text-slate-400 leading-relaxed text-xs">
+                تولیدکننده پوسترهای آموزشی همگام با کتب درسی؛ ابزاری کاربردی برای معلمان خلاق و یادگیری عمیق‌تر دانش‌آموزان.
+            </p>
         </div>
-    </footer>
+
+        <!-- ستون دوم: دسترسی سریع -->
+        <div class="space-y-3">
+            <h4 class="text-white font-bold text-sm border-r-2 border-blue-500 pr-2">دسترسی سریع</h4>
+            <ul class="space-y-2 text-xs">
+                <li><button onclick="showScreen('home')" class="text-slate-400 hover:text-blue-400 transition flex items-center gap-1.5"><i class="fas fa-chevron-left text-[9px]"></i> صفحه اصلی</button></li>
+                <li><button onclick="showScreen('gallery')" class="text-slate-400 hover:text-blue-400 transition flex items-center gap-1.5"><i class="fas fa-chevron-left text-[9px]"></i> گالری محصولات</button></li>
+                <li><button onclick="showScreen('cart')" class="text-slate-400 hover:text-blue-400 transition flex items-center gap-1.5"><i class="fas fa-chevron-left text-[9px]"></i> سبد خرید</button></li>
+                <li><button onclick="showScreen('history')" class="text-slate-400 hover:text-blue-400 transition flex items-center gap-1.5"><i class="fas fa-chevron-left text-[9px]"></i> تاریخچه سفارشات</button></li>
+                <li><button onclick="showScreen('about')" class="text-slate-400 hover:text-blue-400 transition flex items-center gap-1.5"><i class="fas fa-chevron-left text-[9px]"></i> درباره ما و تماس</button></li>
+            </ul>
+        </div>
+
+        <!-- ستون سوم: پشتیبانی و ارتباط -->
+        <div class="space-y-3">
+            <h4 class="text-white font-bold text-sm border-r-2 border-blue-500 pr-2">پشتیبانی و ارتباط</h4>
+            <p class="text-xs text-slate-400 flex items-center gap-2">
+                <i class="fas fa-phone-alt text-blue-400"></i> تلفن ثابت: <a href="tel:02155611875" class="hover:text-white transition">۰۲۱۵۵۶۱۱۸۷۵</a>
+            </p>
+            <p class="text-xs text-slate-400 flex items-center gap-2">
+                <i class="fas fa-mobile-alt text-green-400"></i> همراه پشتیبانی: <a href="tel:09010195885" class="hover:text-white transition">۰۹۰۱۰۱۹۵۸۸۵</a>
+            </p>
+            <p class="text-xs text-slate-400 flex items-start gap-2 leading-relaxed">
+                <i class="fas fa-map-marker-alt text-red-400 mt-0.5 shrink-0"></i> تهران، بازار آهنگران، پاساژ کاغذ و تحریر، پلاک ۷۴
+            </p>
+        </div>
+    </div>
+
+    <!-- خط جداکننده و کپی‌رایت -->
+    <div class="container mx-auto px-4 pt-6 border-t border-slate-800 text-center text-[11px] text-slate-500 flex flex-col sm:flex-row justify-between items-center gap-3">
+        <p>تمامی حقوق این برنامه و محصولات برای <span class="text-slate-300 font-bold">پوستر ایران</span> محفوظ است.</p>
+        <div class="flex items-center gap-2 bg-slate-800/60 px-3 py-1.5 rounded-xl border border-slate-700/50">
+            <i class="fas fa-shield-alt text-emerald-400 text-xs"></i>
+            <span class="text-slate-300 font-medium">خرید امن و مستقیم</span>
+            <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-2 cursor-pointer" onclick="showScreen('home')">
+                <img src="https://PosterIran.github.io/pixel/icons/logo.png" alt="Logo" class="h-10 w-10 logo-img" width="40" height="40">
+                <span class="text-xl font-black text-blue-900">پوستر ایران</span>
+            </div>
+        </div>
+    </div>
+</footer>
   </body>
 </html>
