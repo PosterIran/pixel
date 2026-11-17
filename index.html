@@ -32,16 +32,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-    /* بزرگتر کردن کلی تمام فونت‌های بخش سبد خرید */
+    /* تنظیمات فونت بخش سبد خرید */
     #cartScreen {
-        font-size: 1.05rem !important; /* یا 18px */
+        font-size: 1.05rem !important;
     }
 
-    /* بزرگتر کردن عنوان و متن آیتم‌های داخل سبد خرید */
-    #cartList h4, 
-    #cartList span, 
-    #cartList select {
-        font-size: 0.95rem !important;
+    #cartList span {
+        font-size: 0.85rem !important;
     }
 
     /* بزرگتر کردن فونت کادرهای ورودی اطلاعات مشتری */
@@ -61,10 +58,46 @@
             padding-left: 1rem;
             padding-right: 1rem;
         }
+        /* تنظیمات هوشمند کارت‌ها بر اساس تعداد ستون انتخابی در گالری */
+#imagesContainer.cols-1 .img-container { height: 260px !important; }
+#imagesContainer.cols-1 h4 { font-size: 14px !important; height: auto !important; }
+#imagesContainer.cols-1 p { font-size: 14px !important; }
+
+#imagesContainer.cols-3 { gap: 8px !important; }
+#imagesContainer.cols-3 .image-box { padding: 8px !important; border-radius: 14px !important; }
+#imagesContainer.cols-3 .img-container { height: 96px !important; }
+#imagesContainer.cols-3 h4 { font-size: 10px !important; height: 28px !important; line-height: 1.3 !important; }
+#imagesContainer.cols-3 p { font-size: 10px !important; margin-bottom: 6px !important; }
+
+#imagesContainer.cols-4 { gap: 6px !important; }
+#imagesContainer.cols-4 .image-box { padding: 6px !important; border-radius: 12px !important; }
+#imagesContainer.cols-4 .img-container { height: 76px !important; }
+#imagesContainer.cols-4 h4 { font-size: 9px !important; height: 24px !important; line-height: 1.25 !important; }
+#imagesContainer.cols-4 p { font-size: 9px !important; margin-bottom: 4px !important; }
+#imagesContainer.cols-4 select { font-size: 9px !important; padding: 2px 0 !important; }
         .image-box { transition: transform 0.3s ease; }
         .image-box:hover:not(.out-of-stock-card) { transform: translateY(-5px); }
         .hidden-section { display: none; }
         .qty-select { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+        /* تنظیمات هوشمند کارت‌ها بر اساس تعداد ستون انتخابی در گالری */
+#imagesContainer.cols-1 .img-container { height: 260px !important; }
+#imagesContainer.cols-1 h4 { font-size: 14px !important; height: auto !important; }
+#imagesContainer.cols-1 p { font-size: 14px !important; }
+
+#imagesContainer.cols-3 { gap: 8px !important; }
+#imagesContainer.cols-3 .image-box { padding: 8px !important; border-radius: 14px !important; }
+#imagesContainer.cols-3 .img-container { height: 96px !important; }
+#imagesContainer.cols-3 h4 { font-size: 10px !important; height: 28px !important; line-height: 1.3 !important; }
+#imagesContainer.cols-3 p { font-size: 10px !important; margin-bottom: 6px !important; }
+#imagesContainer.cols-3 .qty-label-text { display: none !important; }
+
+#imagesContainer.cols-4 { gap: 6px !important; }
+#imagesContainer.cols-4 .image-box { padding: 6px !important; border-radius: 12px !important; }
+#imagesContainer.cols-4 .img-container { height: 76px !important; }
+#imagesContainer.cols-4 h4 { font-size: 9px !important; height: 24px !important; line-height: 1.25 !important; }
+#imagesContainer.cols-4 p { font-size: 9px !important; margin-bottom: 4px !important; }
+#imagesContainer.cols-4 .qty-label-text { display: none !important; }
+#imagesContainer.cols-4 select { font-size: 9px !important; padding: 2px 0 !important; }
         
         /* ----------------------------------------------------
            استایل دکمه طلاییِ پرمیوم با پرتو نور شیمر چرخشی (بسیار لوکس)
@@ -698,28 +731,56 @@ nav {
             </div>
 
             <div class="sticky top-0 z-40 bg-white/95 backdrop-blur-md py-4 mb-8 -mx-4 px-4 border-b border-blue-50 shadow-sm">
-                <div class="max-w-md mx-auto relative group">
-                    <label class="block text-[14px] font-bold text-indigo-500 mb-2 mr-2 flex items-center gap-1.5">
-                        <i class="fas fa-filter text-xs"></i>
-                        دسته‌بندی و سایز مورد نظر خود را انتخاب کنید:
-                    </label>
-                    <div class="relative bg-gradient-to-l from-blue-500 to-indigo-600 p-[2px] rounded-2xl shadow-md shadow-blue-100 transition-all duration-300 focus-within:shadow-lg focus-within:shadow-indigo-100 focus-within:scale-[1.01]">
-                        <div class="bg-white rounded-[14px] flex items-center px-4 relative">
-                            <i class="fas fa-th-large text-indigo-600 text-base ml-3"></i>
-                            <select id="groupSelect" onchange="loadImages(true)" class="w-full py-4 pr-1 pl-10 bg-transparent font-black text-blue-900 outline-none cursor-pointer appearance-none text-sm transition-all">
-                                <option value="1"> سایز ۲۹×۲۱ (دوروچاپ)</option>
-                                <option value="2"> سایز ۴۲×۳۰ (یکروچاپ)</option>
-                                <option value="4">️ سایز ۷۰×۵۰ (یکروچاپ)</option>
-                                <option value="5"> سایز ۷۰×۵۰ (یووی‌دار)</option>
-                                <option value="6"> سایر محصولات و فلش‌کارت‌ها</option>
-                            </select>
-                            <div class="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none text-indigo-600 transition-transform duration-300">
-                                <i class="fas fa-chevron-down text-xs"></i>
-                            </div>
+    <div id="groupSelectorArea" class="max-w-lg mx-auto relative group px-2">
+        <div class="flex items-center gap-2">
+            
+            <!-- بخش اول: دراپ‌دان انتخاب دسته‌بندی با برچسب بالای آن -->
+            <div class="flex-1">
+                <label class="block text-[11px] font-bold text-indigo-500 mb-1.5 mr-1 flex items-center gap-1">
+                    <i class="fas fa-filter text-[10px]"></i>
+                    دسته‌بندی محصولات:
+                </label>
+                <div class="relative bg-gradient-to-l from-blue-500 to-indigo-600 p-[2px] rounded-2xl shadow-md">
+                    <div class="bg-white rounded-[14px] flex items-center px-3 relative">
+                        <i class="fas fa-th-large text-indigo-600 text-sm ml-2"></i>
+                        <select id="groupSelect" onchange="loadImages(true)" class="w-full py-3.5 pr-1 pl-8 bg-transparent font-black text-blue-900 outline-none cursor-pointer appearance-none text-xs md:text-sm transition-all">
+                            <option value="1"> سایز ۲۹×۲۱ (دوروچاپ)</option>
+                            <option value="2"> سایز ۴۲×۳۰ (یکروچاپ)</option>
+                            <option value="4">️ سایز ۷۰×۵۰ (یکروچاپ)</option>
+                            <option value="5"> سایز ۷۰×۵۰ (یووی‌دار)</option>
+                            <option value="6"> سایر محصولات و فلش‌کارت‌ها</option>
+                        </select>
+                        <div class="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none text-indigo-600">
+                            <i class="fas fa-chevron-down text-[10px]"></i>
                         </div>
                     </div>
                 </div>
             </div>
+            
+            <!-- بخش دوم: دراپ‌دان نحوه نمایش با برچسب اختصاصی بالای آن -->
+            <div class="w-24 md:w-28 shrink-0">
+                <label class="block text-[11px] font-bold text-indigo-500 mb-1.5 mr-1 flex items-center gap-1">
+                    <i class="fas fa-columns text-[10px]"></i>
+                    نحوه نمایش:
+                </label>
+                <div class="relative bg-gradient-to-l from-indigo-500 to-blue-500 p-[2px] rounded-2xl shadow-md">
+                    <div class="bg-white rounded-[14px] flex items-center px-1.5 relative">
+                        <select id="columnSelect" onchange="setGalleryColumns(parseInt(this.value))" class="w-full py-3.5 pr-1 pl-5 bg-transparent font-black text-blue-900 outline-none cursor-pointer appearance-none text-xs transition-all text-center">
+                            <option value="1">۱ ستونه</option>
+                            <option value="2">۲ ستونه</option>
+                            <option value="3">۳ ستونه</option>
+                            <option value="4">۴ ستونه</option>
+                        </select>
+                        <div class="absolute left-1.5 top-1/2 -translate-y-1/2 pointer-events-none text-indigo-600">
+                            <i class="fas fa-chevron-down text-[9px]"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
 
             <div id="imagesContainer" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
         </section>
@@ -1298,17 +1359,17 @@ function updateSingleGalleryCard(groupName, filename) {
                                 </span>
                             </div>`;
     } else {
-        controlWidget = `
-                            <div class="w-full flex items-center gap-2 mt-auto pt-2 border-t">
-                                <span class="text-[10px] text-gray-400 font-bold">تعداد:</span>
-                                <div class="relative bg-blue-50 border border-blue-100 rounded-xl px-2 py-1 flex-1 text-center">
-                                    <select onchange="addToCart('${img.filename}', '${img.name}', parseInt(this.value), ${img.price}, '${info.name}', ${JSON.stringify(qtys)})" 
-                                            class="w-full text-[11px] font-bold text-blue-700 bg-transparent outline-none cursor-pointer appearance-none text-center">
-                                        ${optionsHtml}
-                                    </select>
-                                </div>
-                            </div>`;
-    }
+    controlWidget = `
+            <div class="w-full flex items-center gap-2 mt-auto pt-2 border-t">
+                <span class="text-[10px] text-gray-400 font-bold qty-label-text">تعداد:</span>
+                <div class="relative bg-blue-50 border border-blue-100 rounded-xl px-2 py-1 flex-1 text-center">
+                    <select onchange="addToCart('${img.filename}', '${img.name}', parseInt(this.value), ${img.price}, '${info.name}', ${JSON.stringify(qtys)})" 
+                            class="w-full text-[11px] font-bold text-blue-700 bg-transparent outline-none cursor-pointer appearance-none text-center">
+                        ${optionsHtml}
+                    </select>
+                </div>
+            </div>`;
+}
     
     box.innerHTML = `
             <div class="w-full h-32 mb-2 rounded-lg img-container flex items-center justify-center overflow-hidden cursor-pointer relative" 
@@ -1586,24 +1647,25 @@ if (currentScreen === 'gallery') {
                             const originalSrc = getOriginalUrl(item.groupName, item.filename);
                             
                             htmlContent += `
-                            <div class="p-4 flex items-center justify-between">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-12 h-12 bg-gray-50 rounded-xl overflow-hidden border border-gray-100 flex-shrink-0 p-1 cursor-pointer" onclick="openModal('${item.groupName}', '${item.filename}')">
-                                        <img src="${thumbSrc}" class="w-full h-full object-contain" onerror="this.onerror=null; this.src='${originalSrc}';">
-                                    </div>
-                                    <div>
-                                        <h4 class="text-[11px] font-bold text-gray-800 mb-2">${item.name}</h4>
-                                        <div class="flex items-center gap-2">
-                                            <div class="relative bg-blue-50 border border-blue-100 rounded-lg px-2 py-0.5">
-                                                <select onchange="addToCart('${item.filename}', '${item.name}', parseInt(this.value), ${item.price}, '${item.groupName}', ${JSON.stringify(qtys)}); updateCartDisplay();" 
-                                                        class="text-[10px] font-bold text-blue-700 bg-transparent outline-none cursor-pointer appearance-none">
-                                                    ${optionsHtml}
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>`;
+<div class="p-4 flex items-center justify-between gap-3">
+    <!-- عکس محصول (سایز استاندارد و مناسب) -->
+    <div class="w-12 h-12 bg-gray-50 rounded-xl overflow-hidden border border-gray-100 flex-shrink-0 p-1 cursor-pointer" onclick="openModal('${item.groupName}', '${item.filename}')">
+        <img src="${thumbSrc}" class="w-full h-full object-contain" onerror="this.onerror=null; this.src='${originalSrc}';">
+    </div>
+    
+    <!-- نام محصول (با فونت خوانا و قابلیت نمایش کامل در دو خط) -->
+    <div class="flex-1 min-w-0 px-2">
+        <h4 class="text-[11px] font-bold text-gray-800 line-clamp-2">${item.name}</h4>
+    </div>
+    
+    <!-- دراپ‌دان انتخاب تعداد (کوچک‌شده با فونت ریزتر) -->
+    <div class="relative bg-blue-50 border border-blue-100 rounded-md px-1.5 py-0.5 shrink-0">
+        <select onchange="addToCart('${item.filename}', '${item.name}', parseInt(this.value), ${item.price}, '${item.groupName}', ${JSON.stringify(qtys)}); updateCartDisplay();" 
+                class="text-[9px] font-bold text-blue-700 bg-transparent outline-none cursor-pointer appearance-none text-center">
+            ${optionsHtml}
+        </select>
+    </div>
+</div>`;
                         }
                     });
                     htmlContent += `</div></div>`;
@@ -1927,12 +1989,58 @@ async function checkWhatsAppAccess() {
 }
 
 async function submitOrder(platform, isConfirmed = false) {
-    const name = document.getElementById('customerName').value;
-    const phone = document.getElementById('customerPhone').value;
-    const address = document.getElementById('customerAddress').value;
+    const nameInput = document.getElementById('customerName');
+    const phoneInput = document.getElementById('customerPhone');
+    const addressInput = document.getElementById('customerAddress');
     
-    if (!name || !phone || !address || Object.keys(cart).length === 0) {
-        showToast('لطفاً اطلاعات را کامل کرده و سبد را پر کنید.', 'خطا در ثبت', 'error');
+    const name = nameInput.value.trim();
+    const phone = phoneInput.value.trim();
+    const address = addressInput.value.trim();
+    
+    // ۱. بررسی خالی نبودن سبد خرید
+    if (!cart || Object.keys(cart).length === 0) {
+        showToast('سبد خرید شما خالی است. لطفاً ابتدا محصولی را انتخاب کنید.', 'خطا در ثبت', 'error');
+        return;
+    }
+    
+    // ۲. بررسی وارد شدن نام و نام خانوادگی
+    if (!name) {
+        showToast('لطفاً نام و نام خانوادگی خود را وارد کنید.', 'اطلاعات مشتری', 'error');
+        nameInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        nameInput.focus();
+        nameInput.classList.add('border-red-500', 'bg-red-50');
+        setTimeout(() => nameInput.classList.remove('border-red-500', 'bg-red-50'), 3000);
+        return;
+    }
+    
+    // ۳. بررسی وارد شدن شماره موبایل
+    if (!phone) {
+        showToast('لطفاً شماره موبایل خود را وارد کنید.', 'اطلاعات مشتری', 'error');
+        phoneInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        phoneInput.focus();
+        phoneInput.classList.add('border-red-500', 'bg-red-50');
+        setTimeout(() => phoneInput.classList.remove('border-red-500', 'bg-red-50'), 3000);
+        return;
+    }
+    
+    // ۴. اعتبارسنجی فرمت صحیح شماره موبایل (۱۱ رقم و شروع با 09)
+    const phoneRegex = /^09\d{9}$/;
+    if (!phoneRegex.test(phone)) {
+        showToast('شماره موبایل صحیح نمی‌باشد (باید ۱۱ رقم و با 09 شروع شود).', 'خطا در شماره موبایل', 'error');
+        phoneInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        phoneInput.focus();
+        phoneInput.classList.add('border-red-500', 'bg-red-50');
+        setTimeout(() => phoneInput.classList.remove('border-red-500', 'bg-red-50'), 3000);
+        return;
+    }
+    
+    // ۵. بررسی وارد شدن آدرس کامل
+    if (!address) {
+        showToast('لطفاً آدرس کامل تحویل را وارد کنید.', 'اطلاعات مشتری', 'error');
+        addressInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        addressInput.focus();
+        addressInput.classList.add('border-red-500', 'bg-red-50');
+        setTimeout(() => addressInput.classList.remove('border-red-500', 'bg-red-50'), 3000);
         return;
     }
     
@@ -1942,7 +2050,7 @@ async function submitOrder(platform, isConfirmed = false) {
     }
     
     // نمایش پاپ‌آپ تاییدیه قبل از ارسال نهایی در واتس‌آپ یا ایتا
-    if (!isConfirmed) {
+    if (platform !== 'copy' && !isConfirmed) {
         let title = "";
         let message = "";
         let yesColorClass = "";
@@ -2032,7 +2140,7 @@ async function submitOrder(platform, isConfirmed = false) {
     text += `💳 مبلغ نهایی: ${toPersianPrice(finalPayable)} ریال\n`;
     
     text += `\n✅ سفارش شما با موفقیت ثبت شد. در اسرع وقت هماهنگی لازم با شما صورت می‌گیرد.`;
-    
+
     if (platform === 'whatsapp') {
         showToast("در حال بررسی اتصال به واتس‌آپ...", "", "info");
         const isVpnOn = await checkWhatsAppAccess();
@@ -2069,8 +2177,33 @@ async function submitOrder(platform, isConfirmed = false) {
             showToast('کپی متن ناموفق بود. لطفاً دستی اقدام نمایید.', 'خطا', 'error');
         });
     }
+    else if (platform === 'copy') {
+        copyToClipboard(text).then(() => {
+            showToast('متن فاکتور با موفقیت در حافظه کپی شد!', 'کپی متن', 'success');
+            
+            showCustomConfirm(
+                "📋 متن سفارش کپی شد!",
+                "متن کامل فاکتور و آدرس شما با موفقیت در حافظه موقت دستگاه کپی شد.\n\n" +
+                "ادامه روند کار:\n" +
+                "۱. وارد پیام‌رسان دلخواه خود (ایتا، واتس‌آپ، تلگرام یا پیامک) شوید.\n" +
+                "۲. وارد چت پشتیبانی ما (۰۹۰۱۰۱۹۵۸۸۵) شوید.\n" +
+                "۳. در قسمت کادر ارسال پیام، کلمه Paste (یا چسباندن) را بزنید و پیام را ارسال کنید.",
+                () => {
+                    saveOrderToHistory(orderNum, finalPayable, total, discount, shipping);
+                    localStorage.setItem('cart_submitted', 'true');
+                    clearCartAfterOrder();
+                },
+                "متوجه شدم (تکمیل)",
+                "انصراف",
+                "bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-100",
+                '<i class="fas fa-clipboard-check text-2xl"></i>',
+                "bg-blue-100 text-blue-600"
+            );
+        }).catch(err => {
+            showToast('کپی متن ناموفق بود. لطفاً مجدداً تلاش کنید.', 'خطا', 'error');
+        });
+    }
 }
-
 // تابع کمکی اختصاصی برای باز کردن واتس‌آپ
 function processWhatsAppSend(text, orderNum, finalPayable, total, discount, shipping) {
     saveOrderToHistory(orderNum, finalPayable, total, discount, shipping);
@@ -3033,22 +3166,26 @@ function hideInstallBanner() {
     }
 }
 
-        // بارگذاری اولیه
-        window.addEventListener('DOMContentLoaded', () => {
-            loadCartFromStorage();
-            loadCustomerData();
-            setupInstallBanner();
-            repairOrderHistory();
-            updateDateTime();
-            checkConnectionManually();
-            
-            const hash = window.location.hash.replace('#', '');
-            if (['home', 'gallery', 'cart', 'about', 'history', 'assistant'].includes(hash)) {
-                showScreen(hash, false, true);
-            } else {
-                showScreen('home', false, true);
-            }
-        });
+       // بارگذاری اولیه
+window.addEventListener('DOMContentLoaded', () => {
+    loadCartFromStorage();
+    loadCustomerData();
+    setupInstallBanner();
+    repairOrderHistory();
+    updateDateTime();
+    checkConnectionManually();
+    
+    // اعمال تعداد ستون‌های ذخیره‌شده گالری در شروع برنامه
+    const savedCols = Number(localStorage.getItem('gallery_columns')) || 2;
+    setGalleryColumns(savedCols, false);
+    
+    const hash = window.location.hash.replace('#', '');
+    if (['home', 'gallery', 'cart', 'about', 'history', 'assistant'].includes(hash)) {
+        showScreen(hash, false, true);
+    } else {
+        showScreen('home', false, true);
+    }
+});
         document.addEventListener('keydown', (e) => {
     const modal = document.getElementById('imageModal');
     if (modal && !modal.classList.contains('hidden')) {
@@ -3837,19 +3974,16 @@ setTimeout(function() {
         };
 
 })();
-// =========================================================
-// افزودن قابلیت سوایپ افقی برای تغییر دسته‌بندی‌ها در گالری
-// =========================================================
+// محدود کردن قابلیت سوایپ افقی فقط به کادر دراپ‌داون و انتخاب دسته
 function setupGallerySwipe() {
-    const galleryScreen = document.getElementById('galleryScreen');
-    if (!galleryScreen) return;
+    const selectorArea = document.getElementById('groupSelectorArea');
+    if (!selectorArea) return;
 
     let touchStartX = 0;
     let touchEndX = 0;
-    const minSwipeDistance = 70; // حداقل فاصله برحسب پیکسل برای تشخیص سوایپ
+    const minSwipeDistance = 50; // حداقل فاصله برحسب پیکسل برای تشخیص سوایپ
 
-    galleryScreen.addEventListener('touchstart', (e) => {
-        // اگر مودال بزرگنمایی باز است، سوایپ گالری غیرفعال باشد تا تداخلی ایجاد نشود
+    selectorArea.addEventListener('touchstart', (e) => {
         const modal = document.getElementById('imageModal');
         if (modal && !modal.classList.contains('hidden')) return;
         
@@ -3858,7 +3992,7 @@ function setupGallerySwipe() {
         }
     }, { passive: true });
 
-    galleryScreen.addEventListener('touchend', (e) => {
+    selectorArea.addEventListener('touchend', (e) => {
         const modal = document.getElementById('imageModal');
         if (modal && !modal.classList.contains('hidden')) return;
 
@@ -3871,7 +4005,6 @@ function setupGallerySwipe() {
     function handleGallerySwipe() {
         const diffX = touchEndX - touchStartX;
         
-        // اگر میزان جابجایی کمتر از حد آستانه باشد، نادیده گرفته شود
         if (Math.abs(diffX) < minSwipeDistance) return;
 
         const select = document.getElementById('groupSelect');
@@ -3902,6 +4035,32 @@ function setupGallerySwipe() {
 window.addEventListener('DOMContentLoaded', () => {
     setupGallerySwipe();
 });
+// مدیریت تغییر تعداد ستون‌های گالری (۱ تا ۴ ستون)
+// مدیریت تغییر تعداد ستون‌های گالری و هماهنگی با دراپ‌دان جدید
+function setGalleryColumns(cols, savePref = true) {
+    const container = document.getElementById('imagesContainer');
+    if (!container) return;
+    
+    // حذف کلاس‌های گرید قبلی
+    container.classList.remove(
+        'grid-cols-1', 'grid-cols-2', 'grid-cols-3', 'grid-cols-4',
+        'md:grid-cols-3', 'lg:grid-cols-4',
+        'cols-1', 'cols-2', 'cols-3', 'cols-4'
+    );
+    
+    // اعمال تعداد ستون جدید
+    container.classList.add(`grid-cols-${cols}`, `cols-${cols}`);
+    
+    // هماهنگ کردن مقدار دراپ‌دان نحوه نمایش
+    const columnSelect = document.getElementById('columnSelect');
+    if (columnSelect) {
+        columnSelect.value = String(cols);
+    }
+    
+    if (savePref) {
+        localStorage.setItem('gallery_columns', String(cols));
+    }
+}
 </script>
     <script src="live-reload.js"></script>
     <!-- فوتر سراسری سایت -->
@@ -3915,7 +4074,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 <span class="text-base font-black text-white">پوستر ایران</span>
             </div>
             <p class="text-slate-400 leading-relaxed text-xs">
-                تولیدکننده پوسترهای آموزشی همگام با کتب درسی؛ ابزاری کاربردی برای معلمان خلاق و یادگیری عمیق‌تر دانش‌آموزان.
+                مجموعه‌ای پیشرفته از پوسترهای آموزشی همگام با کتب درسی؛ ابزاری ارتقا‌یافته برای تدریس تعاملی و درک بصری عمیق‌تر دانش‌آموزان نسل جدید.
             </p>
         </div>
 
